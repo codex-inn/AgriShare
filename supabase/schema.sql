@@ -186,12 +186,15 @@ grant delete on table public.group_bookings to authenticated;
 -- Membership rows are private to members/organizers under RLS. Farmers may join
 -- and leave groups, but cannot move/edit membership rows after creation.
 revoke all on table public.group_members from anon, authenticated;
-grant select, insert, delete on table public.group_members to authenticated;
+grant select, delete on table public.group_members to authenticated;
+grant insert (group_id, farmer_id, acres) on table public.group_members to authenticated;
 
 -- Booking requests may be created and read by the farmer and equipment owner.
 -- Direct updates are disabled until a server-validated status transition exists.
 revoke all on table public.booking_requests from anon, authenticated;
-grant select, insert on table public.booking_requests to authenticated;
+grant select on table public.booking_requests to authenticated;
+grant insert (farmer_id, equipment_id, preferred_date, acres, village, notes)
+  on table public.booking_requests to authenticated;
 
 -- Before launch, add server-side validation for status transitions, group capacity,
 -- preventing overbooking, image storage policies, abuse controls, and audited owner verification.
