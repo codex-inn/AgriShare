@@ -77,6 +77,24 @@ drop policy if exists "Farmers can cancel their own pending requests" on public.
 drop policy if exists "Equipment owners can read booking requests" on public.booking_requests;
 drop policy if exists "Equipment owners can update booking status" on public.booking_requests;
 
+drop policy if exists "Available equipment listings are readable" on public.equipment;
+drop policy if exists "Owners can create equipment listings" on public.equipment;
+drop policy if exists "Owners can update own equipment" on public.equipment;
+drop policy if exists "Owners can delete own equipment" on public.equipment;
+drop policy if exists "Open groups are readable" on public.group_bookings;
+drop policy if exists "Authenticated farmers can create groups" on public.group_bookings;
+drop policy if exists "Organizers can update their groups" on public.group_bookings;
+drop policy if exists "Organizers can delete their groups" on public.group_bookings;
+drop policy if exists "Members and organizers can read group members" on public.group_members;
+drop policy if exists "Farmers can join open groups as themselves" on public.group_members;
+drop policy if exists "Farmers can edit their own membership" on public.group_members;
+drop policy if exists "Farmers can leave their own group" on public.group_members;
+drop policy if exists "Farmers can read their own booking requests" on public.booking_requests;
+drop policy if exists "Farmers can create booking requests" on public.booking_requests;
+drop policy if exists "Farmers can cancel their own pending requests" on public.booking_requests;
+drop policy if exists "Equipment owners can read booking requests" on public.booking_requests;
+drop policy if exists "Equipment owners can update booking status" on public.booking_requests;
+
 -- Public listing fields contain no owner phone number. Use a consent-based contact flow later.
 create policy "Available equipment listings are readable"
   on public.equipment for select to anon, authenticated
@@ -163,3 +181,19 @@ create policy "Equipment owners can update booking status"
 
 -- Before launch, add server-side validation for status transitions, group capacity,
 -- preventing overbooking, image storage policies, abuse controls, and audited owner verification.
+
+
+-- Return only aggregate acreage, never individual farmer identities or notes.
+create or replace function public.get_group_progress()
+returns table (group_id uuid, joined_acres numeric)
+language sql
+stable
+security definer
+set search_path = public, pg_temp
+as $$
+  select gm.group_id, coalesce(sum(gm.acres), 0)::numeric as joined_acres
+  from public.group_members gm
+  group by gm.group_id;
+$$;
+revoke all on function public.get_group_progress() from public;
+grant execute on function public.get_group_progress() to anon, authenticated;
