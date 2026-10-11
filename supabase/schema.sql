@@ -119,9 +119,6 @@ create policy "Open groups are readable"
 create policy "Authenticated farmers can create groups"
   on public.group_bookings for insert to authenticated
   with check (auth.uid() = organizer_id);
-create policy "Organizers can update their groups"
-  on public.group_bookings for update to authenticated
-  using (auth.uid() = organizer_id) with check (auth.uid() = organizer_id);
 create policy "Organizers can delete their groups"
   on public.group_bookings for delete to authenticated
   using (auth.uid() = organizer_id);
@@ -143,9 +140,6 @@ create policy "Farmers can join open groups as themselves"
       where g.id = group_id and g.status = 'open' and g.organizer_id <> auth.uid()
     )
   );
-create policy "Farmers can edit their own membership"
-  on public.group_members for update to authenticated
-  using (auth.uid() = farmer_id) with check (auth.uid() = farmer_id);
 create policy "Farmers can leave their own group"
   on public.group_members for delete to authenticated
   using (auth.uid() = farmer_id);
@@ -162,26 +156,42 @@ create policy "Farmers can create booking requests"
       where e.id = equipment_id and e.available = true
     )
   );
-create policy "Farmers can cancel their own pending requests"
-  on public.booking_requests for update to authenticated
-  using (auth.uid() = farmer_id and status = 'pending')
-  with check (auth.uid() = farmer_id and status in ('pending','cancelled'));
 create policy "Equipment owners can read booking requests"
   on public.booking_requests for select to authenticated
   using (exists (
     select 1 from public.equipment e
     where e.id = equipment_id and e.owner_id = auth.uid()
   ));
-create policy "Equipment owners can update booking status"
-  on public.booking_requests for update to authenticated
-  using (exists (
-    select 1 from public.equipment e
-    where e.id = equipment_id and e.owner_id = auth.uid()
-  ))
-  with check (exists (
-    select 1 from public.equipment e
-    where e.id = equipment_id and e.owner_id = auth.uid()
-  ));
+
+
+-- Explicit least-privilege grants. RLS policies do not replace SQL privileges.
+-- Equipment listings are public-read, but owners cannot self-mark as verified or
+-- change the owner_id. Column grants also prevent clients setting protected fields.
+revoke all on table public.equipment from anon, authenticated;
+grant select on table public.equipment to anon, authenticated;
+grant insert (owner_id, name, category, description, rate, rate_unit, village, service_area, image_url, available)
+  on table public.equipment to authenticated;
+grant update (name, category, description, rate, rate_unit, village, service_area, image_url, available)
+  on table public.equipment to authenticated;
+grant delete on table public.equipment to authenticated;
+
+-- Group booking creation and read are supported by the current UI. Status changes
+-- and group edits need a server-side workflow; do not permit direct client updates.
+revoke all on table public.group_bookings from anon, authenticated;
+grant select on table public.group_bookings to anon, authenticated;
+grant insert (organizer_id, equipment_category, village, preferred_date, target_acres, rate_per_acre)
+  on table public.group_bookings to authenticated;
+grant delete on table public.group_bookings to authenticated;
+
+-- Membership rows are private to members/organizers under RLS. Farmers may join
+-- and leave groups, but cannot move/edit membership rows after creation.
+revoke all on table public.group_members from anon, authenticated;
+grant select, insert, delete on table public.group_members to authenticated;
+
+-- Booking requests may be created and read by the farmer and equipment owner.
+-- Direct updates are disabled until a server-validated status transition exists.
+revoke all on table public.booking_requests from anon, authenticated;
+grant select, insert on table public.booking_requests to authenticated;
 
 -- Before launch, add server-side validation for status transitions, group capacity,
 -- preventing overbooking, image storage policies, abuse controls, and audited owner verification.
