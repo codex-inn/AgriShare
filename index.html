@@ -123,7 +123,13 @@ async function submitAuth(signUp){
    const {data:created,error:createError}=await supabaseClient.functions.invoke('username-signup',{body:{username,password}});
    if(createError){
     console.error('[AgriShare username signup]',createError);
-    toast('Account creation service is not ready. The username-signup Edge Function must be deployed and configured in Supabase. Please do not keep retrying.');
+    let serverMessage='';
+    try{serverMessage=(await createError.context?.json())?.error||''}catch(_){}
+    if(serverMessage){
+     toast(serverMessage);
+    }else{
+     toast('Account creation service is not ready. The username-signup Edge Function must be deployed and configured in Supabase. Please do not keep retrying.');
+    }
     return;
    }
    if(created?.error){
