@@ -1,6 +1,6 @@
 # AgriShare — Supabase setup guide
 
-The AgriShare frontend now contains the Supabase client, a username + password interface (no email field), live equipment listing reads, equipment listing creation, booking request creation, group creation, and group joining. **These features become live only after the SQL schema has been applied and the connection is verified.**
+The AgriShare frontend contains a username + password interface (no email field), live equipment listing reads, equipment listing creation, booking request creation, group creation, and group joining. Account creation uses a server-side Supabase Edge Function to avoid email confirmation delivery. **These features become live only after the SQL schema has been applied and the connection is verified.**
 
 ## 1. Create a Supabase project
 1. Create a project in Supabase and save the database password privately.
@@ -11,9 +11,16 @@ The AgriShare frontend now contains the Supabase client, a username + password i
 ## 2. Configure authentication
 1. In **Authentication → URL Configuration**, add your deployed site URL: `https://codex-inn.github.io/AgriShare`.
 2. Add the same URL to the allowed redirect URLs (and a local development URL only if needed).
-3. In **Authentication → Sign In / Providers → Email**, turn **Confirm email OFF** before creating accounts. This prevents confirmation emails from being required for the current prototype.
-4. The form asks only for a username and password. Internally, this prototype maps each username to a non-routable `username@agrishare.local` identity because Supabase Auth does not natively provide username sign-in. Passwords are still managed by Supabase Auth, not stored in public tables. This is a workaround, not a dedicated username-auth backend.
-5. Username accounts cannot receive confirmation or password-reset emails. Users must remember their password. If a username account was created while confirmation was enabled, it may be stuck unconfirmed; check Authentication → Users before deciding how to handle that account. Do not delete accounts with real data.
+3. Apply the SQL in `supabase/username-auth.sql` using **SQL Editor → New query**. This creates a private rate-limit table for signup attempts. Keep RLS enabled.
+4. Deploy the Edge Function in `supabase/functions/username-signup/index.ts` to project `xsrrpjkvlodcvlqawrui`. From a machine with Supabase CLI installed and logged in, run:
+   ```sh
+   supabase link --project-ref xsrrpjkvlodcvlqawrui
+   supabase functions deploy username-signup --no-verify-jwt
+   ```
+   The repo includes `supabase/config.toml` with JWT verification disabled only for this public signup function; the function performs input validation and rate limiting itself.
+5. In **Edge Functions → Secrets**, confirm `SUPABASE_SERVICE_ROLE_KEY` is available to the function. If not, set it there from the project’s server-side API keys page. Never paste it into GitHub, chat, or `index.html`. The function uses this secret only on the server to create an Auth user with `email_confirm: true`, so no confirmation email is sent.
+6. The form asks only for a username and password. Internally, usernames map to non-routable `username@agrishare.local` identities because Supabase Auth does not natively support username sign-in. Supabase Auth still hashes/manages passwords and issues the session; passwords are never stored in app tables.
+7. Username accounts cannot receive password-reset emails. Existing username accounts created earlier through the old email-signup path may remain unconfirmed; do not delete accounts with real data. Check **Authentication → Users** first. If a test username is already registered but unconfirmed, use a new username until you decide how to handle that test account.
 
 ## 3. Keep keys safe
 The browser integration may use only the Supabase **Project URL** and the **anon/publishable key**. These are designed for client use when Row Level Security is correctly configured.
@@ -28,4 +35,4 @@ The browser integration may use only the Supabase **Project URL** and the **anon
 - Do not rely on the `verified` field as proof of identity; verification must be an actual reviewed process.
 
 ## 5. Next integration milestone
-After applying the schema, test username account creation, sign-in, sign-out, listing creation, booking requests, and group joining with two separate accounts. The configured browser key is a public publishable key; keep Row Level Security enabled and never expose service-role or secret keys.
+After applying the schema and deploying the signup function, test username account creation, sign-in, sign-out, listing creation, booking requests, and group joining with two separate accounts. The configured browser key is a public publishable key; keep Row Level Security enabled and never expose service-role or secret keys.
