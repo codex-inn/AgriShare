@@ -78,7 +78,7 @@ const seedGroups=[
 {id:'g3',machine:'Tractor',village:'Tiruvannamalai area',date:'2026-10-22',target:12,joined:7,rate:1500,leader:'Demo organizer'}
 ];
 const readStore=(key,fallback)=>{try{const x=JSON.parse(localStorage.getItem(key));return Array.isArray(x)?x:fallback}catch{return fallback}};
-let machines=readStore('agrishare-machines',seedMachines),groups=readStore('agrishare-groups',seedGroups);
+let machines=[],groups=[]; // Only show listings loaded from Supabase; never present demo/local cache as real offers.
 function setAuthButton(){const b=document.getElementById('authButton');if(!b)return;const displayName=currentUser?.user_metadata?.username||currentUser?.email||'Signed in';b.textContent=currentUser?displayName+' · Sign out':'Sign in';b.onclick=()=>currentUser?signOutUser():openModal('authModal');}
 function setConnectionStatus(message,ok=false){const el=document.getElementById('dbStatus');if(el){el.textContent=message;el.style.color=ok?'#d9f99d':'#ffd6a5';}}
 function showCloudError(message){setConnectionStatus('Database setup required',false);toast(message);console.error('[AgriShare Supabase]',message);}
@@ -98,7 +98,7 @@ async function loadCloudData(){
   machines=(equipmentResult.data||[]).map(x=>({id:x.id,name:x.name,type:x.category,rate:Number(x.rate),unit:x.rate_unit||'acre',village:x.service_area?x.village+' · '+x.service_area:x.village,owner:'Local provider',rating:x.verified?'Verified':'Community listing',status:x.verified?'Verified':'Community listing',image:x.image_url||'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80',description:x.description||'Farm machinery service',verified:x.verified}));
   groups=(groupsResult.data||[]).map(x=>({id:x.id,machine:x.equipment_category,village:x.village,date:x.preferred_date,target:Number(x.target_acres),joined:Number(progress[x.id]?.joined_acres||0),rate:Number(x.rate_per_acre),leader:'Farmer organizer',organizerId:x.organizer_id}));
   cloudReady=true;setConnectionStatus('Shared database connected',true);renderMachines();renderGroups();
- }catch(err){cloudReady=false;setConnectionStatus('Database setup required',false);showCloudError('Supabase connection failed: '+(err?.message||'Check schema and API settings')+'. Demo listings are shown only as a fallback.');}
+ }catch(err){cloudReady=false;machines=[];groups=[];renderMachines();renderGroups();setConnectionStatus('Live listings unavailable',false);showCloudError('Could not load live listings from Supabase: '+(err?.message||'Check database/API settings')+'. Demo listings are hidden so farmers do not mistake examples for real offers.');}
  finally{cloudBusy=false;}
 }
 async function signOutUser(){const {error}=await supabaseClient.auth.signOut();if(error){showCloudError(error.message);return}currentUser=null;setAuthButton();toast('Signed out.');}
