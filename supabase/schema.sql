@@ -58,6 +58,10 @@ alter table public.group_bookings enable row level security;
 alter table public.group_members enable row level security;
 alter table public.booking_requests enable row level security;
 
+-- Remove the legacy public phone field if an earlier starter schema created it.
+-- Owner contact details must be shared only through a deliberate consent-based flow.
+alter table public.equipment drop column if exists contact_phone;
+
 -- Drop named policies first so this script can be re-run in development.
 drop policy if exists "Equipment listings are readable" on public.equipment;
 drop policy if exists "Owners can create equipment listings" on public.equipment;
