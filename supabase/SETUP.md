@@ -11,8 +11,9 @@ The AgriShare frontend now contains the Supabase client, email sign-in/sign-up, 
 ## 2. Configure authentication
 1. In **Authentication → URL Configuration**, add your deployed site URL: `https://codex-inn.github.io/AgriShare`.
 2. Add the same URL to the allowed redirect URLs (and a local development URL only if needed).
-3. Choose sign-in methods and configure email confirmation for your intended audience.
-4. Test sign-up, sign-in, sign-out, and password recovery before inviting real users.
+3. **Username-only account workaround:** in **Authentication → Sign In / Providers → Email**, turn off **Confirm email** before creating username accounts. The frontend maps a username to a synthetic `username@agrishare.local` identity so Supabase Auth can issue its normal session/JWT. Passwords remain managed by Supabase Auth; they are never stored in the public app tables.
+4. Username accounts cannot receive confirmation or password-reset emails. Users must remember their password; use a real email account if account recovery is important. Do not enter a real person's email as a username. Existing email accounts can still sign in using their email.
+5. Test sign-up, sign-in, sign-out, and recovery behavior before inviting real users.
 
 ## 3. Keep keys safe
 The browser integration may use only the Supabase **Project URL** and the **anon/publishable key**. These are designed for client use when Row Level Security is correctly configured.
