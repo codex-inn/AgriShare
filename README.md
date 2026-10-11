@@ -1,38 +1,47 @@
 # AgriShare — Shared Machinery, Stronger Farms
 
-A mobile-first agricultural machinery discovery and group-booking prototype for local farming communities. The visual language follows the clean, green, institutional feel of the user's previous GreenFarm and TNAU RAWE projects.
+AgriShare is a mobile-first agricultural machinery discovery and group-booking web app for local farming communities.
 
-**Live site:** https://codex-inn.github.io/AgriShare/  
-**Repository:** https://github.com/codex-inn/AgriShare
+- **Live site:** https://codex-inn.github.io/AgriShare/
+- **Repository:** https://github.com/codex-inn/AgriShare
+- **Backend:** Supabase project `xsrrpjkvlodcvlqawrui`
+- **Hosting:** GitHub Pages from `main` via `.github/workflows/pages.yml`
 
-## Current features
-- Responsive college-themed landing page for Tamil Nadu Agricultural University, AC&RI Vazhavachanur context.
-- Search and filter sample equipment by name, category and rate.
-- Booking request submission with field area, preferred date, and explicit contact-sharing consent.
-- Group booking creation, acreage progress and join flow.
-- Authenticated equipment listing form.
-- Mobile navigation, modal forms, accessible labels and keyboard dismissal.
-- Supabase client configured with the supplied public publishable key.
-- Username + password sign-in and account creation (email address is not requested in the interface).
-- Server-side username account creation through a Supabase Edge Function, with confirmed accounts and signup rate limiting (requires one-time Supabase setup).
-- Shared equipment listing reads and authenticated listing creation.
-- Shared booking requests and group creation/join flows.
-- Aggregate group acreage RPC that avoids returning individual membership details.
-- PWA manifest and service-worker shell cache.
+## Current app features
+
+- Responsive landing page, mobile navigation, equipment search, category and rate filters.
+- Username + password sign-in through Supabase Auth, with account creation via the `username-signup` Edge Function.
+- Live equipment listings from Supabase and authenticated listing creation.
+- Booking requests with date, acreage, field location and explicit consent to share contact details with the relevant owner.
+- Owner accept/decline and farmer cancellation through database RPCs.
+- Group booking creation and joining, with public aggregate acreage progress.
+- PWA manifest and service-worker shell caching.
+
+## Data integrity
+
+The marketplace now starts with empty lists and only displays equipment and groups loaded from Supabase. If the cloud read fails, those lists are cleared rather than showing cached demo offers. This prevents farmers from mistaking sample machinery for real, available equipment.
+
+The production tables were checked on 2026-10-12 and contained zero equipment, group bookings, group members and booking requests. The site will remain empty until real users publish listings or create groups. No fabricated production records were added.
+
+## Backend security and limits
+
+The production project has row-level security enabled on the core tables. Booking status transitions and group joining use database functions; group joining calls a private transactional core that checks the authenticated user, group status and capacity while locking the group row. Public group progress is aggregated without exposing individual member records. The `username-signup` Edge Function is active.
+
+This project is **not certified for commercial production**. Before real-world transactions, run end-to-end tests with two real, consenting accounts and review provider verification/moderation, privacy and terms pages, abuse reporting, support, backups and dispute handling. The database `verified` flag alone is not proof of provider identity. Payments are not implemented.
+
+## Supabase files
+
+- `supabase/schema.sql` is a **starter schema for a new development project**, not a replayable production migration and not a complete description of the deployed database.
+- `supabase/SETUP.md` describes the connection and setup precautions.
+- `supabase/functions/username-signup/index.ts` contains the signup function source.
+- Production database changes should remain versioned in Supabase migrations.
+
+**Do not run the starter schema over the existing production project as a reset.** It contains baseline policies and can diverge from the hardened production migrations.
+
+## Key safety
+
+Only the Supabase project URL and publishable/anon key belong in browser code. Never commit a service-role/secret key, database password or private connection string. Do not expose farmer phone numbers in public equipment listings.
 
 ## Deployment
-GitHub Pages deploy workflow: `.github/workflows/pages.yml`. Check its status in the repository's Actions tab.
 
-## Current status and limitations
-The frontend uses usernames as the visible identity and maps each username to an internal non-routable Supabase Auth identity. Account creation is handled by `supabase/functions/username-signup` so confirmation emails are not sent. This function must be deployed to the linked Supabase project and `supabase/username-auth.sql` must be applied before signup works. Supabase Auth still manages passwords and JWT sessions; passwords are never stored in app tables. Registration, booking writes, group writes, and listing creation still require real account tests. Any seed cards shown before cloud data loads are illustrative, not verified offers. The app is not yet ready for production transactions: group capacity/overbooking needs a server-side transactional guard; there is no full owner/farmer booking-management dashboard, payment processing, verified-provider workflow, or legal/privacy page.
-
-## Supabase backend preparation
-- Starter database schema and row-level security policies: `supabase/schema.sql`
-- Step-by-step setup and key-safety notes: `supabase/SETUP.md`
-
-The schema is a foundation, not a production security certification. The website frontend is configured for Supabase. The current reported connection status is a useful smoke test, not proof that every authenticated write and role-specific policy works. Test with two accounts and confirm records in Supabase Table Editor. Before public launch, implement server-side booking status/capacity validation, storage rules, contact consent, spam protection, provider verification, and privacy/legal pages.
-
-**Key safety:** browser code may use the Supabase Project URL and anon/publishable key only. Never commit or share a service-role/secret key, database password, or private connection string.
-
-## Project credits
-Institution context: Tamil Nadu Agricultural University, Agricultural College & Research Institute, Vazhavachanur, Tiruvannamalai. Student/team names remain placeholders until confirmed.
+A push to `main` triggers the GitHub Pages workflow. Check the repository's Actions tab for the latest Pages deployment before assuming a change is live.
