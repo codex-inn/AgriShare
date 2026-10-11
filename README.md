@@ -13,7 +13,7 @@ A mobile-first agricultural machinery discovery and group-booking prototype for 
 - Authenticated equipment listing form.
 - Mobile navigation, modal forms, accessible labels and keyboard dismissal.
 - Supabase client configured with the supplied public publishable key.
-- Email sign-up/sign-in and sign-out.
+- Username + password sign-up/sign-in and sign-out (email address is not requested in the interface).
 - Shared equipment listing reads and authenticated listing creation.
 - Shared booking requests and group creation/join flows.
 - Aggregate group acreage RPC that avoids returning individual membership details.
@@ -23,7 +23,7 @@ A mobile-first agricultural machinery discovery and group-booking prototype for 
 GitHub Pages deploy workflow: `.github/workflows/pages.yml`. Check its status in the repository's Actions tab.
 
 ## Current status and limitations
-The Supabase client and email authentication are configured, and the website reports whether core listing/group reads succeed. Registration, booking writes, group writes, and listing creation still require real account tests. Any seed cards shown before cloud data loads are illustrative, not verified offers. The app is not yet ready for production transactions: group capacity/overbooking needs a server-side transactional guard; there is no full owner/farmer booking-management dashboard, payment processing, verified-provider workflow, or legal/privacy page.
+The Supabase client and username-only interface are configured, and the website reports whether core listing/group reads succeed. The current prototype maps usernames to non-routable Supabase Auth identities because Supabase Auth does not natively support username sign-in. This is not a substitute for a dedicated username-auth backend. Registration, booking writes, group writes, and listing creation still require real account tests. Any seed cards shown before cloud data loads are illustrative, not verified offers. The app is not yet ready for production transactions: group capacity/overbooking needs a server-side transactional guard; there is no full owner/farmer booking-management dashboard, payment processing, verified-provider workflow, or legal/privacy page.
 
 ## Supabase backend preparation
 - Starter database schema and row-level security policies: `supabase/schema.sql`
