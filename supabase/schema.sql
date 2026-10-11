@@ -193,6 +193,8 @@ set search_path = public, pg_temp
 as $$
   select gm.group_id, coalesce(sum(gm.acres), 0)::numeric as joined_acres
   from public.group_members gm
+  join public.group_bookings g on g.id = gm.group_id
+  where g.status = 'open'
   group by gm.group_id;
 $$;
 revoke all on function public.get_group_progress() from public;
