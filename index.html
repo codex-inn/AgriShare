@@ -116,13 +116,28 @@ async function submitAuth(signUp){
  submitBtn.disabled=true;createBtn.disabled=true;
  const originalText=submitBtn.textContent;submitBtn.textContent=signUp?'Creating…':'Signing in…';
  try{
-  const result=signUp
-   ? await supabaseClient.auth.signUp({email,password,options:{data:{username}}})
-   : await supabaseClient.auth.signInWithPassword({email,password});
+  let result;
+  if(signUp){
+   // The Edge Function creates a confirmed Supabase Auth user server-side.
+   // This avoids Supabase's email confirmation delivery/rate-limit path.
+   const {data:created,error:createError}=await supabaseClient.functions.invoke('username-signup',{body:{username,password}});
+   if(createError){
+    console.error('[AgriShare username signup]',createError);
+    toast('Account creation service is not ready. The username-signup Edge Function must be deployed and configured in Supabase. Please do not keep retrying.');
+    return;
+   }
+   if(created?.error){
+    toast(created.error);
+    return;
+   }
+   result=await supabaseClient.auth.signInWithPassword({email,password});
+  }else{
+   result=await supabaseClient.auth.signInWithPassword({email,password});
+  }
   if(result.error){
    const msg=String(result.error.message||'');
    if(/rate.?limit|email rate limit/i.test(msg)){
-    toast('Supabase email rate limit reached. Stop retrying and wait for the limit to reset. Confirm email must be OFF in Supabase before creating username accounts.');
+    toast('Sign-in was rate limited by Supabase. Wait before retrying. New account creation uses the username-signup server function and should not send confirmation emails.');
    }else if(/email not confirmed/i.test(msg)){
     toast('This account still requires email confirmation. Username accounts need Confirm email disabled in Supabase.');
    }else if(/invalid login credentials/i.test(msg)){
