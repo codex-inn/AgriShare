@@ -45,9 +45,10 @@ Deno.serve(async (req: Request) => {
     return response(req, 400, { error: "Password must be between 8 and 128 characters." });
   }
 
-  // Do not trust client-controlled x-forwarded-for values for rate limiting.
-  const forwarded = req.headers.get("cf-connecting-ip") || "unknown";
-  const ipHash = await hashIp(forwarded);
+  // Only use the platform-provided Cloudflare client IP when present.
+  // Avoid a shared "unknown" bucket that could rate-limit every visitor together.
+  const trustedIp = req.headers.get("cf-connecting-ip");
+  const ipHash = await hashIp(trustedIp || ("no-trusted-ip:" + username));
   const admin = createClient(supabaseUrl, serviceKey, {
     auth: { autoRefreshToken: false, persistSession: false },
   });
