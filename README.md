@@ -8,9 +8,9 @@ A mobile-first agricultural machinery discovery and group-booking prototype for 
 ## Current features
 - Responsive college-themed landing page for Tamil Nadu Agricultural University, AC&RI Vazhavachanur context.
 - Search and filter sample equipment by name, category and rate.
-- Demo booking request form with field area and preferred date.
+- Booking request submission with field area, preferred date, and explicit contact-sharing consent.
 - Group booking creation, acreage progress and join flow.
-- Demo equipment listing form.
+- Authenticated equipment listing form.
 - Mobile navigation, modal forms, accessible labels and keyboard dismissal.
 - Supabase client configured with the supplied public publishable key.
 - Email sign-up/sign-in and sign-out.
@@ -22,14 +22,14 @@ A mobile-first agricultural machinery discovery and group-booking prototype for 
 ## Deployment
 GitHub Pages deploy workflow: `.github/workflows/pages.yml`. Check its status in the repository's Actions tab.
 
-## Important demo limitations
-The frontend code is configured, but the database is not confirmed active until `supabase/schema.sql` has been run in the linked Supabase project. Until the top strip says “Shared database connected,” do not assume forms are live. Any sample listings are illustrative, not verified offers. Group capacity/overbooking still needs a server-side transactional guard before real transactions.
+## Current status and limitations
+The Supabase client and email authentication are configured, and the website reports whether core listing/group reads succeed. Registration, booking writes, group writes, and listing creation still require real account tests. Any seed cards shown before cloud data loads are illustrative, not verified offers. The app is not yet ready for production transactions: group capacity/overbooking needs a server-side transactional guard; there is no full owner/farmer booking-management dashboard, payment processing, verified-provider workflow, or legal/privacy page.
 
 ## Supabase backend preparation
 - Starter database schema and row-level security policies: `supabase/schema.sql`
 - Step-by-step setup and key-safety notes: `supabase/SETUP.md`
 
-The schema is a foundation, not a production security certification. The website frontend is configured for Supabase; verify the live connection by applying the schema and testing with two accounts. Before public launch, implement server-side booking status/capacity validation, storage rules, contact consent, spam protection, provider verification, and privacy/legal pages.
+The schema is a foundation, not a production security certification. The website frontend is configured for Supabase. The current reported connection status is a useful smoke test, not proof that every authenticated write and role-specific policy works. Test with two accounts and confirm records in Supabase Table Editor. Before public launch, implement server-side booking status/capacity validation, storage rules, contact consent, spam protection, provider verification, and privacy/legal pages.
 
 **Key safety:** browser code may use the Supabase Project URL and anon/publishable key only. Never commit or share a service-role/secret key, database password, or private connection string.
 
