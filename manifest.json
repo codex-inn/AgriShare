@@ -1,0 +1,13 @@
+{
+  "name": "AgriShare — Shared Machinery, Stronger Farms",
+  "short_name": "AgriShare",
+  "description": "Discover and coordinate agricultural machinery sharing in your local farming community.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f7f8f2",
+  "theme_color": "#14532d",
+  "icons": [
+    { "src": "agri-icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}
