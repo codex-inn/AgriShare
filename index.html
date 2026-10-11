@@ -103,16 +103,55 @@ async function loadCloudData(){
 }
 async function signOutUser(){const {error}=await supabaseClient.auth.signOut();if(error){showCloudError(error.message);return}currentUser=null;setAuthButton();toast('Signed out.');}
 async function submitAuth(signUp){
- if(!supabaseClient){showCloudError('Supabase client did not load. Check your internet connection.');return}
- if(!document.getElementById('authForm').reportValidity())return;
+ const form=document.getElementById('authForm');
+ const submitBtn=form.querySelector('button[type="submit"]');
+ const createBtn=document.getElementById('signUpButton');
+ if(!supabaseClient){toast('Authentication service did not load. Refresh the page and try again.');return}
+ if(!form.reportValidity())return;
  const identifier=document.getElementById('authEmail').value.trim(),password=document.getElementById('authPassword').value;
  let email=identifier.toLowerCase(),username=null;
- if(!identifier.includes('@')){username=identifier.toLowerCase();if(!/^[a-z0-9._-]{3,24}$/.test(username)){toast('Username must be 3–24 characters and use only letters, numbers, dots, underscores or hyphens.');return}email=username+'@agrishare.local';}
- if(identifier.includes('@')&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier)){toast('Enter a valid email address or a username.');return}
- const result=signUp?await supabaseClient.auth.signUp({email,password,options:{data:username?{username}: {}}}):await supabaseClient.auth.signInWithPassword({email,password});
- if(result.error){showCloudError(result.error.message);return}
- if(signUp&&!result.data.session){closeModal('authModal');toast('Supabase email confirmation is still enabled. Turn it off before creating username accounts; this account cannot receive a confirmation email.');return}
- currentUser=result.data.user||null;setAuthButton();closeModal('authModal');toast(signUp?'Account created and signed in.':'Signed in successfully.');await loadCloudData();
+ if(!identifier.includes('@')){
+  username=identifier.toLowerCase();
+  if(!/^[a-z0-9._-]{3,24}$/.test(username)){toast('Username must be 3–24 characters: letters, numbers, dots, underscores or hyphens.');return}
+  email=username+'@agrishare.local';
+ }else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(identifier)){toast('Enter a valid email address or a username.');return}
+ submitBtn.disabled=true;createBtn.disabled=true;
+ const originalText=submitBtn.textContent;submitBtn.textContent=signUp?'Creating…':'Signing in…';
+ try{
+  const result=signUp
+   ? await supabaseClient.auth.signUp({email,password,options:{data:username?{username}:{}}})
+   : await supabaseClient.auth.signInWithPassword({email,password});
+  if(result.error){
+   const msg=String(result.error.message||'');
+   if(/rate.?limit|email rate limit/i.test(msg)){
+    toast('Supabase email rate limit reached. Wait for the limit to reset, then disable Confirm email in Supabase Email provider before creating username accounts.');
+   }else if(/email not confirmed/i.test(msg)){
+    toast('This account still requires email confirmation. Username accounts need Confirm email disabled in Supabase.');
+   }else if(/invalid login credentials/i.test(msg)){
+    toast('Username or password is incorrect. For username accounts, use the exact username and ensure the account was created after email confirmation was disabled.');
+   }else if(/already registered|already exists/i.test(msg)){
+    toast('That username/account already exists. Sign in instead, or choose another username.');
+   }else{
+    toast((signUp?'Could not create account: ':'Could not sign in: ')+msg);
+   }
+   console.error('[AgriShare auth]',msg);
+   return;
+  }
+  if(signUp&&!result.data.session){
+   toast('Account was not signed in because email confirmation is enabled. In Supabase → Authentication → Providers → Email, turn off Confirm email, then try a new username.');
+   return;
+  }
+  currentUser=result.data.user||null;
+  setAuthButton();
+  closeModal('authModal');
+  toast(signUp?'Account created and signed in.':'Signed in successfully.');
+  await loadCloudData();
+ }catch(err){
+  console.error('[AgriShare auth]',err);
+  toast('Authentication request failed. Check your connection and Supabase settings, then try again.');
+ }finally{
+  submitBtn.disabled=false;createBtn.disabled=false;submitBtn.textContent=originalText;
+ }
 }
 function requireLogin(){if(currentUser)return true;toast('Please sign in first to use live bookings.');openModal('authModal');return false;}
 const money=n=>'₹'+Number(n).toLocaleString('en-IN');
