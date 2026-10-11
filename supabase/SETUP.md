@@ -1,12 +1,12 @@
 # AgriShare — Supabase setup guide
 
-This guide prepares the database foundation. **The public GitHub Pages site is still a local-storage prototype until the front-end integration is implemented and tested.** Running SQL alone does not connect the website.
+The AgriShare frontend now contains the Supabase client, email sign-in/sign-up, live equipment listing reads, equipment listing creation, booking request creation, group creation, and group joining. **These features become live only after the SQL schema has been applied and the connection is verified.**
 
 ## 1. Create a Supabase project
 1. Create a project in Supabase and save the database password privately.
 2. Open **SQL Editor → New query**.
 3. Copy all of `supabase/schema.sql`, run it, and check for errors.
-4. Open **Table Editor** and confirm these tables exist: `equipment`, `group_bookings`, `group_members`, and `booking_requests`.
+4. Open **Table Editor** and confirm these tables exist: `equipment`, `group_bookings`, `group_members`, and `booking_requests`. The SQL also creates the `get_group_progress()` aggregate function used to show group acreage without exposing individual member records.
 
 ## 2. Configure authentication
 1. In **Authentication → URL Configuration**, add your deployed site URL: `https://codex-inn.github.io/AgriShare`.
@@ -21,10 +21,10 @@ The browser integration may use only the Supabase **Project URL** and the **anon
 - The schema deliberately omits a public owner phone field. Design a consent-based contact flow rather than exposing phone numbers in public listings.
 
 ## 4. Understand current limitations
-- The site currently saves demo records in each browser's `localStorage`; another user/device will not see them.
-- Supabase is not yet connected to the website. Forms are not yet creating shared database records.
+- If the page reports “Database setup required,” run the current `supabase/schema.sql` in the SQL Editor, then refresh the website. The status in the top strip should read “Shared database connected.”
+- Group capacity is checked in the UI but is not transaction-safe; add a database transaction/RPC before real-world bookings.
 - This schema is a starter. RLS limits who can read or change rows, but it is not a complete production security review. In particular, validate allowed booking status transitions server-side and add capacity/overbooking protection before real transactions.
 - Do not rely on the `verified` field as proof of identity; verification must be an actual reviewed process.
 
 ## 5. Next integration milestone
-After the database is created, provide the **Project URL** and **anon/publishable key only** if you want the website integration implemented. Do not share the service-role key. The next code change should add the Supabase client, authentication UI, and database-backed listing/group/booking flows, then test each flow with two separate accounts.
+After applying the schema, test sign-up, email confirmation, sign-in, listing creation, booking requests, and group joining with two separate accounts. The configured browser key is a public publishable key; keep Row Level Security enabled and never expose service-role or secret keys.
