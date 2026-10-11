@@ -22,7 +22,7 @@ Deno.serve(async (req: Request) => {
   if (req.method !== "POST") return response(405, { error: "Method not allowed." });
 
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  const serviceKey = Deno.env.get("SERVICE_ROLE_KEY");
   if (!supabaseUrl || !serviceKey) {
     console.error("Username signup function is missing its server-side Supabase configuration.");
     return response(500, { error: "Account creation is not configured yet. Please contact the project administrator." });
