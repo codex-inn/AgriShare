@@ -58,9 +58,17 @@ alter table public.group_bookings enable row level security;
 alter table public.group_members enable row level security;
 alter table public.booking_requests enable row level security;
 
--- Remove the legacy public phone field if an earlier starter schema created it.
--- Owner contact details must be shared only through a deliberate consent-based flow.
-alter table public.equipment drop column if exists contact_phone;
+-- Foreign-key indexes help joins, deletes and owner/member lookups as data grows.
+create index if not exists equipment_owner_id_idx on public.equipment(owner_id);
+create index if not exists group_bookings_organizer_id_idx on public.group_bookings(organizer_id);
+create index if not exists group_members_farmer_id_idx on public.group_members(farmer_id);
+create index if not exists booking_requests_farmer_id_idx on public.booking_requests(farmer_id);
+create index if not exists booking_requests_equipment_id_idx on public.booking_requests(equipment_id);
+
+-- Do not automatically drop legacy contact columns here: dropping a column can
+-- permanently delete existing owner contact data. If a legacy contact_phone column
+-- exists, migrate its values into a reviewed private/consent-based contact flow first.
+
 
 -- Drop named policies first so this script can be re-run in development.
 drop policy if exists "Equipment listings are readable" on public.equipment;
