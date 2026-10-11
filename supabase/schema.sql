@@ -224,3 +224,94 @@ as $$
 $$;
 revoke all on function public.get_group_progress() from public;
 grant execute on function public.get_group_progress() to anon, authenticated;
+
+
+-- Secure RPC workflows used by the live AgriShare dashboard.
+-- These functions validate ownership and state transitions on the server.
+create or replace function public.join_group(p_group_id uuid, p_acres numeric)
+returns table(group_id uuid, joined_acres numeric, group_status text)
+language plpgsql security definer
+set search_path = public, pg_temp
+as $$
+declare
+  v_user uuid := auth.uid();
+  v_group public.group_bookings%rowtype;
+  v_joined numeric;
+begin
+  if v_user is null then raise exception 'Sign in to join a group'; end if;
+  if p_acres is null or p_acres <= 0 or p_acres > 10000 then raise exception 'Enter a valid acreage'; end if;
+  select * into v_group from public.group_bookings where id = p_group_id for update;
+  if not found then raise exception 'Group not found'; end if;
+  if v_group.status <> 'open' then raise exception 'This group is no longer open'; end if;
+  if v_group.organizer_id = v_user then raise exception 'The organizer cannot join their own group as a member'; end if;
+  select coalesce(sum(acres),0) into v_joined from public.group_members where group_id = p_group_id;
+  if exists(select 1 from public.group_members where group_id=p_group_id and farmer_id=v_user) then raise exception 'You have already joined this group'; end if;
+  if p_acres > v_group.target_acres-v_joined then raise exception 'Requested acreage exceeds remaining target'; end if;
+  insert into public.group_members(group_id,farmer_id,acres) values(p_group_id,v_user,p_acres);
+  select coalesce(sum(acres),0) into v_joined from public.group_members where group_id=p_group_id;
+  if v_joined >= v_group.target_acres then update public.group_bookings set status='full' where id=p_group_id and status='open'; end if;
+  return query select p_group_id,v_joined,case when v_joined>=v_group.target_acres then 'full'::text else 'open'::text end;
+end;
+$$;
+
+create or replace function public.respond_to_booking_request(p_request_id uuid, p_decision text)
+returns table(request_id uuid, request_status text)
+language plpgsql security definer
+set search_path = public, pg_temp
+as $$
+declare v_user uuid := auth.uid(); v_status text;
+begin
+  if v_user is null then raise exception 'Sign in required'; end if;
+  if p_decision not in ('accepted','declined') then raise exception 'Decision must be accepted or declined'; end if;
+  update public.booking_requests br set status=p_decision
+  from public.equipment e
+  where br.id=p_request_id and e.id=br.equipment_id and e.owner_id=v_user and br.status='pending'
+  returning br.status into v_status;
+  if v_status is null then raise exception 'Request not found, not pending, or you do not own this equipment'; end if;
+  return query select p_request_id,v_status;
+end;
+$$;
+
+create or replace function public.cancel_booking_request(p_request_id uuid)
+returns boolean
+language plpgsql security definer
+set search_path = public, pg_temp
+as $$
+declare v_user uuid := auth.uid();
+begin
+  if v_user is null then raise exception 'Sign in required'; end if;
+  update public.booking_requests set status='cancelled'
+  where id=p_request_id and farmer_id=v_user and status='pending';
+  if not found then raise exception 'Request not found or can no longer be cancelled'; end if;
+  return true;
+end;
+$$;
+
+create or replace function public.set_group_status(p_group_id uuid, p_status text)
+returns text
+language plpgsql security definer
+set search_path = public, pg_temp
+as $$
+declare v_user uuid := auth.uid(); v_current text;
+begin
+  if v_user is null then raise exception 'Sign in required'; end if;
+  if p_status not in ('scheduled','completed','cancelled') then raise exception 'Unsupported group status transition'; end if;
+  select status into v_current from public.group_bookings where id=p_group_id and organizer_id=v_user for update;
+  if not found then raise exception 'Group not found or you are not the organizer'; end if;
+  if v_current not in ('open','full','scheduled') then raise exception 'This group cannot be changed from its current status'; end if;
+  if v_current='scheduled' and p_status='scheduled' then raise exception 'Group is already scheduled'; end if;
+  if v_current='scheduled' and p_status='completed' then update public.group_bookings set status=p_status where id=p_group_id;
+  elsif p_status in ('scheduled','cancelled') then update public.group_bookings set status=p_status where id=p_group_id;
+  else raise exception 'A group must be scheduled before it can be completed'; end if;
+  return p_status;
+end;
+$$;
+
+revoke all on function public.join_group(uuid,numeric) from public, anon;
+grant execute on function public.join_group(uuid,numeric) to authenticated;
+revoke all on function public.respond_to_booking_request(uuid,text) from public, anon;
+grant execute on function public.respond_to_booking_request(uuid,text) to authenticated;
+revoke all on function public.cancel_booking_request(uuid) from public, anon;
+grant execute on function public.cancel_booking_request(uuid) to authenticated;
+revoke all on function public.set_group_status(uuid,text) from public, anon;
+grant execute on function public.set_group_status(uuid,text) to authenticated;
