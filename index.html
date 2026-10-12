@@ -266,6 +266,33 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 
 
 .app-equipment-placeholder{width:104px;min-height:108px;display:grid;place-items:center;background:#eef5e9;color:#3f6e45;border-radius:13px;font-size:32px;flex-shrink:0}
+
+/* Responsive desktop/tablet/mobile app layout and readable controls */
+.app-device{max-width:1120px;border-radius:26px}
+.app-page{padding:24px clamp(18px,3vw,36px) 30px}
+.app-page.active{min-height:calc(100vh - 220px)}
+.app-bottom-nav{max-width:1120px;left:50%;right:auto;width:calc(100% - 24px);transform:translateX(-50%);border:1px solid #dce9df;border-bottom:0;border-radius:20px 20px 0 0}
+.app-equipment-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.app-equipment-card{height:100%;align-content:start;grid-template-columns:112px minmax(0,1fr);padding:10px}
+.app-equipment-card h3{font-size:14px}.app-equipment-card p{font-size:11px}.app-equipment-card .app-btn{font-size:11px}
+.app-empty{font-size:13px}.app-empty strong{font-size:15px}.app-search input{font-size:14px}.app-location{font-size:13px}
+.app-section-head h2{font-size:17px}.app-group-card h3{font-size:14px}.app-group-top p{font-size:11px}
+.app-group-bottom .app-btn{font-size:12px}.app-info-card{font-size:13px;line-height:1.65}.app-info-card h3{font-size:16px}
+.app-map-label{max-width:calc(100% - 20px);white-space:normal}.app-profile-hero{padding:18px}.app-profile-hero strong{font-size:16px}.app-profile-hero small{font-size:12px}.app-menu button{font-size:14px;min-height:52px}
+@media(min-width:760px){
+ #appRoot{padding:24px 18px 112px}.app-device{min-height:calc(100vh - 48px)}
+ .app-page.active#appPage-home{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(280px,.8fr);gap:18px 26px;align-content:start}
+ #appPage-home>.app-greeting,#appPage-home>.app-search,#appPage-home>.app-hero-card,#appPage-home>.app-category-row{grid-column:1/-1}
+ #appPage-home>.app-hero-card{height:230px}
+ #appPage-home>.app-section-head:nth-of-type(1),#appPage-home>#appPopularGrid{grid-column:1}
+ #appPage-home>.app-section-head:nth-of-type(2),#appPage-home>.app-feature-row{grid-column:2}
+ #appPage-home>.app-section-head:nth-of-type(3),#appPage-home>.app-mini-grid:last-child{grid-column:1/-1}
+ .app-mini-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.app-category-row{gap:12px}.app-category{min-height:88px}
+ .app-greeting h1{font-size:30px}.app-hero-card{height:220px}.app-hero-content{left:26px;top:22px}
+ .app-hero-content h2{font-size:28px}.app-hero-content p{font-size:13px}.app-btn{font-size:12px}.app-map{height:440px}
+}
+@media(max-width:759px){#appRoot{padding:0 0 84px}.app-device{max-width:600px;border-radius:0;border:0;min-height:100vh;box-shadow:none}.app-bottom-nav{width:100%;border-radius:18px 18px 0 0}.app-equipment-list{grid-template-columns:1fr}.app-page{padding:17px 16px 25px}}
+@media(max-width:420px){.app-page{padding:15px 14px 24px}.app-equipment-card{grid-template-columns:91px minmax(0,1fr)}.app-equipment-card img,.app-equipment-card .app-equipment-placeholder{width:91px;min-height:101px}}
 </style>
 </head>
 <body>
@@ -286,7 +313,7 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
    <button class="app-icon-btn" aria-label="Notifications" onclick="showAppScreen('messages')">♧</button>
   </header>
   <section class="app-page active" id="appPage-home">
-   <div class="app-greeting"><div><small>Good morning,</small><h1><span id="appGreetingName">Farmer</span> 👋</h1><div class="app-location">📍 Vazhavachanur, Tamil Nadu</div></div><button class="app-icon-btn" aria-label="Notifications" onclick="showAppScreen('messages')">♧</button></div>
+   <div class="app-greeting"><div><small>Good morning,</small><h1><span id="appGreetingName">Farmer</span> 👋</h1><div class="app-location" id="appHomeLocation">📍 Location not set · Search equipment by village</div></div><button class="app-icon-btn" aria-label="Notifications" onclick="showAppScreen('messages')">♧</button></div>
    <div class="app-search"><span>⌕</span><input id="appHomeSearch" placeholder="Search equipment, location, or farmer..." oninput="appSearch(this.value)"><button onclick="showAppScreen('explore')">☷</button></div>
    <div class="app-hero-card"><img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=1000&q=85" alt="Tractor working on a farm" onerror="this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80'"><div class="app-hero-content"><span class="app-pill">FARM SMARTER 🌿</span><h2>Farm Machinery<br>for Everyone</h2><p>Rent · Share · Grow Together</p><button class="app-btn light" onclick="showAppScreen('explore')">Book now →</button></div></div>
    <div class="app-category-row">
@@ -313,9 +340,10 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
    <div class="app-feature-row"><div class="app-feature-icon">👥</div><div style="flex:1"><strong>Create a group booking</strong><small>Invite farmers and share equipment costs</small></div></div><button class="app-btn full" style="margin-top:11px" onclick="openModal('groupModal')">＋ Create group</button>
   </section>
   <section class="app-page" id="appPage-nearby">
-   <div class="app-greeting"><div><h1>Nearby equipment</h1><div class="app-location">Explore machinery around Tamil Nadu</div></div><button class="app-icon-btn" onclick="showAppScreen('explore')">☷</button></div>
-   <div class="app-map"><iframe title="OpenStreetMap around Vazhavachanur and Tiruvannamalai" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=78.55%2C12.15%2C79.05%2C12.65&layer=mapnik"></iframe><span class="app-map-label">📍 Vazhavachanur area</span></div>
-   <div class="app-map-card"><img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=300&q=80" alt="Agricultural machinery"><div><strong>Equipment near your village</strong><small>Map shows the region, not live equipment positions. Contact owners to confirm location.</small><button class="app-btn soft" onclick="showAppScreen('explore')">Browse listings</button></div></div>
+   <div class="app-greeting"><div><h1>Nearby equipment</h1><div class="app-location">Look up a real village or town</div></div><button class="app-icon-btn" onclick="showAppScreen('explore')">☷</button></div>
+   <form id="nearbyPlaceForm" class="app-search"><span>⌖</span><input id="nearbyPlace" maxlength="100" required placeholder="Enter village, town or district"><button type="submit">Find</button></form>
+   <div class="app-map"><iframe id="nearbyMapFrame" title="OpenStreetMap location search" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=76.0%2C8.0%2C81.0%2C14.0&layer=mapnik"></iframe><span class="app-map-label" id="nearbyMapLabel">📍 Search a location to center the map</span></div>
+   <div class="app-info-card"><h3>Live listing results</h3><p>The map shows the selected region only. Equipment cards below come from actual owner listings; exact machine coordinates are not collected or shown.</p><button class="app-btn soft full" onclick="showAppScreen('explore')">Browse real listings</button></div>
   </section>
   <section class="app-page" id="appPage-bookings">
    <div class="app-greeting"><div><h1>My bookings</h1><div class="app-location">Manage your booking requests</div></div><button class="app-icon-btn" onclick="openModal('dashboardModal');loadDashboard()">↻</button></div>
@@ -437,7 +465,7 @@ async function loadCloudData(){
   if(groupsResult.error)throw groupsResult.error;
   if(progressResult.error)console.warn('Group progress RPC is not available yet:',progressResult.error.message);
   const progress=Object.fromEntries((progressResult.data||[]).map(x=>[x.group_id,x]));
-  machines=(equipmentResult.data||[]).map(x=>({id:x.id,name:x.name,type:x.category,rate:Number(x.rate),unit:x.rate_unit||'acre',village:x.service_area?x.village+' · '+x.service_area:x.village,owner_id:x.owner_id,available:x.available!==false,owner:x.owner_id===currentUser?.id?'Your listing':'Local provider',rating:x.verified?'Verified':'Community listing',status:x.verified?'Verified':'Community listing',image:x.image_url||'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80',description:x.description||'Farm machinery service',verified:x.verified}));
+  machines=(equipmentResult.data||[]).map(x=>({id:x.id,name:x.name,type:x.category,rate:Number(x.rate),unit:x.rate_unit||'acre',village:x.service_area?x.village+' · '+x.service_area:x.village,owner_id:x.owner_id,available:x.available!==false,owner:x.owner_id===currentUser?.id?'Your listing':'Local provider',rating:x.verified?'Owner marked verified':'Not verified',status:x.verified?'Owner marked verified':'Not verified',image:x.image_url||'',description:x.description||'',verified:x.verified}));
   groups=(groupsResult.data||[]).map(x=>({id:x.id,machine:x.equipment_category,village:x.village,date:x.preferred_date,target:Number(x.target_acres),joined:Number(progress[x.id]?.joined_acres||0),rate:Number(x.rate_per_acre),leader:'Farmer organizer',organizer_id:x.organizer_id}));
   cloudReady=true;setConnectionStatus('Shared database connected',true);renderMachines();renderGroups();
  }catch(err){cloudReady=false;machines=[];groups=[];renderMachines();renderGroups();setConnectionStatus('Live listings unavailable',false);showCloudError('Could not load live listings from Supabase: '+(err?.message||'Check database/API settings')+'. Demo listings are hidden so farmers do not mistake examples for real offers.');}
@@ -692,6 +720,14 @@ async function openBookingConversation(bookingId,recipientId){
   document.getElementById('appSendMessageForm').addEventListener('submit',async e=>{e.preventDefault();const field=document.getElementById('appMessageBody'),text=field.value.trim();if(!text)return;const btn=e.submitter;btn.disabled=true;try{const {error}=await supabaseClient.from('booking_messages').insert({booking_request_id:bookingId,sender_id:currentUser.id,recipient_id:other,body:text});if(error)throw error;await openBookingConversation(bookingId,other)}catch(err){toast('Message not sent: '+(err.message||'Please try again.'))}finally{if(btn.isConnected)btn.disabled=false}});
  }catch(err){console.error('[AgriShare conversation]',err);root.innerHTML='<div class="app-empty"><strong>Could not open conversation</strong>'+esc(err.message||'Please try again.')+'</div><button class="app-btn outline" onclick="loadMessageThreads()">Back to conversations</button>'}
 }
+
+
+async function searchNearbyPlace(place){
+ const label=document.getElementById('nearbyMapLabel'),frame=document.getElementById('nearbyMapFrame');if(!label||!frame)return;
+ label.textContent='Looking up '+place+'…';
+ try{const r=await fetch('https://geocoding-api.open-meteo.com/v1/search?name='+encodeURIComponent(place)+'&count=1&language=en&format=json');if(!r.ok)throw new Error('Location service returned HTTP '+r.status);const j=await r.json(),loc=j.results&&j.results[0];if(!loc)throw new Error('No matching location found. Try a nearby town or district.');const lat=Number(loc.latitude),lon=Number(loc.longitude),pad=.16;frame.src='https://www.openstreetmap.org/export/embed.html?bbox='+encodeURIComponent((lon-pad)+','+(lat-pad)+','+(lon+pad)+','+(lat+pad))+'&layer=mapnik&marker='+encodeURIComponent(lat+','+lon);label.textContent='📍 '+loc.name+(loc.admin1?', '+loc.admin1:'')+(loc.country?', '+loc.country:'')+' · regional map, not live machine positions';const home=document.getElementById('appHomeLocation');if(home)home.textContent='📍 '+loc.name+(loc.admin1?', '+loc.admin1:'')+(loc.country?', '+loc.country:'')}catch(e){label.textContent=e.message||'Location lookup failed. Try again.'}
+}
+document.getElementById('nearbyPlaceForm')?.addEventListener('submit',e=>{e.preventDefault();const place=document.getElementById('nearbyPlace').value.trim();if(place)searchNearbyPlace(place)});
 
 document.querySelectorAll('.app-page').forEach(p=>{p.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(a){const target=a.getAttribute('href').slice(1);if(['machines','groups','owners'].includes(target)){e.preventDefault();showAppScreen(target==='machines'?'explore':target==='groups'?'groups':'equipment')}}})});
 const appObserver=new MutationObserver(()=>{syncAppListings();syncAppGroups();syncAppProfile()});
