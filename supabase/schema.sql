@@ -177,9 +177,9 @@ create policy "Equipment owners can read booking requests"
 -- change the owner_id. Column grants also prevent clients setting protected fields.
 revoke all on table public.equipment from anon, authenticated;
 grant select on table public.equipment to anon, authenticated;
-grant insert (owner_id, name, category, description, rate, rate_unit, village, service_area, image_url, available)
+grant insert (owner_id, name, category, description, rate, rate_unit, village, service_area, image_url, available, equipment_role, horsepower, hitch_type, pto_rpm, hydraulic_capacity_lpm, min_tractor_hp, max_tractor_hp, required_pto_rpm, required_hydraulic_lpm, compatibility_notes)
   on table public.equipment to authenticated;
-grant update (name, category, description, rate, rate_unit, village, service_area, image_url, available)
+grant update (name, category, description, rate, rate_unit, village, service_area, image_url, available, equipment_role, horsepower, hitch_type, pto_rpm, hydraulic_capacity_lpm, min_tractor_hp, max_tractor_hp, required_pto_rpm, required_hydraulic_lpm, compatibility_notes)
   on table public.equipment to authenticated;
 grant delete on table public.equipment to authenticated;
 
