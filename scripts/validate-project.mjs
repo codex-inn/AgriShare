@@ -77,7 +77,10 @@ for (const operation of ["insert", "update"]) {
 }
 
 const workflowSql = readFileSync(new URL("../supabase/production-readiness-workflows.sql", import.meta.url), "utf8");
+const indexSql = readFileSync(new URL("../supabase/production-readiness-indexes.sql", import.meta.url), "utf8");
 assert.match(workflowSql, /booking_requests_active_equipment_date_uidx/, "Active equipment booking collisions must be prevented in Postgres");
+assert.match(indexSql, /booking_reviews_reviewer_created_idx/, "Review participant lookups must be indexed");
+assert.match(indexSql, /support_requests_equipment_id_idx/, "Support listing lookups and the foreign key must be indexed");
 assert.match(workflowSql, /support_requests/, "Private support queue migration must exist");
 assert.match(workflowSql, /booking_reviews/, "Participant-only review workflow must exist");
 assert.match(workflowSql, /grant insert \(requester_id, request_type, equipment_id, details\)[\s\S]*?on public\.support_requests to authenticated/i, "Support requests must grant authenticated insert only");
