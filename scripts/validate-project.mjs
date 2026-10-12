@@ -20,6 +20,15 @@ assert.match(html, /geocoding-api\.open-meteo\.com/, "Live location lookup shoul
 assert.match(html, /api\.open-meteo\.com\/v1\/forecast/, "Live weather API should be wired");
 assert.match(html, /booking_messages/, "Private booking message integration should exist");
 assert.match(html, /owner_id/, "Equipment owner IDs must be retained for owner actions");
+assert.match(html, /async function changeGroupStatus\(/, "Group status handler must be async");
+assert.match(html, /async function loadAppBookings\(/, "Booking history must load asynchronously");
+assert.match(html, /async function openBookingConversation\(/, "Booking messages must load asynchronously");
+assert.match(html, /function editEquipment\(/, "Owners must be able to edit their own equipment");
+assert.match(html, /function deleteEquipment\(/, "Owners must be able to delete their own equipment");
+assert.match(html, /async function loadAppNotifications\(/, "Profile must load real notifications");
+assert.match(html, /id="cropAnalyzeForm"/, "CropSight screen must expose a real-image analysis form");
+assert.match(html, /No scan performed/, "Crop analysis must state clearly when no prediction has been made");
+
 assert.doesNotMatch(html, /image:x\.image_url\|\|['"]https:\/\/images\.unsplash\.com/, "Equipment data must not use generic photo URLs as listing images");
 assert.doesNotMatch(html, /Verified provider|Identity verified/, "Do not claim provider identity verification from the listing flag alone");
 
