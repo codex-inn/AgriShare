@@ -414,6 +414,7 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
   <section class="app-page" id="appPage-profile">
    <div class="app-greeting"><div><h1>My profile</h1><div class="app-location">Your AgriShare account</div></div><button class="app-icon-btn" onclick="openModal('authModal')">⚙</button></div>
    <div class="app-profile-hero"><div class="app-profile-photo">👨‍🌾</div><div><strong id="appProfileName">Farmer account</strong><small id="appProfileStatus">Sign in to view your account</small><small>📍 Tamil Nadu, India</small></div></div>
+   <div id="appNotifications" class="app-info-card" style="margin-top:12px"><h3>🔔 Notifications</h3><p>Sign in to see booking and group updates.</p></div>
    <div class="app-menu"><button onclick="showAppScreen('bookings')"><span class="menu-icon">▣</span>My bookings <span class="menu-arrow">›</span></button><button onclick="showAppScreen('equipment')"><span class="menu-icon">🚜</span>My equipment <span class="menu-arrow">›</span></button><button onclick="showAppScreen('groups')"><span class="menu-icon">♧</span>Group bookings <span class="menu-arrow">›</span></button><button onclick="toast('Payments are not enabled in this prototype.')"><span class="menu-icon">▤</span>Payments & wallet <span class="menu-arrow">›</span></button><button onclick="toast('Reviews will be added with the verified booking workflow.')"><span class="menu-icon">★</span>My reviews <span class="menu-arrow">›</span></button><button onclick="showAppScreen('support')"><span class="menu-icon">ⓘ</span>Help & support <span class="menu-arrow">›</span></button><button onclick="openModal('authModal')"><span class="menu-icon">⚙</span>Account settings <span class="menu-arrow">›</span></button></div>
    <button id="appProfileAuthButton" class="app-btn outline full" style="margin-top:13px" onclick="openModal('authModal')">Sign in / Create account</button>
   </section>
@@ -657,6 +658,18 @@ if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addE
 
 /* App screen navigation and live data adapters */
 let appCurrentScreen='home',appCurrentFilter='',appCurrentGroupTab='open',appCurrentBookingTab='upcoming',appSearchQuery='';
+async function loadAppNotifications(){
+ const root=document.getElementById('appNotifications');if(!root)return;
+ if(!currentUser){root.innerHTML='<h3>🔔 Notifications</h3><p>Sign in to see booking and group updates.</p>';return}
+ root.innerHTML='<h3>🔔 Notifications</h3><p>Loading your alerts…</p>';
+ try{
+  const {data,error}=await supabaseClient.from('user_notifications').select('id,kind,title,body,related_id,read_at,created_at').order('created_at',{ascending:false}).limit(15);
+  if(error)throw error;
+  if(!data?.length){root.innerHTML='<h3>🔔 Notifications</h3><p>No alerts yet. Booking and group updates will appear here.</p>';return}
+  root.innerHTML='<h3>🔔 Notifications</h3>'+data.map(n=>'<div style="border-top:1px solid var(--app-border,#e5e7eb);padding:10px 0;opacity:'+(n.read_at?'.72':'1')+'"><div style="display:flex;justify-content:space-between;gap:8px"><strong>'+esc(n.title)+'</strong><small>'+esc(new Date(n.created_at).toLocaleString())+'</small></div><p>'+esc(n.body)+'</p>'+(n.read_at?'':'<button class="app-btn outline" onclick="markNotificationRead(\\''+n.id+'\\')">Mark read</button>')+'</div>').join('');
+ }catch(err){console.error('[AgriShare notifications]',err);root.innerHTML='<h3>🔔 Notifications</h3><p>Could not load notifications. Refresh and try again.</p>'}
+}
+async function markNotificationRead(id){if(!currentUser)return;const {error}=await supabaseClient.from('user_notifications').update({read_at:new Date().toISOString()}).eq('id',id);if(error){showCloudError('Could not mark notification read: '+error.message);return}await loadAppNotifications()}
 function showAppScreen(screen){
  const valid=['home','explore','groups','nearby','bookings','equipment','messages','profile','weather','crop','support'];
  if(!valid.includes(screen))screen='home';
@@ -669,6 +682,7 @@ function showAppScreen(screen){
  if(screen==='bookings')loadAppBookings();
  if(screen==='messages')loadMessageThreads();
  if(screen==='profile')syncAppProfile();
+ if(screen==='profile')loadAppNotifications();
  if(screen==='equipment')syncAppEquipment();
  if(screen==='explore')syncAppListings();
  if(screen==='groups')syncAppGroups();
