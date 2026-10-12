@@ -1,47 +1,54 @@
 # AgriShare — Shared Machinery, Stronger Farms
 
-AgriShare is a mobile-first agricultural machinery discovery and group-booking web app for local farming communities.
-
 - **Live site:** https://codex-inn.github.io/AgriShare/
 - **Repository:** https://github.com/codex-inn/AgriShare
 - **Backend:** Supabase project `xsrrpjkvlodcvlqawrui`
-- **Hosting:** GitHub Pages from `main` via `.github/workflows/pages.yml`
+- **Hosting:** GitHub Pages from `main`
 
-## Current app features
+## Project structure
 
-- Responsive landing page, mobile navigation, equipment search, category and rate filters.
-- Username + password sign-in through Supabase Auth, with account creation via the `username-signup` Edge Function.
-- Live equipment listings from Supabase and authenticated listing creation.
-- Booking requests with date, acreage, field location and explicit consent to share contact details with the relevant owner.
-- Owner accept/decline and farmer cancellation through database RPCs.
-- Group booking creation and joining, with public aggregate acreage progress.
-- PWA manifest and service-worker shell caching.
+- `index.html` — responsive farmer app, marketplace, bookings, group bookings, profile, weather and crop-analysis screens.
+- `manifest.json`, `agri-icon.svg`, `sw.js` — installable PWA metadata, app icon and shell caching.
+- `supabase/functions/username-signup/index.ts` — username signup Edge Function source.
+- `supabase/schema.sql` — starter schema for a **new development project only**; not a production reset script.
+- `supabase/SETUP.md` — backend setup and deployment precautions.
+- `privacy.html`, `terms.html` — prototype privacy notice and use terms.
+- `scripts/validate-project.mjs` — static integrity checks for required screens and inline JavaScript syntax.
+- `.github/workflows/validate.yml` — validation runs on pull requests and pushes.
+- `.github/workflows/pages.yml` — GitHub Pages deployment.
+
+## Live features and limitations
+
+- Username/password authentication uses Supabase Auth and the `username-signup` Edge Function.
+- Equipment listings and group bookings are loaded from Supabase. Owners publish their own listings; the app must not seed example equipment into production.
+- Booking requests and owner/farmer status changes use Supabase data and database functions.
+- Group joining uses the existing transactional database RPC.
+- Weather lookup uses Open-Meteo's public geocoding and forecast APIs.
+- CropSight analysis requires a deployed HTTPS inference API with trained weights; no predictions are fabricated if it is unavailable.
+- Booking messages use a private Supabase table and participant policies; validate the full send/read flow with two real accounts before relying on it.
+- The nearby map is a searched regional map, **not a live machine tracker**. Exact equipment coordinates are not currently part of the listing model.
+- Payments, identity verification, dispute handling and commercial-grade support are not implemented.
 
 ## Data integrity
 
-The marketplace now starts with empty lists and only displays equipment and groups loaded from Supabase. If the cloud read fails, those lists are cleared rather than showing cached demo offers. This prevents farmers from mistaking sample machinery for real, available equipment.
+The production database was checked on 2026-10-12 and contained zero equipment listings, open groups, group members and booking requests. That may mean there is nothing to display until actual users publish listings. No fabricated production records were added.
 
-The production tables were checked on 2026-10-12 and contained zero equipment, group bookings, group members and booking requests. The site will remain empty until real users publish listings or create groups. No fabricated production records were added.
+If a Supabase read fails, the marketplace should show a clear error/empty state rather than substitute demo listings. Generic illustrations are not evidence that a machine exists or is available.
 
-## Backend security and limits
+## Security and setup
 
-The production project has row-level security enabled on the core tables. Booking status transitions and group joining use database functions; group joining calls a private transactional core that checks the authenticated user, group status and capacity while locking the group row. Public group progress is aggregated without exposing individual member records. The `username-signup` Edge Function is active.
+- Only the Supabase URL and publishable/anon key belong in browser code. Never commit a service-role key, database password or private connection string.
+- Keep RLS enabled. Do not expose farmer phone numbers in public listings.
+- `supabase/schema.sql` is a starter schema for a new development project, **not** a replayable production migration. Do not run it over the current production database as a reset.
+- Use consenting test accounts to verify signup, booking, owner response, cancellation, group joining and messaging end to end.
+- Review the privacy notice and terms with appropriate institutional/legal guidance before public commercial use.
 
-This project is **not certified for commercial production**. Before real-world transactions, run end-to-end tests with two real, consenting accounts and review provider verification/moderation, privacy and terms pages, abuse reporting, support, backups and dispute handling. The database `verified` flag alone is not proof of provider identity. Payments are not implemented.
+## Verify locally
 
-## Supabase files
+Requires Node.js 20 or later.
 
-- `supabase/schema.sql` is a **starter schema for a new development project**, not a replayable production migration and not a complete description of the deployed database.
-- `supabase/SETUP.md` describes the connection and setup precautions.
-- `supabase/functions/username-signup/index.ts` contains the signup function source.
-- Production database changes should remain versioned in Supabase migrations.
+```sh
+node scripts/validate-project.mjs
+```
 
-**Do not run the starter schema over the existing production project as a reset.** It contains baseline policies and can diverge from the hardened production migrations.
-
-## Key safety
-
-Only the Supabase project URL and publishable/anon key belong in browser code. Never commit a service-role/secret key, database password or private connection string. Do not expose farmer phone numbers in public equipment listings.
-
-## Deployment
-
-A push to `main` triggers the GitHub Pages workflow. Check the repository's Actions tab for the latest Pages deployment before assuming a change is live.
+The validation workflow runs the same static checks on pushes and pull requests. It does not replace browser testing or real Supabase integration tests.
