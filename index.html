@@ -321,6 +321,7 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 .app-equipment-card,.app-mini-card,.app-info-card,.app-group-card{min-width:0;overflow-wrap:anywhere}
 .app-page input,.app-page textarea,.app-page select,.app-page button{max-width:100%;box-sizing:border-box}
 .app-page .app-greeting h1{overflow-wrap:anywhere}
+.app-bottom-nav button:focus-visible,.app-page button:focus-visible,.app-page a:focus-visible{outline:3px solid #087747;outline-offset:2px}
 @media(min-width:760px){
  #appRoot{padding:24px 18px 108px!important}
  .app-device{min-height:calc(100svh - 150px)}
@@ -342,7 +343,7 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 @media(max-width:390px){
  .app-page{padding:15px 12px 24px!important}
  .app-bottom-nav{width:calc(100% - 12px)!important;padding:5px!important;gap:2px}
- .app-bottom-nav button{font-size:9px}
+ .app-bottom-nav button{font-size:10px}
  .app-bottom-nav .nav-ico{font-size:19px}
  .app-bottom-nav .nav-add{flex-basis:40px;min-height:42px}
 }
@@ -363,10 +364,10 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
    <button class="app-icon-btn" id="appBack" style="display:none" aria-label="Go back" onclick="showAppScreen('home')">‹</button>
    <div class="app-logo">🌱</div>
    <div class="app-header-copy"><strong>Agri<span>Share</span></strong><small>Farm equipment. Shared for everyone.</small></div>
-   <button class="app-icon-btn" aria-label="Notifications" onclick="showAppScreen('messages')">♧</button>
+   <button class="app-icon-btn" aria-label="Messages" title="Messages" onclick="showAppScreen('messages')">💬</button>
   </header>
   <section class="app-page active" id="appPage-home">
-   <div class="app-greeting"><div><small>Good morning,</small><h1><span id="appGreetingName">Farmer</span> 👋</h1><div class="app-location" id="appHomeLocation">📍 Location not set · Search equipment by village</div></div><button class="app-icon-btn" aria-label="Notifications" onclick="showAppScreen('messages')">♧</button></div>
+   <div class="app-greeting"><div><small>Good morning,</small><h1><span id="appGreetingName">Farmer</span> 👋</h1><div class="app-location" id="appHomeLocation">📍 Location not set · Search equipment by village</div></div><button class="app-icon-btn" aria-label="Notifications" title="Notifications" onclick="showAppScreen('profile')">🔔</button></div>
    <div class="app-search"><span>⌕</span><input id="appHomeSearch" placeholder="Search equipment, location, or farmer..." oninput="appSearch(this.value)"><button onclick="showAppScreen('explore')">☷</button></div>
    <div class="app-hero-card"><img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=1000&q=85" alt="Tractor working on a farm" onerror="this.src='https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1000&q=80'"><div class="app-hero-content"><span class="app-pill">FARM SMARTER 🌿</span><h2>Farm Machinery<br>for Everyone</h2><p>Rent · Share · Grow Together</p><button class="app-btn light" onclick="showAppScreen('explore')">Book now →</button></div></div>
    <div class="app-category-row">
@@ -413,11 +414,11 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
    <div class="app-info-card"><h3>Stay safe</h3><p>Keep booking details in the relevant conversation. Do not share passwords or payment credentials. Payments are not processed in AgriShare.</p></div>
   </section>
   <section class="app-page" id="appPage-profile">
-   <div class="app-greeting"><div><h1>My profile</h1><div class="app-location">Your AgriShare account</div></div><button class="app-icon-btn" onclick="openModal('authModal')">⚙</button></div>
+   <div class="app-greeting"><div><h1>My profile</h1><div class="app-location">Your AgriShare account</div></div></div>
    <div class="app-profile-hero"><div class="app-profile-photo">👨‍🌾</div><div><strong id="appProfileName">Farmer account</strong><small id="appProfileStatus">Sign in to view your account</small><small>📍 Tamil Nadu, India</small></div></div>
    <div id="appNotifications" class="app-info-card" style="margin-top:12px"><h3>🔔 Notifications</h3><p>Sign in to see booking and group updates.</p></div>
-   <div class="app-menu"><button onclick="showAppScreen('bookings')"><span class="menu-icon">▣</span>My bookings <span class="menu-arrow">›</span></button><button onclick="showAppScreen('equipment')"><span class="menu-icon">🚜</span>My equipment <span class="menu-arrow">›</span></button><button onclick="showAppScreen('groups')"><span class="menu-icon">♧</span>Group bookings <span class="menu-arrow">›</span></button><button onclick="toast('Payments are not enabled in this prototype.')"><span class="menu-icon">▤</span>Payments & wallet <span class="menu-arrow">›</span></button><button onclick="toast('Reviews will be added with the verified booking workflow.')"><span class="menu-icon">★</span>My reviews <span class="menu-arrow">›</span></button><button onclick="showAppScreen('support')"><span class="menu-icon">ⓘ</span>Help & support <span class="menu-arrow">›</span></button><button onclick="openModal('authModal')"><span class="menu-icon">⚙</span>Account settings <span class="menu-arrow">›</span></button></div>
-   <button id="appProfileAuthButton" class="app-btn outline full" style="margin-top:13px" onclick="openModal('authModal')">Sign in / Create account</button>
+   <div class="app-menu"><button onclick="showAppScreen('bookings')"><span class="menu-icon">📅</span>My bookings <span class="menu-arrow">›</span></button><button onclick="showAppScreen('equipment')"><span class="menu-icon">🚜</span>My equipment <span class="menu-arrow">›</span></button><button onclick="showAppScreen('favorites')"><span class="menu-icon">⭐</span>Saved equipment <span class="menu-arrow">›</span></button><button onclick="showAppScreen('groups')"><span class="menu-icon">🤝</span>Group bookings <span class="menu-arrow">›</span></button><button disabled aria-disabled="true" title="Payments are not available yet"><span class="menu-icon">💳</span>Payments & wallet · Coming soon <span class="menu-arrow">›</span></button><button onclick="showAppScreen('reviews')"><span class="menu-icon">⭐</span>My reviews <span class="menu-arrow">›</span></button><button onclick="showAppScreen('messages')"><span class="menu-icon">💬</span>Messages <span class="menu-arrow">›</span></button><button onclick="showAppScreen('support')"><span class="menu-icon">🛟</span>Help & support <span class="menu-arrow">›</span></button></div>
+   <button id="appProfileAuthButton" class="app-btn outline full" style="margin-top:13px" onclick="openModal('authModal')">🔑 Sign in / Create account</button>
   </section>
   <section class="app-page" id="appPage-weather">
    <div class="app-greeting"><div><h1>Weather planning</h1><div class="app-location">Plan field work around local conditions</div></div><button class="app-screen-back" onclick="showAppScreen('home')">‹</button></div>
@@ -429,24 +430,42 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
   </section>
   <section class="app-page" id="appPage-crop">
    <div class="app-greeting"><div><h1>Crop health</h1><div class="app-location">Crop support and disease identification</div></div><button class="app-screen-back" onclick="showAppScreen('home')">‹</button></div>
-   <div class="app-info-card"><h3>Analyze a real crop photo</h3><p>Connect your deployed CropSight inference API. This screen will not invent predictions when the model is unavailable.</p>
+   <div class="app-info-card"><h3>Analyze a real crop photo</h3><p>Connect a deployed CropSight inference API. AgriShare will not invent predictions when the model is unavailable.</p>
     <label for="cropApiUrl" style="display:block;font-size:11px;font-weight:700;margin-top:12px">CropSight API base URL</label><input id="cropApiUrl" type="url" placeholder="https://your-cropsight-api.example.com" style="width:100%;box-sizing:border-box;border:1px solid var(--app-line);border-radius:10px;padding:11px;margin-top:5px;font:inherit">
-    <form id="cropAnalyzeForm" style="margin-top:12px"><label for="cropImageFile" style="display:block;font-size:11px;font-weight:700">Tomato photo (max 10 MB)</label><input id="cropImageFile" type="file" accept="image/*" required style="width:100%;margin:8px 0"><button class="app-btn full" type="submit">Analyze real image</button></form>
-   </div><div id="cropResult" aria-live="polite"><div class="app-empty"><span class="emoji">🍅</span><strong>No scan performed</strong>Choose a photo and configure a live CropSight API to request a real model result.</div></div>
+    <form id="cropAnalyzeForm" style="margin-top:12px"><label for="cropImageFile" style="display:block;font-size:11px;font-weight:700">Tomato photo (JPEG, PNG or WebP; max 10 MB)</label><input id="cropImageFile" type="file" accept="image/jpeg,image/png,image/webp" required style="width:100%;margin:8px 0"><label class="consent-label" style="display:flex;gap:8px;align-items:flex-start;margin:8px 0 12px"><input id="cropImageConsent" type="checkbox" required><span>I agree to send this photo to the HTTPS CropSight endpoint entered above. The endpoint operator may process or retain it under their own privacy terms; AgriShare does not verify arbitrary endpoints.</span></label><button class="app-btn full" type="submit">Analyze real image</button></form>
+   </div><div id="cropResult" aria-live="polite"><div class="app-empty"><span class="emoji">🍅</span><strong>No scan performed</strong>Choose a photo, enter a live CropSight API and consent for this scan to request a real model result.</div></div>
    <div class="app-info-card"><h3>Model limitations</h3><p>The CropSight API must have the trained tomato maturity weights installed. Results can fail if the model is unavailable; detection confidence is not a calibrated probability. Confirm crop decisions with a qualified agricultural specialist.</p></div>
   </section>
+  <section class="app-page" id="appPage-favorites">
+   <div class="app-greeting"><div><h1>Saved equipment</h1><div class="app-location">Favorites stored on this device</div></div><button class="app-screen-back" onclick="showAppScreen('profile')">‹</button></div>
+   <div class="app-info-card"><p>Saved listings are private to this browser profile and account. Saving equipment does not reserve it or create a booking.</p></div>
+   <div id="appFavoritesList"><div class="app-empty"><strong>No saved equipment yet</strong>Real listings you save will appear here.</div></div>
+  </section>
+  <section class="app-page" id="appPage-reviews">
+   <div class="app-greeting"><div><h1>My reviews</h1><div class="app-location">Private feedback for completed bookings</div></div><button class="app-screen-back" onclick="showAppScreen('profile')">‹</button></div>
+   <div class="app-info-card"><p>Reviews are visible only to the two people involved in the completed booking. They do not verify identity, machine condition or service quality.</p></div>
+   <div id="appReviewList"><div class="app-empty"><strong>Sign in to view reviews</strong>Reviews from completed bookings will appear here.</div></div>
+  </section>
   <section class="app-page" id="appPage-support">
-   <div class="app-greeting"><div><h1>Help & support</h1><div class="app-location">AgriShare project support</div></div><button class="app-screen-back" onclick="showAppScreen('profile')">‹</button></div>
+   <div class="app-greeting"><div><h1>Help & support</h1><div class="app-location">Private request to the AgriShare project team</div></div><button class="app-screen-back" onclick="showAppScreen('profile')">‹</button></div>
    <div class="app-info-card"><h3>How to use AgriShare</h3><p>1. Browse available equipment.<br>2. Send a booking request with your field location and date.<br>3. Confirm final rates and availability with the owner.<br>4. Use group booking to coordinate shared acreage.</p></div>
    <div class="app-info-card"><h3>Project information</h3><p>Tamil Nadu Agricultural University · Agricultural College & Research Institute, Vazhavachanur, Tiruvannamalai. AgriShare is a student prototype; payments and provider identity verification are not enabled.</p></div>
-   <div class="app-info-card"><h3>Privacy & terms</h3><p>Review how account, booking and location information is used before submitting real details.</p><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"><a class="app-btn outline" href="./privacy.html" target="_blank" rel="noopener">Privacy notice</a><a class="app-btn outline" href="./terms.html" target="_blank" rel="noopener">Terms of use</a><a class="app-btn outline" href="https://github.com/codex-inn/AgriShare/issues" target="_blank" rel="noopener">Report a problem</a></div></div>
+   <div class="app-info-card"><h3>Contact the project team</h3><p>Sign in to send a private support, listing-safety, account-access or account-deletion request. Project maintainers review requests manually; this form does not delete an account or guarantee a response time. Do not include passwords, identity documents, payment details or another person's private information.</p>
+    <form id="appSupportForm" style="margin-top:12px">
+     <label for="appSupportType" style="display:block;font-size:11px;font-weight:700">Request type</label><select id="appSupportType" required style="width:100%;box-sizing:border-box;border:1px solid var(--app-line);border-radius:10px;padding:11px;margin:5px 0 10px;font:inherit"><option value="general">General help</option><option value="listing_safety">Report a listing or safety concern</option><option value="account_access">Account access help</option><option value="account_deletion">Request account deletion</option><option value="other">Other feedback</option></select>
+     <label for="appSupportEquipment" style="display:block;font-size:11px;font-weight:700">Related listing (optional)</label><select id="appSupportEquipment" style="width:100%;box-sizing:border-box;border:1px solid var(--app-line);border-radius:10px;padding:11px;margin:5px 0 10px;font:inherit"><option value="">No specific listing</option></select>
+     <label for="appSupportDetails" style="display:block;font-size:11px;font-weight:700">What do you need help with?</label><textarea id="appSupportDetails" required minlength="10" maxlength="1200" rows="4" style="width:100%;box-sizing:border-box;border:1px solid var(--app-line);border-radius:10px;padding:11px;margin:5px 0 10px;font:inherit" placeholder="Describe the issue without passwords or sensitive documents."></textarea>
+     <button class="app-btn full" type="submit">Send private request</button>
+    </form>
+   </div>
+   <div class="app-info-card"><h3>Privacy & terms</h3><p>Review how account, booking and location information is used before submitting real details. GitHub issue reports are public; never include personal or account details there.</p><div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px"><a class="app-btn outline" href="./privacy.html" target="_blank" rel="noopener">Privacy notice</a><a class="app-btn outline" href="./terms.html" target="_blank" rel="noopener">Terms of use</a><a class="app-btn outline" href="https://github.com/codex-inn/AgriShare/issues" target="_blank" rel="noopener">Public feedback</a></div></div>
   </section>
  </div>
 </div>
 <nav class="app-bottom-nav" aria-label="App navigation">
- <button class="active" data-screen="home" onclick="showAppScreen('home')"><span class="nav-ico" aria-hidden="true">🏠</span><span>Home</span></button>
+ <button class="active" data-screen="home" aria-current="page" onclick="showAppScreen('home')"><span class="nav-ico" aria-hidden="true">🏠</span><span>Home</span></button>
  <button data-screen="explore" onclick="showAppScreen('explore')"><span class="nav-ico" aria-hidden="true">🔍</span><span>Explore</span></button>
- <button class="nav-add" aria-label="➕ List equipment" title="List equipment" onclick="openModal('listModal')"><span aria-hidden="true">➕</span></button>
+ <button class="nav-add" aria-label="List equipment" title="List equipment" onclick="openModal('listModal')"><span aria-hidden="true">➕</span></button>
  <button data-screen="bookings" onclick="showAppScreen('bookings')"><span class="nav-ico" aria-hidden="true">📅</span><span>Bookings</span></button>
  <button data-screen="profile" onclick="showAppScreen('profile')"><span class="nav-ico" aria-hidden="true">👤</span><span>Profile</span></button>
 </nav>
@@ -476,32 +495,11 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 <div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle"><div class="modal"><div class="modal-head"><div><h2 id="authTitle">AgriShare account</h2><p>Username and password only — no email address is needed in this form.</p></div><button class="close" onclick="closeModal('authModal')" aria-label="Close">×</button></div><form id="authForm"><div class="form-grid"><div class="field full"><label for="authUsername">Username</label><input id="authUsername" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required minlength="3" maxlength="24" pattern="[A-Za-z0-9._-]{3,24}" placeholder="e.g. farmer_kumar"></div><div class="field full"><label for="authPassword">Password</label><input id="authPassword" name="password" type="password" minlength="8" autocomplete="current-password" required placeholder="At least 8 characters"></div></div><div class="form-note"><b>First time here?</b> Enter a username and password, then select <b>Create account</b>. To return, use <b>Sign in</b>. Usernames may contain letters, numbers, dots, underscores or hyphens (3–24 characters). For this Supabase-backed prototype, the project owner must turn off <b>Confirm email</b> in Authentication → Providers → Email before creating accounts. Username accounts cannot receive email password-reset messages, so keep your password safe.</div><div class="form-actions"><button class="btn btn-outline" type="button" onclick="closeModal('authModal')">Cancel</button><button class="btn btn-primary" type="submit">Sign in</button><button class="btn btn-outline" type="button" id="signUpButton">Create account</button></div></form></div></div>
 <div class="modal-backdrop" id="dashboardModal" role="dialog" aria-modal="true" aria-labelledby="dashboardTitle"><div class="modal"><div class="modal-head"><div><h2 id="dashboardTitle">My AgriShare dashboard</h2><p>View your booking requests and group bookings.</p></div><button class="close" onclick="closeModal('dashboardModal')" aria-label="Close">×</button></div><div id="dashboardContent"><p>Sign in to view your activity.</p></div><div class="form-actions"><button class="btn btn-outline" onclick="loadDashboard()">Refresh</button><button class="btn btn-primary" onclick="closeModal('dashboardModal')">Done</button></div></div></div><div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<nav class="app-bottom-nav" aria-label="Quick navigation">
-<a class="active" href="#home"><span class="nav-ico">⌂</span><span>Home</span></a>
-<a href="#machines"><span class="nav-ico">⌕</span><span>Explore</span></a>
-<button class="nav-add" aria-label="List equipment" onclick="openModal('listModal')">＋</button>
-<button onclick="openModal('dashboardModal');loadDashboard()"><span class="nav-ico">▣</span><span>Bookings</span></button>
-<button onclick="openModal('authModal')"><span class="nav-ico">♙</span><span>Profile</span></button>
-</nav>
 <script>
 const SUPABASE_URL='https://xsrrpjkvlodcvlqawrui.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_lnA0EdDqKKDFT7UHoEbU1Q_4WPnRbNe';
 const supabaseClient=window.supabase?.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY) ?? null;
 let currentUser=null, cloudReady=false, cloudBusy=false;
-const seedMachines=[
-{id:'m1',name:'45 HP Farm Tractor',type:'Tractor',rate:1500,unit:'acre',village:'Paiyur area',owner:'Demo provider',rating:'4.8',status:'Popular',image:'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=900&q=80',description:'Field preparation and transport'},
-{id:'m2',name:'Heavy-duty Rotavator',type:'Rotavator',rate:900,unit:'acre',village:'Vazhavachanur area',owner:'Demo provider',rating:'4.7',status:'Field prep',image:'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80',description:'Soil tillage and seedbed prep'},
-{id:'m3',name:'Combine Harvester',type:'Harvester',rate:2500,unit:'acre',village:'Tiruvannamalai area',owner:'Demo provider',rating:'4.9',status:'Seasonal',image:'https://images.unsplash.com/photo-1530267981375-f0de937f5f13?auto=format&fit=crop&w=900&q=80',description:'Harvesting support for suitable crops'},
-{id:'m4',name:'Paddy Transplanter',type:'Transplanter',rate:1800,unit:'acre',village:'Paiyur area',owner:'Demo provider',rating:'4.6',status:'Labour saver',image:'https://images.unsplash.com/photo-1499529112087-3cb3b73153e?auto=format&fit=crop&w=900&q=80',description:'Mechanized paddy transplanting'},
-{id:'m5',name:'Power Sprayer Set',type:'Sprayer',rate:450,unit:'acre',village:'Vazhavachanur area',owner:'Demo provider',rating:'4.5',status:'Small farms',image:'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=900&q=80',description:'Crop care and plant protection'},
-{id:'m6',name:'Tractor + Trailer',type:'Tractor',rate:1100,unit:'trip',village:'Tiruvannamalai area',owner:'Demo provider',rating:'4.7',status:'Transport',image:'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=900&q=80',description:'Farm input and produce transport'}
-];
-const seedGroups=[
-{id:'g1',machine:'Rotavator',village:'Paiyur area',date:'2026-10-18',target:20,joined:13,rate:900,leader:'Demo organizer'},
-{id:'g2',machine:'Harvester',village:'Vazhavachanur area',date:'2026-10-20',target:25,joined:18,rate:2500,leader:'Demo organizer'},
-{id:'g3',machine:'Tractor',village:'Tiruvannamalai area',date:'2026-10-22',target:12,joined:7,rate:1500,leader:'Demo organizer'}
-];
-const readStore=(key,fallback)=>{try{const x=JSON.parse(localStorage.getItem(key));return Array.isArray(x)?x:fallback}catch{return fallback}};
 let machines=[],groups=[]; // Only show listings loaded from Supabase; never present demo/local cache as real offers.
 function setAuthButton(){const b=document.getElementById('authButton');if(!b)return;const displayName=currentUser?.user_metadata?.username||currentUser?.email||'Signed in';b.textContent=currentUser?displayName+' · Sign out':'Sign in';b.onclick=()=>currentUser?signOutUser():openModal('authModal');}
 function setConnectionStatus(message,ok=false){const el=document.getElementById('dbStatus');if(el){el.textContent=message;el.style.color=ok?'#d9f99d':'#ffd6a5';}}
@@ -520,13 +518,13 @@ async function loadCloudData(){
   if(progressResult.error)console.warn('Group progress RPC is not available yet:',progressResult.error.message);
   const progress=Object.fromEntries((progressResult.data||[]).map(x=>[x.group_id,x]));
   let myMemberships={};if(currentUser){const mr=await supabaseClient.from('group_members').select('group_id,acres').eq('farmer_id',currentUser.id);if(mr.error)console.warn('Could not load your group memberships:',mr.error.message);else myMemberships=Object.fromEntries((mr.data||[]).map(x=>[x.group_id,Number(x.acres)]));}
-  machines=(equipmentResult.data||[]).map(x=>({id:x.id,name:x.name,type:x.category,rate:Number(x.rate),unit:x.rate_unit||'acre',village:x.service_area?x.village+' · '+x.service_area:x.village,owner_id:x.owner_id,available:x.available!==false,owner:x.owner_id===currentUser?.id?'Your listing':'Local provider',rating:x.verified?'Owner marked verified':'Not verified',status:x.verified?'Owner marked verified':'Not verified',image:x.image_url||'',description:x.description||'',verified:x.verified,role:x.equipment_role||'machine',hp:x.horsepower==null?null:Number(x.horsepower),hitch:x.hitch_type||'unknown',pto:x.pto_rpm==null?null:Number(x.pto_rpm),hydraulic:x.hydraulic_capacity_lpm==null?null:Number(x.hydraulic_capacity_lpm),minHp:x.min_tractor_hp==null?null:Number(x.min_tractor_hp),maxHp:x.max_tractor_hp==null?null:Number(x.max_tractor_hp),requiredPto:x.required_pto_rpm==null?null:Number(x.required_pto_rpm),requiredHydraulic:x.required_hydraulic_lpm==null?null:Number(x.required_hydraulic_lpm),compatibilityNotes:x.compatibility_notes||''}));
+  machines=(equipmentResult.data||[]).map(x=>({id:x.id,name:x.name,type:x.category,rate:Number(x.rate),unit:x.rate_unit||'acre',village:x.service_area?x.village+' · '+x.service_area:x.village,owner_id:x.owner_id,available:x.available!==false,owner:x.owner_id===currentUser?.id?'Your listing':'Local provider',rating:'Owner-provided details',status:x.category,image:x.image_url||'',description:x.description||'',verified:x.verified,role:x.equipment_role||'machine',hp:x.horsepower==null?null:Number(x.horsepower),hitch:x.hitch_type||'unknown',pto:x.pto_rpm==null?null:Number(x.pto_rpm),hydraulic:x.hydraulic_capacity_lpm==null?null:Number(x.hydraulic_capacity_lpm),minHp:x.min_tractor_hp==null?null:Number(x.min_tractor_hp),maxHp:x.max_tractor_hp==null?null:Number(x.max_tractor_hp),requiredPto:x.required_pto_rpm==null?null:Number(x.required_pto_rpm),requiredHydraulic:x.required_hydraulic_lpm==null?null:Number(x.required_hydraulic_lpm),compatibilityNotes:x.compatibility_notes||''}));
   groups=(groupsResult.data||[]).map(x=>({id:x.id,machine:x.equipment_category,village:x.village,date:x.preferred_date,target:Number(x.target_acres),joined:Number(progress[x.id]?.joined_acres||0),rate:Number(x.rate_per_acre),leader:'Farmer organizer',organizer_id:x.organizer_id,myAcres:myMemberships[x.id]||0,status:x.status}));
-  cloudReady=true;setConnectionStatus('Shared database connected',true);renderMachines();renderGroups();
+  cloudReady=true;setConnectionStatus('Shared database connected',true);renderMachines();renderGroups();syncSupportEquipmentOptions();
  }catch(err){cloudReady=false;machines=[];groups=[];renderMachines();renderGroups();setConnectionStatus('Live listings unavailable',false);showCloudError('Could not load live listings from Supabase: '+(err?.message||'Check database/API settings')+'. Demo listings are hidden so farmers do not mistake examples for real offers.');}
  finally{cloudBusy=false;}
 }
-async function signOutUser(){const {error}=await supabaseClient.auth.signOut();if(error){showCloudError(error.message);return}currentUser=null;setAuthButton();toast('Signed out.');}
+async function signOutUser(){const {error}=await supabaseClient.auth.signOut();if(error){showCloudError(error.message);return}currentUser=null;syncAppAuthState(true);toast('Signed out.');}
 async function submitAuth(signUp){
  const form=document.getElementById('authForm');
  const submitBtn=form.querySelector('button[type="submit"]');
@@ -586,7 +584,7 @@ async function submitAuth(signUp){
    return;
   }
   currentUser=result.data.user||null;
-  setAuthButton();
+  syncAppAuthState(true);
   closeModal('authModal');
   toast(signUp?'Account created and signed in.':'Signed in successfully.');
   await loadCloudData();
@@ -600,8 +598,8 @@ async function submitAuth(signUp){
 function requireLogin(){if(currentUser)return true;toast('Please sign in first to use live bookings.');openModal('authModal');return false;}
 const money=n=>'₹'+Number(n).toLocaleString('en-IN');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function save(){try{localStorage.setItem('agrishare-machines',JSON.stringify(machines));localStorage.setItem('agrishare-groups',JSON.stringify(groups))}catch{}}
-function renderMachines(){const q=document.getElementById('searchInput').value.trim().toLowerCase(),type=document.getElementById('typeFilter').value,sort=document.getElementById('rateFilter').value;let list=machines.filter(m=>m.available!==false&&(!type||m.type===type)&&[m.name,m.type,m.village,m.description,m.owner].join(' ').toLowerCase().includes(q));if(sort==='low')list.sort((a,b)=>a.rate-b.rate);if(sort==='high')list.sort((a,b)=>b.rate-a.rate);document.getElementById('statMachines').textContent=String(machines.length).padStart(2,'0');document.getElementById('machineGrid').innerHTML=list.length?list.map(m=>'<article class="machine-card"><div class="machine-img">'+(m.image?'<img src="'+esc(m.image)+'" alt="Owner-provided photo of '+esc(m.name)+'" loading="lazy">':'<div class="app-equipment-placeholder" style="width:100%;height:100%;border-radius:0">🚜</div>')+'<span class="tag">'+esc(m.status||m.type)+'</span></div><div class="machine-body"><div class="machine-type">'+esc(m.type)+'</div><h3 class="machine-title">'+esc(m.name)+'</h3><div class="machine-meta"><span>📍 '+esc(m.village)+'</span><span>🛠 '+esc(m.description||'Farm service')+'</span></div><div class="machine-bottom"><div><div class="price">'+money(m.rate)+' <small>/ '+esc(m.unit||'acre')+'</small></div><div class="rating">★ '+esc(m.rating||'New')+' · '+esc(m.owner||'Local owner')+'</div></div><button class="btn btn-primary btn-small" onclick="requestBooking(\''+esc(m.id)+'\')">Request ↗</button></div></div></article>').join(''):'<div class="empty"><b>No live equipment listings yet</b>Be the first provider to publish real machinery, or check back later. Demo offers are not shown.</div>'}
+function safeEquipmentImage(value){try{const url=new URL(String(value||''));const storage=new URL(SUPABASE_URL);return url.protocol==='https:'&&url.origin===storage.origin&&url.pathname.startsWith('/storage/v1/object/public/equipment-photos/')?url.href:''}catch{return ''}}
+function renderMachines(){const q=document.getElementById('searchInput').value.trim().toLowerCase(),type=document.getElementById('typeFilter').value,sort=document.getElementById('rateFilter').value;let list=machines.filter(m=>m.available!==false&&(!type||m.type===type)&&[m.name,m.type,m.village,m.description,m.owner].join(' ').toLowerCase().includes(q));if(sort==='low')list.sort((a,b)=>a.rate-b.rate);if(sort==='high')list.sort((a,b)=>b.rate-a.rate);document.getElementById('statMachines').textContent=String(machines.length).padStart(2,'0');document.getElementById('machineGrid').innerHTML=list.length?list.map(m=>'<article class="machine-card"><div class="machine-img">'+(safeEquipmentImage(m.image)?'<img src="'+esc(safeEquipmentImage(m.image))+'" alt="Owner-provided photo of '+esc(m.name)+'" loading="lazy">':'<div class="app-equipment-placeholder" style="width:100%;height:100%;border-radius:0">🚜</div>')+'<span class="tag">'+esc(m.status||m.type)+'</span></div><div class="machine-body"><div class="machine-type">'+esc(m.type)+'</div><h3 class="machine-title">'+esc(m.name)+'</h3><div class="machine-meta"><span>📍 '+esc(m.village)+'</span><span>🛠 '+esc(m.description||'Farm service')+'</span></div><div class="machine-bottom"><div><div class="price">'+money(m.rate)+' <small>/ '+esc(m.unit||'acre')+'</small></div><div class="rating">★ '+esc(m.rating||'New')+' · '+esc(m.owner||'Local owner')+'</div></div><button class="btn btn-primary btn-small" onclick="requestBooking(\''+esc(m.id)+'\')">Request ↗</button></div></div></article>').join(''):'<div class="empty"><b>No live equipment listings yet</b>Be the first provider to publish real machinery, or check back later. Demo offers are not shown.</div>'}
 function renderGroups(){document.getElementById('statGroups').textContent=String(groups.length).padStart(2,'0');document.getElementById('groupGrid').innerHTML=groups.length?groups.map(g=>{const p=Math.min(100,Math.round(g.joined/g.target*100));return '<article class="group-card"><small>👥 '+esc(g.machine)+' · '+esc(g.village)+'</small><h3>'+esc(g.village)+' group</h3><p>📅 '+esc(g.date||'Date to be confirmed')+' · '+money(g.rate)+'/acre</p><div class="progress"><span style="width:'+p+'%"></span></div><div class="progress-text"><span>'+g.joined+' of '+g.target+' acres joined</span><b>'+p+'%</b></div><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:14px"><span style="font-size:10px;color:#d0e0d2">Est. per acre: '+money(g.rate)+'</span><button class="btn btn-lime btn-small" onclick="joinGroup(\''+esc(g.id)+'\')">Join group</button></div></article>'}).join(''):'<div class="empty"><b>No open group bookings yet</b>Create a group booking to invite nearby farmers to coordinate machinery and reduce field-work costs.</div>';}
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window.toastTimer);window.toastTimer=setTimeout(()=>t.classList.remove('show'),3200)}
 function openModal(id){document.getElementById(id).classList.add('open');document.body.style.overflow='hidden';const f=document.querySelector('#'+id+' input:not([readonly])');if(f)setTimeout(()=>f.focus(),100)}
@@ -629,7 +627,7 @@ async function respondBooking(id,decision){if(!requireLogin())return;const {erro
 async function cancelBooking(id){if(!requireLogin())return;const {error}=await supabaseClient.rpc('cancel_booking_request',{p_request_id:id});if(error){showCloudError(error.message);return}toast('Booking request cancelled.');await loadDashboard();await loadAppBookings();}
 async function completeBooking(id){if(!requireLogin())return;if(!confirm('Mark this accepted booking as completed?'))return;const {error}=await supabaseClient.rpc('complete_booking_request',{p_request_id:id});if(error){showCloudError(error.message);return}toast('Booking marked completed.');await loadAppBookings();await loadDashboard();}
 async function changeGroupStatus(id,status){if(!requireLogin())return;const {error}=await supabaseClient.rpc('set_group_status',{p_group_id:id,p_status:status});if(error){showCloudError(error.message);return}toast('Group status updated.');await loadCloudData();await loadDashboard();}
-document.getElementById('bookingForm').addEventListener('submit',async e=>{e.preventDefault();if(!requireLogin())return;const d=Object.fromEntries(new FormData(e.target));const machineId=document.getElementById('bookingModal').dataset.machine||'';if(!cloudReady){toast('Live database is not ready yet. Check Supabase schema setup.');return}const {data:machine,error:machineError}=await supabaseClient.from('equipment').select('id').eq('id',machineId).maybeSingle();if(machineError||!machine){toast('This listing is not available in the live database. Refresh the page and try again.');return}const {error}=await supabaseClient.rpc('create_booking_request',{p_equipment_id:machineId,p_preferred_date:d.date,p_acres:Number(d.area),p_village:d.location,p_notes:[d.notes?'Work: '+d.notes:'',d.name?'Farmer name: '+d.name:'',d.phone?'Contact phone: '+d.phone:''].filter(Boolean).join('\n')||null});if(error){showCloudError('Booking request could not be saved: '+error.message);return}e.target.reset();closeModal('bookingModal');toast('Booking request saved to Supabase. The owner may need to contact you to confirm.');await loadAppBookings();});
+document.getElementById('bookingForm').addEventListener('submit',async e=>{e.preventDefault();if(!requireLogin())return;const d=Object.fromEntries(new FormData(e.target));const machineId=document.getElementById('bookingModal').dataset.machine||'';if(!cloudReady){toast('Live database is not ready yet. Check Supabase schema setup.');return}const {data:machine,error:machineError}=await supabaseClient.from('equipment').select('id').eq('id',machineId).maybeSingle();if(machineError||!machine){toast('This listing is not available in the live database. Refresh the page and try again.');return}const {error}=await supabaseClient.rpc('create_booking_request',{p_equipment_id:machineId,p_preferred_date:d.date,p_acres:Number(d.area),p_village:d.location,p_notes:[d.notes?'Work: '+d.notes:'',d.name?'Farmer name: '+d.name:'',d.phone?'Contact phone: '+d.phone:''].filter(Boolean).join('\n')||null});if(error){const message=String(error.message||'Booking request could not be saved.');toast(message.includes('booking_requests_active_equipment_date')?'That equipment already has a request for this date. Choose another date.':message);return}e.target.reset();closeModal('bookingModal');toast('Booking request saved to Supabase. The owner may need to contact you to confirm.');await loadAppBookings();});
 document.getElementById('groupForm').addEventListener('submit',async e=>{e.preventDefault();if(!requireLogin())return;const d=Object.fromEntries(new FormData(e.target));if(!cloudReady){toast('Live database is not ready yet. Check Supabase schema setup.');return}const {error}=await supabaseClient.from('group_bookings').insert({organizer_id:currentUser.id,equipment_category:d.machine,village:d.village,preferred_date:d.date,target_acres:Number(d.target),rate_per_acre:Number(d.rate)});if(error){showCloudError('Group booking could not be created: '+error.message);return}e.target.reset();closeModal('groupModal');toast('Group booking created in the shared database.');await loadCloudData();document.getElementById('groups').scrollIntoView({behavior:'smooth'})});
 async function saveEquipmentListing(e){
  e.preventDefault();if(!requireLogin())return;if(!cloudReady){toast('Live database is not ready. Try again after reconnecting.');return}
@@ -654,11 +652,30 @@ document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('clic
 document.getElementById('mobileToggle').addEventListener('click',()=>{const n=document.getElementById('navlinks');const open=n.classList.toggle('open');document.getElementById('mobileToggle').setAttribute('aria-expanded',String(open));document.getElementById('mobileToggle').textContent=open?'×':'☰'});document.querySelectorAll('#navlinks a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('navlinks').classList.remove('open');document.getElementById('mobileToggle').setAttribute('aria-expanded','false');document.getElementById('mobileToggle').textContent='☰'}));
 document.getElementById('authForm').addEventListener('submit',e=>{e.preventDefault();submitAuth(false)});document.getElementById('signUpButton').addEventListener('click',()=>submitAuth(true));
 document.getElementById('year').textContent=new Date().getFullYear();renderMachines();renderGroups();setAuthButton();
-if(supabaseClient){supabaseClient.auth.getSession().then(({data,error})=>{if(error)console.warn(error.message);currentUser=data?.session?.user||null;setAuthButton();loadCloudData()});supabaseClient.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;setAuthButton();if(session)loadCloudData()})}else{showCloudError('Supabase client library failed to load.');}
+if(supabaseClient){supabaseClient.auth.getSession().then(({data,error})=>{if(error)console.warn(error.message);currentUser=data?.session?.user||null;syncAppAuthState(false);loadCloudData()});supabaseClient.auth.onAuthStateChange((_event,session)=>{const previousUserId=currentUser?.id||null;currentUser=session?.user||null;syncAppAuthState(previousUserId!==(currentUser?.id||null));loadCloudData()})}else{showCloudError('Supabase client library failed to load.');}
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 
 /* App screen navigation and live data adapters */
 let appCurrentScreen='home',appCurrentFilter='',appCurrentGroupTab='open',appCurrentBookingTab='upcoming',appSearchQuery='';
+function syncAppAuthState(refreshPrivateViews){
+ setAuthButton();
+ syncAppProfile();
+ if(!refreshPrivateViews)return;
+ if(!currentUser){
+  loadAppBookings();
+  loadMessageThreads();
+  loadAppReviews();
+  syncAppEquipment();
+  loadAppNotifications();
+  document.getElementById('appSupportForm')?.reset();
+  return;
+ }
+ if(appCurrentScreen==='bookings')loadAppBookings();
+ if(appCurrentScreen==='messages')loadMessageThreads();
+ if(appCurrentScreen==='profile')loadAppNotifications();
+ if(appCurrentScreen==='equipment')syncAppEquipment();
+ if(appCurrentScreen==='reviews')loadAppReviews();
+}
 async function loadAppNotifications(){
  const root=document.getElementById('appNotifications');if(!root)return;
  if(!currentUser){root.innerHTML='<h3>🔔 Notifications</h3><p>Sign in to see booking and group updates.</p>';return}
@@ -672,13 +689,13 @@ async function loadAppNotifications(){
 }
 async function markNotificationRead(id){if(!currentUser)return;const {error}=await supabaseClient.from('user_notifications').update({read_at:new Date().toISOString()}).eq('id',id);if(error){showCloudError('Could not mark notification read: '+error.message);return}await loadAppNotifications()}
 function showAppScreen(screen){
- const valid=['home','explore','groups','nearby','bookings','equipment','messages','profile','weather','crop','support'];
+ const valid=['home','explore','groups','nearby','bookings','equipment','messages','profile','weather','crop','favorites','reviews','support'];
  if(!valid.includes(screen))screen='home';
  appCurrentScreen=screen;
  document.querySelectorAll('#appRoot .app-page').forEach(p=>p.classList.toggle('active',p.id==='appPage-'+screen));
  document.querySelectorAll('.app-bottom-nav [data-screen]').forEach(b=>b.classList.toggle('active',b.dataset.screen===screen));
  const back=document.getElementById('appBack');if(back)back.style.display=['home','explore','groups','bookings','profile'].includes(screen)?'none':'grid';
- const headerTitles={home:'AgriShare',explore:'All Equipment',groups:'Group Bookings',nearby:'Nearby Equipment',bookings:'My Bookings',equipment:'My Equipment',messages:'Messages',profile:'My Profile',weather:'Weather',crop:'Crop Health',support:'Support'};
+ const headerTitles={home:'AgriShare',explore:'All Equipment',groups:'Group Bookings',nearby:'Nearby Equipment',bookings:'My Bookings',equipment:'My Equipment',messages:'Messages',profile:'My Profile',weather:'Weather',crop:'Crop Health',favorites:'Saved Equipment',reviews:'My Reviews',support:'Support'};
  document.title=(headerTitles[screen]||'AgriShare')+' | AgriShare';
  if(screen==='bookings')loadAppBookings();
  if(screen==='messages')loadMessageThreads();
@@ -688,6 +705,9 @@ function showAppScreen(screen){
  if(screen==='explore')syncAppListings();
  if(screen==='explore')refreshCompatibilitySelector();
  if(screen==='groups')syncAppGroups();
+ if(screen==='favorites')syncAppFavorites();
+ if(screen==='reviews')loadAppReviews();
+ if(screen==='support')syncSupportEquipmentOptions();
  const appRoot=document.getElementById('appRoot');
  if(appRoot){const top=appRoot.getBoundingClientRect().top+window.scrollY;window.scrollTo({top:Math.max(0,top-8),behavior:'auto'});}
  document.querySelectorAll('.app-bottom-nav [data-screen]').forEach(b=>{b.setAttribute('aria-current',b.dataset.screen===screen?'page':'false')});
@@ -695,16 +715,23 @@ function showAppScreen(screen){
 function appSearch(q){appSearchQuery=String(q||'').trim().toLowerCase();const home=document.getElementById('appHomeSearch'),explore=document.getElementById('appExploreSearch');if(home&&home.value!==q)home.value=q;if(explore&&explore.value!==q)explore.value=q;const input=document.getElementById('searchInput');if(input){input.value=q;renderMachines()}syncAppListings()}
 function appFilter(type){appCurrentFilter=type;const typeSelect=document.getElementById('typeFilter');if(typeSelect){typeSelect.value=type;renderMachines()}document.querySelectorAll('#appFilterChips .app-chip').forEach(b=>b.classList.toggle('active',b.textContent.trim().toLowerCase()===(type||'all').toLowerCase()));showAppScreen('explore');syncAppListings()}
 function appCardMarkup(m){
- const img=m.image||'';
- const id=String(m.id||'').replace(/'/g,'');
- return '<article class="app-equipment-card">'+(img?'<img src="'+esc(img)+'" alt="Owner-provided photo of '+esc(m.name)+'" loading="lazy">':'<div class="app-equipment-placeholder" aria-label="No equipment photo provided">🚜</div>')+'<div><h3>'+esc(m.name)+'</h3><p>📍 '+esc(m.village||'Location to confirm')+'</p><p>⭐ '+esc(m.rating||'New')+' · '+esc(m.owner||'Local owner')+'</p><div class="app-price">'+money(m.rate)+' <small>/ '+esc(m.unit||'acre')+'</small></div><div class="app-card-actions"><button class="app-btn" onclick="requestBooking(\''+id+'\')">Book</button><button class="app-btn outline" onclick="toast(&#39;Please contact the owner through the booking request flow.&#39;)">Details</button></div></div></article>';
+ const img=safeEquipmentImage(m.image);
+ const id=String(m.id||'').replace(/[^a-f0-9-]/gi,'');
+ const saved=appFavoriteIds().includes(id);
+ return '<article class="app-equipment-card">'+(img?'<img src="'+esc(img)+'" alt="Owner-provided photo of '+esc(m.name)+'" loading="lazy">':'<div class="app-equipment-placeholder" aria-label="No equipment photo provided">🚜</div>')+'<div><h3>'+esc(m.name)+'</h3><p>📍 '+esc(m.village||'Location to confirm')+'</p><p>📋 '+esc(m.owner||'Local provider')+' · confirm provider details before work begins</p><div class="app-price">'+money(m.rate)+' <small>/ '+esc(m.unit||'acre')+'</small></div><div class="app-card-actions"><button class="app-btn" onclick="requestBooking(\''+id+'\')">Book</button><button class="app-btn outline" onclick="reportEquipment(\''+id+'\')">Report</button><button class="app-btn outline" aria-pressed="'+saved+'" onclick="toggleFavorite(\''+id+'\')">'+(saved?'Saved':'Save')+'</button></div></div></article>';
 }
+function appFavoriteStorageKey(){return 'agrishare-favorites:'+(currentUser?.id||'guest')}
+function appFavoriteIds(){try{const value=JSON.parse(localStorage.getItem(appFavoriteStorageKey())||'[]');return Array.isArray(value)?value.filter(id=>typeof id==='string'):[]}catch{return []}}
+function toggleFavorite(id){const key=appFavoriteStorageKey(),ids=appFavoriteIds(),next=ids.includes(id)?ids.filter(value=>value!==id):[...ids,id];try{localStorage.setItem(key,JSON.stringify(next))}catch{toast('Favorites could not be saved on this device.');return}syncAppListings();if(appCurrentScreen==='favorites')syncAppFavorites();toast(next.includes(id)?'Saved on this device.':'Removed from saved equipment.')}
+function syncAppFavorites(){const root=document.getElementById('appFavoritesList');if(!root)return;const ids=new Set(appFavoriteIds()),list=(machines||[]).filter(m=>m.available!==false&&ids.has(String(m.id)));root.innerHTML=list.length?list.map(appCardMarkup).join(''):'<div class="app-empty"><span class="emoji">☆</span><strong>No saved equipment yet</strong>Save real listings to find them again on this device. Saving does not create a booking.</div>'}
+function syncSupportEquipmentOptions(){const select=document.getElementById('appSupportEquipment');if(!select)return;const selected=select.value;select.innerHTML='<option value="">No specific listing</option>'+(machines||[]).map(m=>'<option value="'+esc(m.id)+'">'+esc(m.name)+' · '+esc(m.village)+'</option>').join('');if([...select.options].some(option=>option.value===selected))select.value=selected}
+function reportEquipment(id){showAppScreen('support');const type=document.getElementById('appSupportType'),equipment=document.getElementById('appSupportEquipment'),details=document.getElementById('appSupportDetails');if(type)type.value='listing_safety';if(equipment)equipment.value=id;if(details)details.focus()}
 function syncAppListings(){
- const list=(machines||[]).filter(m=>(!appCurrentFilter||m.type===appCurrentFilter)&&(!appSearchQuery||[m.name,m.type,m.village,m.description,m.owner].join(' ').toLowerCase().includes(appSearchQuery)));
+ const list=(machines||[]).filter(m=>m.available!==false&&(!appCurrentFilter||m.type===appCurrentFilter)&&(!appSearchQuery||[m.name,m.type,m.village,m.description,m.owner].join(' ').toLowerCase().includes(appSearchQuery)));
  const empty='<div class="app-empty"><span class="emoji">🚜</span><strong>No live equipment listings yet</strong>Real equipment will appear here when an owner publishes a listing. No demo offers are shown.</div>';
  const html=list.length?list.map(appCardMarkup).join(''):empty;
  ['appEquipmentList'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html});
- const pop=document.getElementById('appPopularGrid');if(pop)pop.innerHTML=list.length?list.slice(0,4).map(m=>'<button class="app-mini-card" style="text-align:left;border:1px solid var(--app-line)" onclick="showAppScreen(\'explore\')">'+(m.image?'<img src="'+esc(m.image)+'" alt="Owner-provided photo of '+esc(m.name)+'">':'<div class="app-equipment-placeholder" aria-label="No equipment photo provided">🚜</div>')+'<div class="app-mini-body"><strong>'+esc(m.name)+'</strong><small>'+esc(m.type)+' · '+esc(m.village)+'</small><div class="app-price">'+money(m.rate)+' / '+esc(m.unit||'acre')+'</div></div></button>').join(''):empty;
+ const pop=document.getElementById('appPopularGrid');if(pop)pop.innerHTML=list.length?list.slice(0,4).map(m=>'<button class="app-mini-card" style="text-align:left;border:1px solid var(--app-line)" onclick="showAppScreen(\'explore\')">'+(safeEquipmentImage(m.image)?'<img src="'+esc(safeEquipmentImage(m.image))+'" alt="Owner-provided photo of '+esc(m.name)+'">':'<div class="app-equipment-placeholder" aria-label="No equipment photo provided">🚜</div>')+'<div class="app-mini-body"><strong>'+esc(m.name)+'</strong><small>'+esc(m.type)+' · '+esc(m.village)+'</small><div class="app-price">'+money(m.rate)+' / '+esc(m.unit||'acre')+'</div></div></button>').join(''):empty;
 }
 function syncAppGroups(){
  const el=document.getElementById('appGroupList');if(!el)return;
@@ -717,6 +744,26 @@ function syncAppGroups(){
 }
 async function leaveGroup(id){if(!requireLogin())return;if(!confirm('Leave this group booking? Your acreage will be removed from its shared target.'))return;const {error}=await supabaseClient.rpc('leave_group',{p_group_id:id});if(error){showCloudError('Could not leave group: '+error.message);return}toast('You left the group.');await loadCloudData();syncAppGroups();}
 function appGroupTab(btn,tab){appCurrentGroupTab=tab;btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn));syncAppGroups()}
+async function loadAppReviews(){
+ const root=document.getElementById('appReviewList');if(!root)return;
+ if(!currentUser){root.innerHTML='<div class="app-empty"><strong>Sign in to view reviews</strong>Feedback is private to booking participants.</div><button class="app-btn full" onclick="openModal(\'authModal\')">Sign in</button>';return}
+ root.innerHTML='<div class="app-empty"><strong>Loading your reviews…</strong></div>';
+ try{
+  const {data,error}=await supabaseClient.from('booking_reviews').select('id,booking_request_id,reviewer_id,reviewee_id,rating,comment,created_at').order('created_at',{ascending:false});
+  if(error)throw error;
+  if(!data?.length){root.innerHTML='<div class="app-empty"><span class="emoji">★</span><strong>No reviews yet</strong>After a booking is completed, either participant can leave private feedback.</div>';return}
+  root.innerHTML=data.map(review=>'<article class="app-info-card"><div style="display:flex;justify-content:space-between;gap:8px"><strong>'+Number(review.rating)+'/5 stars</strong><small>'+esc(new Date(review.created_at).toLocaleDateString())+'</small></div><p>'+(review.reviewer_id===currentUser.id?'You reviewed the other participant':'A participant reviewed you')+' · '+(review.reviewer_id===currentUser.id?'Sent':'Received')+'</p><p style="white-space:pre-wrap">'+esc(review.comment||'No written note.')+'</p></article>').join('');
+ }catch(err){console.error('[AgriShare reviews]',err);root.innerHTML='<div class="app-empty"><strong>Could not load reviews</strong>'+esc(err?.message||'Please try again.')+'</div><button class="app-btn full" onclick="loadAppReviews()">Retry</button>'}
+}
+async function leaveBookingReview(bookingId,revieweeId){
+ if(!requireLogin())return;
+ const rawRating=prompt('Rate your completed booking from 1 to 5 stars.');if(rawRating===null)return;
+ const rating=Number(rawRating);if(!Number.isInteger(rating)||rating<1||rating>5){toast('Enter a whole number from 1 to 5.');return}
+ const comment=(prompt('Optional private comment (up to 1000 characters).')||'').trim();if(comment.length>1000){toast('Review comments must be 1000 characters or fewer.');return}
+ const {error}=await supabaseClient.from('booking_reviews').insert({booking_request_id:bookingId,reviewer_id:currentUser.id,reviewee_id:revieweeId,rating,comment});
+ if(error){toast(error.code==='23505'?'You already reviewed this completed booking.':error.message||'Review could not be saved.');return}
+ toast('Private review saved.');await loadAppBookings();if(appCurrentScreen==='reviews')await loadAppReviews();
+}
 async function loadAppBookings(){
  const root=document.getElementById('appBookingList');if(!root)return;
  if(!currentUser){root.innerHTML='<div class="app-empty"><span class="emoji">🔐</span><strong>Sign in to view bookings</strong>Your booking requests and owner responses will appear here.</div><button class="app-btn full" onclick="openModal(\'authModal\')">Sign in</button>';return}
@@ -725,6 +772,8 @@ async function loadAppBookings(){
  try{
   const {data:rows,error}=await supabaseClient.from('booking_requests').select('id,farmer_id,equipment_id,preferred_date,acres,village,notes,status,created_at,equipment(name,owner_id,category,image_url)').order('created_at',{ascending:false});
   if(error)throw error;
+  let reviewedIds=new Set(),reviewLookupOk=true;
+  if(appCurrentBookingTab==='completed'){const reviewResult=await supabaseClient.from('booking_reviews').select('booking_request_id').eq('reviewer_id',currentUser.id);if(reviewResult.error){reviewLookupOk=false;console.warn('[AgriShare reviews]',reviewResult.error.message)}else reviewedIds=new Set((reviewResult.data||[]).map(x=>x.booking_request_id))}
   const visible=(rows||[]).filter(r=>{const s=String(r.status||'').toLowerCase();if(appCurrentBookingTab==='completed')return s==='completed';if(appCurrentBookingTab==='cancelled')return ['cancelled','declined'].includes(s);return ['pending','accepted'].includes(s)});
   if(!visible.length){root.innerHTML='<div class="app-empty"><span class="emoji">📋</span><strong>No '+esc(appCurrentBookingTab)+' bookings</strong>'+(appCurrentBookingTab==='upcoming'?'Book equipment or wait for an owner response.':'Your '+esc(appCurrentBookingTab)+' booking history will appear here.')+'</div>';return}
   root.innerHTML=visible.map(r=>{
@@ -734,13 +783,28 @@ async function loadAppBookings(){
    if(isOwner&&status==='pending')actions='<div class="app-card-actions"><button class="app-btn" onclick="respondBooking(\''+r.id+'\',\'accepted\')">Accept request</button><button class="app-btn outline" onclick="respondBooking(\''+r.id+'\',\'declined\')">Decline</button></div>';
    if(isOwner&&status==='accepted'&&r.preferred_date<=new Date().toISOString().slice(0,10))actions='<div class="app-card-actions"><button class="app-btn" onclick="completeBooking(\''+r.id+'\')">Mark completed</button></div>';
    if(isFarmer&&status==='pending')actions='<div class="app-card-actions"><button class="app-btn outline" onclick="cancelBooking(\''+r.id+'\')">Cancel request</button></div>';
+   if(status==='completed'&&(isOwner||isFarmer)){if(!reviewLookupOk)actions+='<p>Review status is unavailable; reload before submitting feedback.</p>';else if(reviewedIds.has(r.id))actions+='<p>Private review saved.</p>';else{const safeRequestId=String(r.id).replace(/[^a-f0-9-]/gi,'');const revieweeId=String((isFarmer?eq.owner_id:r.farmer_id)||'').replace(/[^a-f0-9-]/gi,'');if(safeRequestId&&revieweeId)actions+='<div class="app-card-actions"><button class="app-btn outline" onclick="leaveBookingReview(\''+safeRequestId+'\',\''+revieweeId+'\')">Leave a private review</button></div>'}}
    const contact=isOwner&&r.notes?'<details style="margin-top:8px"><summary>Request details / contact</summary><p style="white-space:pre-wrap">'+esc(r.notes)+'</p></details>':'';
    return '<article class="app-equipment-card"><div style="padding:12px;min-width:0"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h3>'+esc(eq.name||'Equipment booking')+'</h3><span style="background:'+color+';border-radius:20px;padding:4px 8px;font-size:10px;font-weight:700">'+esc(status)+'</span></div><p>📅 '+esc(r.preferred_date||'Date not set')+' · '+esc(String(r.acres||0))+' acres</p><p>📍 '+esc(r.village||'Location not set')+'</p><p style="font-size:11px;color:var(--app-muted)">'+(isOwner?'Farmer request':isFarmer?'Your request':'Booking')+'</p>'+contact+actions+'</div></article>';
   }).join('');
  }catch(err){console.error('[AgriShare app bookings]',err);root.innerHTML='<div class="app-empty"><span class="emoji">⚠️</span><strong>Could not load bookings</strong>'+esc(err?.message||'Please retry when the connection is available.')+'</div><button class="app-btn full" onclick="loadAppBookings()">Retry</button>'}
 }
 function appBookingTab(btn,tab){appCurrentBookingTab=tab;btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn));loadAppBookings()}
-function syncAppProfile(){const n=currentUser?.user_metadata?.username||currentUser?.email?.split('@')[0]||'Farmer account';const name=document.getElementById('appProfileName'),status=document.getElementById('appProfileStatus'),greet=document.getElementById('appGreetingName');if(name)name.textContent=n;if(greet)greet.textContent=n;if(status)status.textContent=currentUser?'Signed in · AgriShare account':'Sign in to view your account';const btn=document.getElementById('appProfileAuthButton');if(btn){btn.textContent=currentUser?'Sign out':'Sign in / Create account';btn.onclick=()=>currentUser?signOutUser():openModal('authModal')}const loc=document.getElementById('appHomeLocation');if(loc&&currentUser?.user_metadata?.village)loc.textContent='📍 '+currentUser.user_metadata.village+' · profile location';const profileAuth=document.getElementById('appProfileAuthButton');if(profileAuth)profileAuth.setAttribute('aria-label',currentUser?'Sign out of your AgriShare account':'Sign in or create an AgriShare account')}
+function syncAppProfile(){
+ const n=currentUser?.user_metadata?.username||currentUser?.email?.split('@')[0]||'Farmer account';
+ const name=document.getElementById('appProfileName'),status=document.getElementById('appProfileStatus'),greet=document.getElementById('appGreetingName');
+ if(name)name.textContent=n;
+ if(greet)greet.textContent=n;
+ if(status)status.textContent=currentUser?'Signed in · AgriShare account':'Sign in to view your account';
+ const btn=document.getElementById('appProfileAuthButton');
+ if(btn){
+  btn.textContent=currentUser?'↪️ Sign out':'🔑 Sign in / Create account';
+  btn.setAttribute('aria-label',currentUser?'Sign out of your AgriShare account':'Sign in or create an AgriShare account');
+  btn.onclick=()=>currentUser?signOutUser():openModal('authModal');
+ }
+ const loc=document.getElementById('appHomeLocation');
+ if(loc&&currentUser?.user_metadata?.village)loc.textContent='📍 '+currentUser.user_metadata.village+' · profile location';
+}
 async function toggleEquipmentAvailability(id){if(!requireLogin())return;const item=(machines||[]).find(m=>m.id===id);if(!item)return;const {error}=await supabaseClient.from('equipment').update({available:!item.available}).eq('id',id).eq('owner_id',currentUser.id);if(error){showCloudError('Could not update listing: '+error.message);return}toast(item.available?'Listing paused.':'Listing published.');await loadCloudData();syncAppEquipment();}
 function renderCompatibilityMatches(){
  const select=document.getElementById('compatibilityTractor'),root=document.getElementById('compatibilityResults');if(!select||!root)return;
@@ -767,7 +831,7 @@ function refreshCompatibilitySelector(){
  select.innerHTML='<option value="">Select a tractor listing</option>'+tractors.map(m=>'<option value="'+esc(m.id)+'">'+esc(m.name)+' · '+esc(m.village)+(m.hp==null?' · HP unknown':' · '+esc(m.hp)+' HP')+'</option>').join('');
  if(tractors.some(m=>m.id===previous))select.value=previous;renderCompatibilityMatches();
 }
-function syncAppEquipment(){const el=document.getElementById('appOwnerList');if(!el)return;if(!currentUser){el.innerHTML='<div class="app-empty"><span class="emoji">🔐</span><strong>Sign in to manage equipment</strong>Your published listings are linked to your account.</div><button class="app-btn full" onclick="openModal(\'authModal\')">Sign in</button>';return}const own=(machines||[]).filter(m=>m.owner_id===currentUser.id);el.innerHTML=own.length?own.map(m=>'<article class="app-owner-card">'+(m.image?'<img src="'+esc(m.image)+'" alt="Owner-provided photo of '+esc(m.name)+'">':'<div class="app-equipment-placeholder">🚜</div>')+'<div><strong>'+esc(m.name)+'</strong><small>'+money(m.rate)+' / '+esc(m.unit||'acre')+' · '+esc(m.village)+'</small><div class="app-stats-row"><div><b>'+(m.available?'Active':'Paused')+'</b>Status</div><div><b>'+esc(m.verified?'Owner marked verified':'Not verified')+'</b>Provider status</div></div><div class="app-card-actions"><button class="app-btn outline" onclick="toggleEquipmentAvailability(\''+m.id+'\')">'+(m.available?'Pause listing':'Publish listing')+'</button><button class="app-btn outline" onclick="editEquipment(\''+m.id+'\')">Edit</button><button class="app-btn danger" onclick="deleteEquipment(\''+m.id+'\')">Delete</button></div></div></article>').join(''):'<div class="app-empty"><span class="emoji">🚜</span><strong>No equipment listed yet</strong>Add your real equipment to start receiving booking requests.</div>'}
+function syncAppEquipment(){const el=document.getElementById('appOwnerList');if(!el)return;if(!currentUser){el.innerHTML='<div class="app-empty"><span class="emoji">🔐</span><strong>Sign in to manage equipment</strong>Your published listings are linked to your account.</div><button class="app-btn full" onclick="openModal(\'authModal\')">Sign in</button>';return}const own=(machines||[]).filter(m=>m.owner_id===currentUser.id);el.innerHTML=own.length?own.map(m=>'<article class="app-owner-card">'+(safeEquipmentImage(m.image)?'<img src="'+esc(safeEquipmentImage(m.image))+'" alt="Owner-provided photo of '+esc(m.name)+'">':'<div class="app-equipment-placeholder">🚜</div>')+'<div><strong>'+esc(m.name)+'</strong><small>'+money(m.rate)+' / '+esc(m.unit||'acre')+' · '+esc(m.village)+'</small><div class="app-stats-row"><div><b>'+(m.available?'Active':'Paused')+'</b>Status</div><div><b>'+'Identity not independently verified</b>Provider status</div></div><div class="app-card-actions"><button class="app-btn outline" onclick="toggleEquipmentAvailability(\''+m.id+'\')">'+(m.available?'Pause listing':'Publish listing')+'</button><button class="app-btn outline" onclick="editEquipment(\''+m.id+'\')">Edit</button><button class="app-btn danger" onclick="deleteEquipment(\''+m.id+'\')">Delete</button></div></div></article>').join(''):'<div class="app-empty"><span class="emoji">🚜</span><strong>No equipment listed yet</strong>Add your real equipment to start receiving booking requests.</div>'}
 
 // Live weather: public Open-Meteo geocoding and forecast APIs; no sample forecast is shown.
 async function loadRealWeather(place){
@@ -791,16 +855,18 @@ if(document.getElementById('cropApiUrl'))document.getElementById('cropApiUrl').v
 document.getElementById('cropAnalyzeForm')?.addEventListener('submit',async e=>{
  e.preventDefault();const root=document.getElementById('cropResult'),input=document.getElementById('cropImageFile'),file=input.files&&input.files[0],field=document.getElementById('cropApiUrl'),base=(field.value||'').trim().replace(/\/$/,'');
  if(!file){toast('Choose a crop image first.');return}
- if(!file.type.startsWith('image/')){toast('Select a valid image file.');return}
+ if(!['image/jpeg','image/png','image/webp'].includes(file.type)){toast('Select a JPEG, PNG or WebP image.');return}
  if(file.size>10*1024*1024){toast('Image must be 10 MB or smaller.');return}
  if(!base){root.innerHTML='<div class="app-empty"><strong>CropSight API URL required</strong>The CropSight backend must be deployed and its URL entered here. No fake prediction was generated.</div>';return}
- try{new URL(base)}catch(_){toast('Enter a valid HTTPS API URL.');return}
- if(!base.startsWith('https://')){toast('Use HTTPS for the deployed CropSight API.');return}
- try{localStorage.setItem('agrishare-cropsight-api',base)}catch(_){}
- root.innerHTML='<div class="app-empty"><strong>Analyzing image…</strong>Sending your image to the configured CropSight model.</div>';
- const fd=new FormData();fd.append('file',file);
+ const consent=document.getElementById('cropImageConsent');if(!consent?.checked){toast('Consent is required before sending a crop photo.');return}
+ let endpoint;try{endpoint=new URL(base)}catch(_){toast('Enter a valid HTTPS API URL.');return}
+ if(endpoint.protocol!=='https:'||endpoint.username||endpoint.password||endpoint.search||endpoint.hash){toast('Use a clean HTTPS endpoint URL without credentials, query parameters or a fragment.');return}
+ const endpointBase=endpoint.href.replace(/\/$/,'');
+ try{localStorage.setItem('agrishare-cropsight-api',endpointBase)}catch(_){}
+ root.innerHTML='<div class="app-empty"><strong>Analyzing image…</strong>Sending this photo to the configured endpoint. Its retention practices depend on that operator.</div>';
+ const fd=new FormData();fd.append('file',file);consent.checked=false;input.value='';
  try{
-  const response=await fetch(base+'/api/v1/analyze',{method:'POST',body:fd});const body=await response.json().catch(()=>({detail:'The API returned an unreadable response.'}));
+  const response=await fetch(endpointBase+'/api/v1/analyze',{method:'POST',body:fd});const body=await response.json().catch(()=>({detail:'The API returned an unreadable response.'}));
   if(!response.ok)throw new Error(body.detail||('CropSight returned HTTP '+response.status+'.'));
   if(!body.summary||!Array.isArray(body.detections))throw new Error('The endpoint response does not match the CropSight maturity-analysis contract.');
   const summary=body.summary,classes=[['harvest_ready','Harvest ready'],['nearly_ready','Nearly ready'],['developing','Developing']];
@@ -808,6 +874,20 @@ document.getElementById('cropAnalyzeForm')?.addEventListener('submit',async e=>{
  }catch(err){root.innerHTML='<div class="app-empty"><span class="emoji">⚠️</span><strong>Real crop analysis failed</strong>'+esc(err.message||'The configured inference service is unavailable.')+'<p>No replacement/demo prediction was displayed.</p></div><button class="app-btn full" onclick="document.getElementById(\'cropAnalyzeForm\').requestSubmit()">Retry analysis</button>'}
 });
 
+
+document.getElementById('appSupportForm')?.addEventListener('submit',async e=>{
+ e.preventDefault();if(!requireLogin())return;
+ const type=document.getElementById('appSupportType').value,details=document.getElementById('appSupportDetails').value.trim(),equipmentId=document.getElementById('appSupportEquipment').value||null;
+ if(details.length<10||details.length>1200){toast('Describe the request in 10–1200 characters.');return}
+ const button=e.currentTarget.querySelector('button[type="submit"]'),oldText=button.textContent;button.disabled=true;button.textContent='Sending…';
+ try{
+  const {error}=await supabaseClient.from('support_requests').insert({requester_id:currentUser.id,request_type:type,equipment_id:equipmentId,details});
+  if(error)throw error;
+  e.currentTarget.reset();syncSupportEquipmentOptions();
+  toast(type==='account_deletion'?'Deletion request sent. Your account is not deleted automatically.':'Private request sent to the project queue.');
+ }catch(err){console.error('[AgriShare support]',err);toast(err?.code==='P0001'?err.message||'Support request limit reached. Try later.':err?.message||'Request could not be sent. Please try again.')}
+ finally{button.disabled=false;button.textContent=oldText}
+});
 
 async function loadMessageThreads(){
  const root=document.getElementById('appMessageThreads');if(!root)return;

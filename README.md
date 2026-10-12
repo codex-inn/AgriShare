@@ -11,6 +11,8 @@
 - `manifest.json`, `agri-icon.svg`, `sw.js` — installable PWA metadata, app icon and shell caching.
 - `supabase/functions/username-signup/index.ts` — username signup Edge Function source.
 - `supabase/schema.sql` — starter schema for a **new development project only**; not a production reset script.
+- `supabase/production-readiness-workflows.sql` — one-time migration for existing projects; adds booking-date protection, private reviews and a support request queue.
+- `supabase/production-readiness-indexes.sql` — adds indexes for new review and support foreign keys.
 - `supabase/SETUP.md` — backend setup and deployment precautions.
 - `privacy.html`, `terms.html` — prototype privacy notice and use terms.
 - `scripts/validate-project.mjs` — static integrity checks for required screens and inline JavaScript syntax.
@@ -26,19 +28,25 @@
 - Weather lookup uses Open-Meteo's public geocoding and forecast APIs.
 - CropSight analysis requires a deployed HTTPS inference API with trained weights; no predictions are fabricated if it is unavailable.
 - Booking messages use a private Supabase table and participant policies; validate the full send/read flow with two real accounts before relying on it.
+- Active booking requests are limited to one pending/accepted request per equipment item and date at the database level.
+- Saved equipment is stored locally per browser and signed-in account; it does not sync across devices or reserve a machine.
+- Completed-booking reviews are private to the two participants and are not identity or quality verification.
+- Signed-in users can send listing-safety, support and account-deletion requests to a restricted manual review queue.
 - The nearby map is a searched regional map, **not a live machine tracker**. Exact equipment coordinates are not currently part of the listing model.
-- Payments, identity verification, dispute handling and commercial-grade support are not implemented.
+- Payments, automated identity verification, dispute resolution and password recovery/account deletion are not fully implemented. Account deletion requests go to maintainers for manual handling.
+- CropSight still needs a deployed, trained inference API. Each photo now requires consent and is sent to the user-configured HTTPS endpoint.
 
 ## Data integrity
 
-The production database was checked on 2026-10-12 and contained zero equipment listings, open groups, group members and booking requests. That may mean there is nothing to display until actual users publish listings. No fabricated production records were added.
+The production database was checked on 2026-10-13 and contained zero equipment listings, open groups, group members and booking requests. That may mean there is nothing to display until actual users publish listings. No fabricated production records were added.
 
 If a Supabase read fails, the marketplace should show a clear error/empty state rather than substitute demo listings. Generic illustrations are not evidence that a machine exists or is available.
 
 ## Security and setup
 
 - Only the Supabase URL and publishable/anon key belong in browser code. Never commit a service-role key, database password or private connection string.
-- Keep RLS enabled. Do not expose farmer phone numbers in public listings.
+- Keep RLS enabled. Do not expose farmer phone numbers in public listings. The support queue has no client read policy; only project administrators should review it.
+- Supabase currently reports leaked-password protection disabled. Enable it in the project Auth security settings before inviting more users.
 - `supabase/schema.sql` is a starter schema for a new development project, **not** a replayable production migration. Do not run it over the current production database as a reset.
 - Use consenting test accounts to verify signup, booking, owner response, cancellation, group joining and messaging end to end.
 - Review the privacy notice and terms with appropriate institutional/legal guidance before public commercial use.
