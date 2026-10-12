@@ -39,6 +39,9 @@ assert.ok(html.includes("btn.textContent=currentUser?'↪️ Sign out':'🔑 Sig
 assert.ok(html.includes(`<button class="app-icon-btn" aria-label="Messages" title="Messages" onclick="showAppScreen('messages')">💬</button>`), "The messages shortcut must open messages");
 assert.ok(html.includes(`<button class="app-icon-btn" aria-label="Notifications" title="Notifications" onclick="showAppScreen('profile')">🔔</button>`), "The notifications shortcut must open the profile notification panel");
 assert.ok(html.includes(`<button onclick="showAppScreen('messages')"><span class="menu-icon">💬</span>Messages`), "Profile menu must provide direct access to messages");
+assert.ok(!html.includes(">Account settings"), "Do not present a settings action that only reopens sign-in");
+assert.ok(html.includes('<span class="menu-icon">📅</span>My bookings'), "Profile bookings action needs a clear emoji");
+assert.ok(html.includes('<span class="menu-icon">🤝</span>Group bookings'), "Profile group action needs a clear emoji");
 for (const id of [
   "appEquipmentList", "appOwnerList", "appMessageThreads", "weatherForm",
   "cropAnalyzeForm", "nearbyPlaceForm", "appProfileAuthButton",
