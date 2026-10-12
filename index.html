@@ -304,6 +304,47 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 .app-hero-card img{background:#d9e8d7}
 @media(min-width:681px){#appRoot{padding:18px 12px 112px}.app-device{max-width:1120px}.app-page{padding:24px clamp(18px,3vw,36px) 30px}.app-equipment-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.app-equipment-card{grid-template-columns:112px minmax(0,1fr);padding:10px}.app-equipment-card h3{font-size:14px}.app-equipment-card p{font-size:11px}.app-equipment-card .app-btn{font-size:11px}.app-empty{font-size:13px}.app-empty strong{font-size:15px}.app-location{font-size:13px}.app-info-card{font-size:13px;line-height:1.65}.app-info-card h3{font-size:16px}.app-map{height:440px}}
 @media(max-width:759px){.app-device{max-width:600px;border-radius:0;border:0;min-height:100vh;box-shadow:none}.app-bottom-nav{width:100%;border-radius:18px 18px 0 0}.app-equipment-list{grid-template-columns:1fr}.app-page{padding:17px 16px 25px}}
+
+/* Final responsive layout override: keep primary navigation usable on every viewport. */
+#appRoot{display:block;min-height:100svh;padding:14px 12px 104px!important;box-sizing:border-box}
+.app-device{width:100%;max-width:1120px!important;min-height:calc(100svh - 120px);margin:0 auto;border-radius:26px;overflow:hidden;box-sizing:border-box}
+.app-page{box-sizing:border-box;min-width:0;padding:clamp(16px,2.6vw,32px)!important;padding-bottom:28px!important}
+.app-page.active{display:block!important}
+.app-bottom-nav{display:flex!important;position:fixed!important;z-index:9999!important;left:50%!important;right:auto!important;bottom:max(8px,env(safe-area-inset-bottom))!important;transform:translateX(-50%)!important;width:min(720px,calc(100% - 24px))!important;height:auto!important;min-height:66px;box-sizing:border-box;grid-template-columns:repeat(5,minmax(0,1fr));justify-content:space-around;align-items:center;gap:5px;padding:7px 9px!important;background:rgba(255,255,255,.97)!important;border:1px solid #dce9df!important;border-radius:20px!important;box-shadow:0 8px 30px rgba(16,61,32,.18)!important;backdrop-filter:blur(14px)}
+.app-bottom-nav button{display:flex!important;visibility:visible!important;opacity:1!important;position:relative;z-index:1;flex:1 1 0;min-width:0;min-height:50px;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:5px 2px;border:0;border-radius:13px;background:transparent;color:#647267;font:700 11px/1.1 system-ui,sans-serif;cursor:pointer;pointer-events:auto}
+.app-bottom-nav button.active{background:#e9f5ec;color:#087747}
+.app-bottom-nav .nav-ico{display:block;font-size:21px;line-height:1.05}
+.app-bottom-nav .nav-add{flex:0 0 48px;min-height:48px;border-radius:15px;background:#087747;color:#fff;font-size:27px;box-shadow:0 5px 14px #08774730}
+.app-header{position:sticky;top:0;z-index:40}
+.app-equipment-list,.app-mini-grid{min-width:0}
+.app-equipment-card,.app-mini-card,.app-info-card,.app-group-card{min-width:0;overflow-wrap:anywhere}
+.app-page input,.app-page textarea,.app-page select,.app-page button{max-width:100%;box-sizing:border-box}
+.app-page .app-greeting h1{overflow-wrap:anywhere}
+@media(min-width:760px){
+ #appRoot{padding:24px 18px 108px!important}
+ .app-device{min-height:calc(100svh - 150px)}
+ .app-page{padding:28px 34px!important}
+ .app-page#appPage-home.active{display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:18px 24px;align-content:start}
+ #appPage-home>.app-greeting,#appPage-home>.app-search,#appPage-home>.app-hero-card,#appPage-home>.app-category-row{grid-column:1/-1}
+ #appPage-home>.app-section-head:nth-of-type(1),#appPage-home>#appPopularGrid{grid-column:1}
+ #appPage-home>.app-section-head:nth-of-type(2),#appPage-home>.app-feature-row{grid-column:2}
+ #appPage-home>.app-section-head:nth-of-type(3),#appPage-home>.app-mini-grid:last-child{grid-column:1/-1}
+}
+@media(max-width:759px){
+ #appRoot{padding:0 0 94px!important}
+ .app-device{max-width:620px!important;min-height:100svh;border-radius:0;border-left:0;border-right:0;box-shadow:none}
+ .app-page{padding:17px 16px 26px!important}
+ .app-bottom-nav{width:calc(100% - 18px)!important;min-height:64px;border-radius:18px!important}
+ .app-bottom-nav button{font-size:10px}
+ .app-bottom-nav .nav-add{flex:0 0 44px;min-height:44px}
+}
+@media(max-width:390px){
+ .app-page{padding:15px 12px 24px!important}
+ .app-bottom-nav{width:calc(100% - 12px)!important;padding:5px!important;gap:2px}
+ .app-bottom-nav button{font-size:9px}
+ .app-bottom-nav .nav-ico{font-size:19px}
+ .app-bottom-nav .nav-add{flex-basis:40px;min-height:42px}
+}
 </style>
 </head>
 <body>
