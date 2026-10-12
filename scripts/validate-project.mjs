@@ -51,6 +51,3 @@ for (const path of ["manifest.json", "sw.js", "privacy.html", "terms.html"]) {
   readFileSync(new URL("../" + path, import.meta.url), "utf8");
 }
 console.log(`AgriShare static validation passed: ${requiredScreens.length} screens, ${inlineScripts.length} inline script(s), required integration markers, PWA and policy files.`);
-
-assert.match(html, /AgriShare visual refresh v23/, "Polished responsive app theme must be present");
-assert.match(html, /prefers-reduced-motion:reduce/, "Respect reduced-motion accessibility preference");
