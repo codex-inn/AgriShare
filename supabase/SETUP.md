@@ -30,9 +30,9 @@ The browser integration may use only the Supabase **Project URL** and the **anon
 
 ## 4. Understand current limitations
 - If the page reports “Database setup required,” run the current `supabase/schema.sql` in the SQL Editor, then refresh the website. The status in the top strip should read “Shared database connected.”
-- Group capacity is checked in the UI but is not transaction-safe; add a database transaction/RPC before real-world bookings.
+- Group joining uses the `public.join_group` RPC backed by `private.join_group_core`; it locks the group row, checks remaining acreage and duplicate membership, then inserts within one transaction. Validate this with concurrent test accounts before accepting real bookings.
 - This schema is a starter. RLS limits who can read or change rows, but it is not a complete production security review. In particular, validate allowed booking status transitions server-side and add capacity/overbooking protection before real transactions.
 - Do not rely on the `verified` field as proof of identity; verification must be an actual reviewed process.
 
 ## 5. Next integration milestone
-After applying the schema and deploying the signup function, test username account creation, sign-in, sign-out, listing creation, booking requests, and group joining with two separate accounts. The configured browser key is a public publishable key; keep Row Level Security enabled and never expose service-role or secret keys.
+After applying the schema and deploying the signup function, test username account creation, sign-in, sign-out, listing creation, booking requests, and group joining with two separate accounts. The configured browser key is a public publishable key; keep Row Level Security enabled and never expose service-role or secret keys. The app currently has no self-service account deletion or username password-reset path; establish an authenticated recovery/deletion process before public launch.
