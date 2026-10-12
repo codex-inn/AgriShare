@@ -347,6 +347,12 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
  .app-bottom-nav .nav-ico{font-size:19px}
  .app-bottom-nav .nav-add{flex-basis:40px;min-height:42px}
 }
+
+/* Keep the add action on the navigation bar's exact centerline. */
+.app-bottom-nav{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;justify-content:stretch!important}
+.app-bottom-nav .nav-add{width:48px;min-width:48px;justify-self:center;margin-left:0;margin-right:0}
+@media(max-width:759px){.app-bottom-nav .nav-add{width:44px;min-width:44px}}
+@media(max-width:390px){.app-bottom-nav .nav-add{width:40px;min-width:40px}}
 </style>
 </head>
 <body>
