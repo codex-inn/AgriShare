@@ -318,7 +318,7 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
   <section class="app-page" id="appPage-bookings">
    <div class="app-greeting"><div><h1>My bookings</h1><div class="app-location">Manage your booking requests</div></div><button class="app-icon-btn" onclick="openModal('dashboardModal');loadDashboard()">↻</button></div>
    <div class="app-segment"><button class="active" onclick="appBookingTab(this,'upcoming')">Upcoming</button><button onclick="appBookingTab(this,'completed')">Completed</button><button onclick="appBookingTab(this,'cancelled')">Cancelled</button></div>
-   <div class="app-empty"><span class="emoji">📋</span><strong>View your live bookings</strong>Sign in to check booking requests and group activity from your account.</div><button class="app-btn full" style="margin-top:12px" onclick="openModal('dashboardModal');loadDashboard()">Open booking dashboard</button>
+   <div id="appBookingList"><div class="app-empty"><span class="emoji">📋</span><strong>Loading your bookings</strong>Your live requests will appear here.</div></div><button class="app-btn full" style="margin-top:12px" onclick="showAppScreen('explore')">＋ Find equipment</button>
   </section>
   <section class="app-page" id="appPage-equipment">
    <div class="app-greeting"><div><h1>My equipment</h1><div class="app-location">Manage machinery you have listed</div></div><button class="app-btn" onclick="openModal('listModal')">＋ Add equipment</button></div>
@@ -431,8 +431,8 @@ async function loadCloudData(){
   if(groupsResult.error)throw groupsResult.error;
   if(progressResult.error)console.warn('Group progress RPC is not available yet:',progressResult.error.message);
   const progress=Object.fromEntries((progressResult.data||[]).map(x=>[x.group_id,x]));
-  machines=(equipmentResult.data||[]).map(x=>({id:x.id,name:x.name,type:x.category,rate:Number(x.rate),unit:x.rate_unit||'acre',village:x.service_area?x.village+' · '+x.service_area:x.village,owner:'Local provider',rating:x.verified?'Verified':'Community listing',status:x.verified?'Verified':'Community listing',image:x.image_url||'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80',description:x.description||'Farm machinery service',verified:x.verified}));
-  groups=(groupsResult.data||[]).map(x=>({id:x.id,machine:x.equipment_category,village:x.village,date:x.preferred_date,target:Number(x.target_acres),joined:Number(progress[x.id]?.joined_acres||0),rate:Number(x.rate_per_acre),leader:'Farmer organizer',organizerId:x.organizer_id}));
+  machines=(equipmentResult.data||[]).map(x=>({id:x.id,name:x.name,type:x.category,rate:Number(x.rate),unit:x.rate_unit||'acre',village:x.service_area?x.village+' · '+x.service_area:x.village,owner_id:x.owner_id,available:x.available!==false,owner:x.owner_id===currentUser?.id?'Your listing':'Local provider',rating:x.verified?'Verified':'Community listing',status:x.verified?'Verified':'Community listing',image:x.image_url||'https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=900&q=80',description:x.description||'Farm machinery service',verified:x.verified}));
+  groups=(groupsResult.data||[]).map(x=>({id:x.id,machine:x.equipment_category,village:x.village,date:x.preferred_date,target:Number(x.target_acres),joined:Number(progress[x.id]?.joined_acres||0),rate:Number(x.rate_per_acre),leader:'Farmer organizer',organizer_id:x.organizer_id}));
   cloudReady=true;setConnectionStatus('Shared database connected',true);renderMachines();renderGroups();
  }catch(err){cloudReady=false;machines=[];groups=[];renderMachines();renderGroups();setConnectionStatus('Live listings unavailable',false);showCloudError('Could not load live listings from Supabase: '+(err?.message||'Check database/API settings')+'. Demo listings are hidden so farmers do not mistake examples for real offers.');}
  finally{cloudBusy=false;}
@@ -551,7 +551,7 @@ if(supabaseClient){supabaseClient.auth.getSession().then(({data,error})=>{if(err
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 
 /* App screen navigation and live data adapters */
-let appCurrentScreen='home',appCurrentFilter='',appCurrentGroupTab='open';
+let appCurrentScreen='home',appCurrentFilter='',appCurrentGroupTab='open',appCurrentBookingTab='upcoming',appSearchQuery='';
 function showAppScreen(screen){
  const valid=['home','explore','groups','nearby','bookings','equipment','messages','profile','weather','crop','support'];
  if(!valid.includes(screen))screen='home';
@@ -561,14 +561,14 @@ function showAppScreen(screen){
  const back=document.getElementById('appBack');if(back)back.style.display=['home','explore','groups','bookings','profile'].includes(screen)?'none':'grid';
  const headerTitles={home:'AgriShare',explore:'All Equipment',groups:'Group Bookings',nearby:'Nearby Equipment',bookings:'My Bookings',equipment:'My Equipment',messages:'Messages',profile:'My Profile',weather:'Weather',crop:'Crop Health',support:'Support'};
  document.title=(headerTitles[screen]||'AgriShare')+' | AgriShare';
- if(screen==='bookings')loadDashboard();
+ if(screen==='bookings'){loadAppBookings();loadDashboard();}
  if(screen==='profile')syncAppProfile();
  if(screen==='equipment')syncAppEquipment();
  if(screen==='explore')syncAppListings();
  if(screen==='groups')syncAppGroups();
  window.scrollTo({top:0,behavior:'smooth'});
 }
-function appSearch(q){const home=document.getElementById('appHomeSearch'),explore=document.getElementById('appExploreSearch');if(home&&home.value!==q)home.value=q;if(explore&&explore.value!==q)explore.value=q;const input=document.getElementById('searchInput');if(input){input.value=q;renderMachines()}syncAppListings()}
+function appSearch(q){appSearchQuery=String(q||'').trim().toLowerCase();const home=document.getElementById('appHomeSearch'),explore=document.getElementById('appExploreSearch');if(home&&home.value!==q)home.value=q;if(explore&&explore.value!==q)explore.value=q;const input=document.getElementById('searchInput');if(input){input.value=q;renderMachines()}syncAppListings()}
 function appFilter(type){appCurrentFilter=type;const typeSelect=document.getElementById('typeFilter');if(typeSelect){typeSelect.value=type;renderMachines()}document.querySelectorAll('#appFilterChips .app-chip').forEach(b=>b.classList.toggle('active',b.textContent.trim().toLowerCase()===(type||'all').toLowerCase()));showAppScreen('explore');syncAppListings()}
 function appCardMarkup(m){
  const img=m.image||'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=400&q=80';
@@ -576,7 +576,7 @@ function appCardMarkup(m){
  return '<article class="app-equipment-card"><img src="'+esc(img)+'" alt="'+esc(m.name)+'" loading="lazy"><div><h3>'+esc(m.name)+'</h3><p>📍 '+esc(m.village||'Location to confirm')+'</p><p>⭐ '+esc(m.rating||'New')+' · '+esc(m.owner||'Local owner')+'</p><div class="app-price">'+money(m.rate)+' <small>/ '+esc(m.unit||'acre')+'</small></div><div class="app-card-actions"><button class="app-btn" onclick="requestBooking(\''+id+'\')">Book</button><button class="app-btn outline" onclick="toast('Please contact the owner through the booking request flow.')">Details</button></div></div></article>';
 }
 function syncAppListings(){
- const list=(machines||[]).filter(m=>(!appCurrentFilter||m.type===appCurrentFilter));
+ const list=(machines||[]).filter(m=>(!appCurrentFilter||m.type===appCurrentFilter)&&(!appSearchQuery||[m.name,m.type,m.village,m.description,m.owner].join(' ').toLowerCase().includes(appSearchQuery)));
  const empty='<div class="app-empty"><span class="emoji">🚜</span><strong>No live equipment listings yet</strong>Real equipment will appear here when an owner publishes a listing. No demo offers are shown.</div>';
  const html=list.length?list.map(appCardMarkup).join(''):empty;
  ['appEquipmentList'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html});
@@ -588,7 +588,7 @@ function syncAppGroups(){
  el.innerHTML=list.length?list.map(g=>{const p=Math.min(100,Math.round((Number(g.joined)||0)/(Number(g.target)||1)*100));return '<article class="app-group-card"><div class="app-group-top"><img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=300&q=80" alt="Farm equipment"><div><h3>'+esc(g.machine||'Equipment')+' group booking</h3><p>📍 '+esc(g.village||'Village to confirm')+'</p><p>📅 '+esc(g.date||'Date to confirm')+'</p></div></div><div class="app-progress"><span style="width:'+p+'%"></span></div><div class="app-group-bottom"><strong>'+money(g.rate)+' / acre</strong><button class="app-btn" onclick="joinGroup(\''+String(g.id||'').replace(/'/g,'')+'\')">Join group</button></div></article>'}).join(''):'<div class="app-empty"><span class="emoji">🤝</span><strong>'+(appCurrentGroupTab==='mine'?'No groups from your account yet':'No open group bookings yet')+'</strong>Create a real group booking to invite nearby farmers. Group listings will appear here from the shared database.</div>';
 }
 function appGroupTab(btn,tab){appCurrentGroupTab=tab;btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn));syncAppGroups()}
-function appBookingTab(btn,tab){btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn));if(tab==='upcoming'){openModal('dashboardModal');loadDashboard()}else toast('The current booking schema does not yet store '+tab+' booking status filters.')}
+function appBookingTab(btn,tab){appCurrentBookingTab=tab;btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn));loadAppBookings()}
 function syncAppProfile(){const n=currentUser?.user_metadata?.username||currentUser?.email?.split('@')[0]||'Farmer account';const name=document.getElementById('appProfileName'),status=document.getElementById('appProfileStatus'),greet=document.getElementById('appGreetingName');if(name)name.textContent=n;if(greet)greet.textContent=n;if(status)status.textContent=currentUser?'Signed in · AgriShare account':'Sign in to view your account'}
 function syncAppEquipment(){const el=document.getElementById('appOwnerList');if(!el)return;if(!currentUser){el.innerHTML='<div class="app-empty"><span class="emoji">🔐</span><strong>Sign in to manage equipment</strong>Your published listings are linked to your account.</div>';return}const own=(machines||[]).filter(m=>m.owner_id===currentUser.id);el.innerHTML=own.length?own.map(m=>'<article class="app-owner-card"><img src="'+esc(m.image||'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=300&q=80')+'" alt="'+esc(m.name)+'"><div><strong>'+esc(m.name)+'</strong><small>'+money(m.rate)+' / '+esc(m.unit||'acre')+' · '+esc(m.village)+'</small><div class="app-stats-row"><div><b>Live</b>Status</div><div><b>—</b>Bookings</div><div><b>—</b>Rating</div></div></div></article>').join(''):'<div class="app-empty"><span class="emoji">🚜</span><strong>No equipment listed yet</strong>Add your real equipment to start receiving booking requests.</div>'}
 document.querySelectorAll('.app-page').forEach(p=>{p.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(a){const target=a.getAttribute('href').slice(1);if(['machines','groups','owners'].includes(target)){e.preventDefault();showAppScreen(target==='machines'?'explore':target==='groups'?'groups':'equipment')}}})});
