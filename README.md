@@ -12,6 +12,7 @@
 - `supabase/functions/username-signup/index.ts` — username signup Edge Function source.
 - `supabase/schema.sql` — starter schema for a **new development project only**; not a production reset script.
 - `supabase/production-readiness-workflows.sql` — one-time migration for existing projects; adds booking-date protection, private reviews and a support request queue.
+- `supabase/production-readiness-indexes.sql` — adds indexes for new review and support foreign keys.
 - `supabase/SETUP.md` — backend setup and deployment precautions.
 - `privacy.html`, `terms.html` — prototype privacy notice and use terms.
 - `scripts/validate-project.mjs` — static integrity checks for required screens and inline JavaScript syntax.
