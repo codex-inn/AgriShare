@@ -51,7 +51,7 @@ for (const path of ["manifest.json", "sw.js", "privacy.html", "terms.html"]) {
   readFileSync(new URL("../" + path, import.meta.url), "utf8");
 }
 const schema = readFileSync(new URL("../supabase/schema.sql", import.meta.url), "utf8");
-const equipmentWriteGrants = [...schema.matchAll(/grant\\s+(insert|update)\\s*\\(([^)]+)\\)\\s*on table public\\.equipment/gi)];
+const equipmentWriteGrants = [...schema.matchAll(/grant\s+(insert|update)\s*\(([^)]+)\)\s*on table public\.equipment/gi)];
 const expectedEquipmentWriteColumns = [
   "equipment_role", "horsepower", "hitch_type", "pto_rpm", "hydraulic_capacity_lpm",
   "min_tractor_hp", "max_tractor_hp", "required_pto_rpm", "required_hydraulic_lpm",
