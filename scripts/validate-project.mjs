@@ -42,6 +42,8 @@ assert.ok(html.includes(`<button onclick="showAppScreen('messages')"><span class
 assert.ok(!html.includes(">Account settings"), "Do not present a settings action that only reopens sign-in");
 assert.ok(html.includes('<span class="menu-icon">📅</span>My bookings'), "Profile bookings action needs a clear emoji");
 assert.ok(html.includes('<span class="menu-icon">🤝</span>Group bookings'), "Profile group action needs a clear emoji");
+assert.ok(html.includes(".app-bottom-nav button:focus-visible"), "Navigation needs a visible keyboard focus state");
+assert.ok(html.includes(".app-bottom-nav button{font-size:10px}"), "Small-screen navigation labels must remain readable");
 for (const id of [
   "appEquipmentList", "appOwnerList", "appMessageThreads", "weatherForm",
   "cropAnalyzeForm", "nearbyPlaceForm", "appProfileAuthButton",
