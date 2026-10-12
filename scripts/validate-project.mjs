@@ -36,6 +36,9 @@ assert.ok(!html.includes('aria-label="Quick navigation"'), "The obsolete duplica
 assert.ok(html.includes('id="appProfileAuthButton"'), "The profile must provide an account action");
 assert.ok(html.includes("function syncAppAuthState("), "Auth state changes must refresh the app UI");
 assert.ok(html.includes("btn.textContent=currentUser?'↪️ Sign out':'🔑 Sign in / Create account'"), "Profile account action must clearly show sign-in or sign-out");
+assert.ok(html.includes(`<button class="app-icon-btn" aria-label="Messages" title="Messages" onclick="showAppScreen('messages')">💬</button>`), "The messages shortcut must open messages");
+assert.ok(html.includes(`<button class="app-icon-btn" aria-label="Notifications" title="Notifications" onclick="showAppScreen('profile')">🔔</button>`), "The notifications shortcut must open the profile notification panel");
+assert.ok(html.includes(`<button onclick="showAppScreen('messages')"><span class="menu-icon">💬</span>Messages`), "Profile menu must provide direct access to messages");
 for (const id of [
   "appEquipmentList", "appOwnerList", "appMessageThreads", "weatherForm",
   "cropAnalyzeForm", "nearbyPlaceForm", "appProfileAuthButton",
