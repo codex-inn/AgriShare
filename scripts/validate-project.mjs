@@ -5,20 +5,29 @@ import assert from "node:assert/strict";
 const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const requiredScreens = [
   "home", "explore", "groups", "nearby", "bookings", "equipment",
-  "messages", "profile", "weather", "crop", "support"
+  "messages", "profile", "weather", "crop", "favorites", "reviews", "support"
 ];
 for (const screen of requiredScreens) {
   assert.match(html, new RegExp('id="appPage-' + screen + '"'), `Missing app screen: ${screen}`);
 }
 for (const id of [
   "appEquipmentList", "appOwnerList", "appMessageThreads", "weatherForm",
-  "cropAnalyzeForm", "nearbyPlaceForm", "appProfileAuthButton"
+  "cropAnalyzeForm", "nearbyPlaceForm", "appProfileAuthButton",
+  "cropImageConsent", "appSupportForm", "appFavoritesList", "appReviewList"
 ]) {
   assert.ok(html.includes('id="' + id + '"'), `Missing required UI element: ${id}`);
 }
 assert.match(html, /geocoding-api\.open-meteo\.com/, "Live location lookup should use Open-Meteo");
 assert.match(html, /api\.open-meteo\.com\/v1\/forecast/, "Live weather API should be wired");
 assert.match(html, /booking_messages/, "Private booking message integration should exist");
+assert.match(html, /function safeEquipmentImage\(/, "Listing photos must be restricted to the trusted Supabase Storage bucket");
+assert.match(html, /function toggleFavorite\(/, "Equipment favorites must work");
+assert.match(html, /async function loadAppReviews\(/, "Completed booking reviews must be available");
+assert.match(html, /from\('support_requests'\)/, "Private support submission must use Supabase");
+assert.match(html, /cropImageConsent/, "Crop photos must require explicit endpoint consent");
+assert.doesNotMatch(html, /seedMachines|seedGroups|Demo provider|Demo organizer/, "Production UI source must not retain fake listing fixtures");
+assert.match(html, /Identity not independently verified/, "Provider identity limitations must be visible");
+assert.match(html, /Payments & wallet · Coming soon/, "Payments must be clearly unavailable until implemented");
 assert.match(html, /owner_id/, "Equipment owner IDs must be retained for owner actions");
 assert.match(html, /async function changeGroupStatus\(/, "Group status handler must be async");
 assert.match(html, /async function loadAppBookings\(/, "Booking history must load asynchronously");
@@ -67,4 +76,12 @@ for (const operation of ["insert", "update"]) {
   assert.ok(!columns.has("verified"), "Equipment owners must not be able to grant themselves verification");
 }
 
+const workflowSql = readFileSync(new URL("../supabase/production-readiness-workflows.sql", import.meta.url), "utf8");
+assert.match(workflowSql, /booking_requests_active_equipment_date_uidx/, "Active equipment booking collisions must be prevented in Postgres");
+assert.match(workflowSql, /support_requests/, "Private support queue migration must exist");
+assert.match(workflowSql, /booking_reviews/, "Participant-only review workflow must exist");
+assert.match(workflowSql, /grant insert \(requester_id, request_type, equipment_id, details\)[\s\S]*?on public\.support_requests to authenticated/i, "Support requests must grant authenticated insert only");
+assert.match(workflowSql, /private\.can_submit_booking_review/, "Review writes must be checked against a completed participant booking");
+assert.equal((workflowSql.match(/security definer\s+set search_path = ''/gi) || []).length, 2, "New privileged functions must use an empty search_path");
+assert.match(schema, /security definer\s+set search_path = ''/i, "Starter schema privileged functions must pin an empty search_path");
 console.log(`AgriShare static validation passed: ${requiredScreens.length} screens, ${inlineScripts.length} inline script(s), required integration markers, PWA and policy files.`);
