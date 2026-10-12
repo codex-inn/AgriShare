@@ -50,4 +50,21 @@ for (let i = 0; i < inlineScripts.length; i++) {
 for (const path of ["manifest.json", "sw.js", "privacy.html", "terms.html"]) {
   readFileSync(new URL("../" + path, import.meta.url), "utf8");
 }
+const schema = readFileSync(new URL("../supabase/schema.sql", import.meta.url), "utf8");
+const equipmentWriteGrants = [...schema.matchAll(/grant\\s+(insert|update)\\s*\\(([^)]+)\\)\\s*on table public\\.equipment/gi)];
+const expectedEquipmentWriteColumns = [
+  "equipment_role", "horsepower", "hitch_type", "pto_rpm", "hydraulic_capacity_lpm",
+  "min_tractor_hp", "max_tractor_hp", "required_pto_rpm", "required_hydraulic_lpm",
+  "compatibility_notes"
+];
+for (const operation of ["insert", "update"]) {
+  const grant = equipmentWriteGrants.find(([, action]) => action.toLowerCase() === operation);
+  assert.ok(grant, `Missing equipment ${operation} column grant`);
+  const columns = new Set(grant[2].split(",").map(column => column.trim().toLowerCase()));
+  for (const column of expectedEquipmentWriteColumns) {
+    assert.ok(columns.has(column), `Equipment ${operation} grant is missing ${column}`);
+  }
+  assert.ok(!columns.has("verified"), "Equipment owners must not be able to grant themselves verification");
+}
+
 console.log(`AgriShare static validation passed: ${requiredScreens.length} screens, ${inlineScripts.length} inline script(s), required integration markers, PWA and policy files.`);
