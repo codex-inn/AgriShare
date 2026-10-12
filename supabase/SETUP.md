@@ -42,7 +42,7 @@ The listing form saves owner-declared tractor and implement specifications (role
 
 ## 6. Marketplace support, reviews and booking safety
 
-For an existing project, apply `supabase/production-readiness-workflows.sql` once after the core marketplace migrations. It adds the active equipment/date booking guard, participant-only reviews after completion, and a private support/report queue. Support submissions are insert-only for authenticated users, limited to five per account per hour, and cannot be read through the public client API. Project administrators can review them in the Supabase dashboard. An account-deletion request is manual and does not delete an account automatically.
+For an existing project, apply `supabase/production-readiness-workflows.sql` once after the core marketplace migrations, then apply `supabase/production-readiness-indexes.sql`. The first file adds the active equipment/date booking guard, participant-only reviews after completion, and a private support/report queue; the second indexes the new review/support foreign keys. Support submissions are insert-only for authenticated users, limited to five per account per hour, and cannot be read through the public client API. Project administrators can review them in the Supabase dashboard. An account-deletion request is manual and does not delete an account automatically.
 
 The migration also fixes the SQL `search_path` on the existing privileged database trigger/workflow functions. Do not re-run `supabase/schema.sql` against production; it is only for a new development project.
 
