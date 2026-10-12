@@ -301,6 +301,8 @@ create table if not exists public.booking_reviews (
 );
 create index if not exists booking_reviews_reviewee_created_idx
   on public.booking_reviews(reviewee_id, created_at desc);
+create index if not exists booking_reviews_reviewer_created_idx
+  on public.booking_reviews(reviewer_id, created_at desc);
 alter table public.booking_reviews enable row level security;
 revoke all on table public.booking_reviews from public, anon, authenticated;
 grant select on table public.booking_reviews to authenticated;
@@ -354,6 +356,8 @@ create table if not exists public.support_requests (
 );
 create index if not exists support_requests_requester_created_idx
   on public.support_requests(requester_id, created_at desc);
+create index if not exists support_requests_equipment_id_idx
+  on public.support_requests(equipment_id);
 alter table public.support_requests enable row level security;
 revoke all on table public.support_requests from public, anon, authenticated;
 grant insert (requester_id, request_type, equipment_id, details)
