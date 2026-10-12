@@ -34,5 +34,9 @@ The browser integration may use only the Supabase **Project URL** and the **anon
 - This schema is a starter. RLS limits who can read or change rows, but it is not a complete production security review. In particular, validate allowed booking status transitions server-side and add capacity/overbooking protection before real transactions.
 - Do not rely on the `verified` field as proof of identity; verification must be an actual reviewed process.
 
-## 5. Next integration milestone
+## 5. Equipment compatibility permissions
+
+The listing form saves owner-declared tractor and implement specifications (role, horsepower, hitch, PTO, hydraulic requirements and compatibility notes). The starter schema grants authenticated owners insert/update access to these specific columns while keeping `verified` protected from owner writes. For an existing project created before these grants were added, apply `supabase/allow-equipment-compatibility-writes.sql` once. Do not rerun the starter schema over the production database.
+
+## 6. Next integration milestone
 After applying the schema and deploying the signup function, test username account creation, sign-in, sign-out, listing creation, booking requests, and group joining with two separate accounts. The configured browser key is a public publishable key; keep Row Level Security enabled and never expose service-role or secret keys. The app currently has no self-service account deletion or username password-reset path; establish an authenticated recovery/deletion process before public launch.
