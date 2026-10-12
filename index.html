@@ -52,9 +52,15 @@ body{background:#f6f9f5}
 .modal-backdrop{backdrop-filter:blur(5px)}
 input,select,textarea{accent-color:#087443}
 #machineGrid .empty,#groupGrid .empty{background:#fff;border:1px dashed #cbdcc9}
-.app-bottom-nav{display:none}
+.app-bottom-nav{display:flex;position:fixed;z-index:1000;bottom:0;left:50%;transform:translateX(-50%);width:min(100%,1120px);justify-content:space-around;align-items:center;gap:4px;padding:9px 12px calc(9px + env(safe-area-inset-bottom));background:#fff;border:1px solid #dce9df;border-bottom:0;border-radius:20px 20px 0 0;box-shadow:0 -6px 24px #173b2412}
+.app-bottom-nav button{display:flex;flex:1;min-width:0;min-height:48px;flex-direction:column;align-items:center;justify-content:center;gap:3px;border:0;border-radius:13px;background:transparent;color:#68786d;font:700 11px/1.1 system-ui,sans-serif;cursor:pointer}
+.app-bottom-nav button.active{background:#e9f5ec;color:#087747}
+.app-bottom-nav .nav-ico{font-size:21px;line-height:1.05}
+.app-bottom-nav .nav-add{flex:0 0 48px;min-height:48px;border-radius:16px;background:#087747;color:#fff;font-size:27px;box-shadow:0 5px 14px #08774730}
+@media(min-width:681px){.app-bottom-nav{width:min(calc(100% - 36px),1120px);bottom:12px;border:1px solid #dce9df;border-radius:20px}}
 @media(max-width:680px){
- body{padding-bottom:82px;background:#f6f9f5}
+ body{padding-bottom:94px;background:#f6f9f5}
+ #appRoot{padding-bottom:96px}
  .topline{padding:7px 0}
  .topline .wrap{justify-content:center}
  .topline .wrap span:first-child,.topline .wrap span:last-child{display:none}
@@ -296,7 +302,7 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 
 .app-equipment-placeholder{width:104px;min-height:108px;display:grid;place-items:center;background:#eef5e9;color:#3f6e45;border-radius:13px;font-size:32px;flex-shrink:0}
 .app-hero-card img{background:#d9e8d7}
-@media(min-width:760px){.app-device{max-width:1120px}.app-bottom-nav{max-width:1120px}.app-page{padding:24px clamp(18px,3vw,36px) 30px}.app-equipment-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.app-equipment-card{grid-template-columns:112px minmax(0,1fr);padding:10px}.app-equipment-card h3{font-size:14px}.app-equipment-card p{font-size:11px}.app-equipment-card .app-btn{font-size:11px}.app-empty{font-size:13px}.app-empty strong{font-size:15px}.app-location{font-size:13px}.app-info-card{font-size:13px;line-height:1.65}.app-info-card h3{font-size:16px}.app-map{height:440px}}
+@media(min-width:681px){#appRoot{padding:18px 12px 112px}.app-device{max-width:1120px}.app-page{padding:24px clamp(18px,3vw,36px) 30px}.app-equipment-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.app-equipment-card{grid-template-columns:112px minmax(0,1fr);padding:10px}.app-equipment-card h3{font-size:14px}.app-equipment-card p{font-size:11px}.app-equipment-card .app-btn{font-size:11px}.app-empty{font-size:13px}.app-empty strong{font-size:15px}.app-location{font-size:13px}.app-info-card{font-size:13px;line-height:1.65}.app-info-card h3{font-size:16px}.app-map{height:440px}}
 @media(max-width:759px){.app-device{max-width:600px;border-radius:0;border:0;min-height:100vh;box-shadow:none}.app-bottom-nav{width:100%;border-radius:18px 18px 0 0}.app-equipment-list{grid-template-columns:1fr}.app-page{padding:17px 16px 25px}}
 </style>
 </head>
@@ -310,7 +316,7 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 
 <div id="appRoot">
  <div class="app-device">
-  <div class="app-status"><span id="appClock">9:41</span><span class="app-status-icons">▮▮▮ ◉ ▰</span></div>
+  
   <header class="app-header">
    <button class="app-icon-btn" id="appBack" style="display:none" aria-label="Go back" onclick="showAppScreen('home')">‹</button>
    <div class="app-logo">🌱</div>
@@ -328,8 +334,7 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
    <div id="appPopularGrid" class="app-mini-grid"><div class="app-empty"><span class="emoji">🚜</span><strong>Local listings will appear here</strong>Real owner listings will show when available.</div></div>
    <div class="app-section-head"><h2>Group bookings</h2><button onclick="showAppScreen('groups')">See all →</button></div>
    <div class="app-feature-row"><div class="app-feature-icon">👨‍🌾</div><div style="flex:1"><strong>Join farmers together</strong><small>Lower cost, share time, better yield</small></div><button class="app-btn" onclick="showAppScreen('groups')">Explore</button></div>
-   <div class="app-section-head"><h2>Useful for your farm</h2></div>
-   <div class="app-mini-grid"><button class="app-mini-card" style="border:1px solid var(--app-line);text-align:left;padding:13px" onclick="showAppScreen('weather')"><span style="font-size:23px">☀️</span><div class="app-mini-body" style="padding:8px 0 0"><strong>Weather planning</strong><small>Open forecast tool</small></div></button><button class="app-mini-card" style="border:1px solid var(--app-line);text-align:left;padding:13px" onclick="showAppScreen('crop')"><span style="font-size:23px">🍅</span><div class="app-mini-body" style="padding:8px 0 0"><strong>Crop health</strong><small>Explore crop support</small></div></button></div>
+   
   </section>
   <section class="app-page" id="appPage-explore">
    <div class="app-greeting"><div><h1>All equipment</h1><div class="app-location">Find machinery shared by local owners</div></div><button class="app-icon-btn" onclick="showAppScreen('nearby')">⌖</button></div>
@@ -607,7 +612,9 @@ function showAppScreen(screen){
  if(screen==='equipment')syncAppEquipment();
  if(screen==='explore')syncAppListings();
  if(screen==='groups')syncAppGroups();
- window.scrollTo({top:0,behavior:'smooth'});
+ const appRoot=document.getElementById('appRoot');
+ if(appRoot){const top=appRoot.getBoundingClientRect().top+window.scrollY;window.scrollTo({top:Math.max(0,top-8),behavior:'auto'});}
+ document.querySelectorAll('.app-bottom-nav [data-screen]').forEach(b=>{b.setAttribute('aria-current',b.dataset.screen===screen?'page':'false')});
 }
 function appSearch(q){appSearchQuery=String(q||'').trim().toLowerCase();const home=document.getElementById('appHomeSearch'),explore=document.getElementById('appExploreSearch');if(home&&home.value!==q)home.value=q;if(explore&&explore.value!==q)explore.value=q;const input=document.getElementById('searchInput');if(input){input.value=q;renderMachines()}syncAppListings()}
 function appFilter(type){appCurrentFilter=type;const typeSelect=document.getElementById('typeFilter');if(typeSelect){typeSelect.value=type;renderMachines()}document.querySelectorAll('#appFilterChips .app-chip').forEach(b=>b.classList.toggle('active',b.textContent.trim().toLowerCase()===(type||'all').toLowerCase()));showAppScreen('explore');syncAppListings()}
@@ -651,7 +658,7 @@ async function loadAppBookings(){
  }catch(err){console.error('[AgriShare app bookings]',err);root.innerHTML='<div class="app-empty"><span class="emoji">⚠️</span><strong>Could not load bookings</strong>'+esc(err?.message||'Please retry when the connection is available.')+'</div><button class="app-btn full" onclick="loadAppBookings()">Retry</button>'}
 }
 function appBookingTab(btn,tab){appCurrentBookingTab=tab;btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn));loadAppBookings()}
-function syncAppProfile(){const n=currentUser?.user_metadata?.username||currentUser?.email?.split('@')[0]||'Farmer account';const name=document.getElementById('appProfileName'),status=document.getElementById('appProfileStatus'),greet=document.getElementById('appGreetingName');if(name)name.textContent=n;if(greet)greet.textContent=n;if(status)status.textContent=currentUser?'Signed in · AgriShare account':'Sign in to view your account';const btn=document.getElementById('appProfileAuthButton');if(btn){btn.textContent=currentUser?'Sign out':'Sign in / Create account';btn.onclick=()=>currentUser?signOutUser():openModal('authModal')}const loc=document.getElementById('appHomeLocation');if(loc&&currentUser?.user_metadata?.village)loc.textContent='📍 '+currentUser.user_metadata.village+' · profile location'}
+function syncAppProfile(){const n=currentUser?.user_metadata?.username||currentUser?.email?.split('@')[0]||'Farmer account';const name=document.getElementById('appProfileName'),status=document.getElementById('appProfileStatus'),greet=document.getElementById('appGreetingName');if(name)name.textContent=n;if(greet)greet.textContent=n;if(status)status.textContent=currentUser?'Signed in · AgriShare account':'Sign in to view your account';const btn=document.getElementById('appProfileAuthButton');if(btn){btn.textContent=currentUser?'Sign out':'Sign in / Create account';btn.onclick=()=>currentUser?signOutUser():openModal('authModal')}const loc=document.getElementById('appHomeLocation');if(loc&&currentUser?.user_metadata?.village)loc.textContent='📍 '+currentUser.user_metadata.village+' · profile location';const profileAuth=document.getElementById('appProfileAuthButton');if(profileAuth)profileAuth.setAttribute('aria-label',currentUser?'Sign out of your AgriShare account':'Sign in or create an AgriShare account')}
 async function toggleEquipmentAvailability(id){if(!requireLogin())return;const item=(machines||[]).find(m=>m.id===id);if(!item)return;const {error}=await supabaseClient.from('equipment').update({available:!item.available}).eq('id',id).eq('owner_id',currentUser.id);if(error){showCloudError('Could not update listing: '+error.message);return}toast(item.available?'Listing paused.':'Listing published.');await loadCloudData();syncAppEquipment();}
 function syncAppEquipment(){const el=document.getElementById('appOwnerList');if(!el)return;if(!currentUser){el.innerHTML='<div class="app-empty"><span class="emoji">🔐</span><strong>Sign in to manage equipment</strong>Your published listings are linked to your account.</div><button class="app-btn full" onclick="openModal(\'authModal\')">Sign in</button>';return}const own=(machines||[]).filter(m=>m.owner_id===currentUser.id);el.innerHTML=own.length?own.map(m=>'<article class="app-owner-card">'+(m.image?'<img src="'+esc(m.image)+'" alt="Owner-provided photo of '+esc(m.name)+'">':'<div class="app-equipment-placeholder">🚜</div>')+'<div><strong>'+esc(m.name)+'</strong><small>'+money(m.rate)+' / '+esc(m.unit||'acre')+' · '+esc(m.village)+'</small><div class="app-stats-row"><div><b>'+(m.available?'Active':'Paused')+'</b>Status</div><div><b>—</b>Bookings</div><div><b>'+esc(m.verified?'Verified':'Unverified')+'</b>Owner</div></div><button class="app-btn outline" style="margin-top:8px" onclick="toggleEquipmentAvailability(\''+m.id+'\')">'+(m.available?'Pause listing':'Publish listing')+'</button></div></article>').join(''):'<div class="app-empty"><span class="emoji">🚜</span><strong>No equipment listed yet</strong>Add your real equipment to start receiving booking requests.</div>'}
 
