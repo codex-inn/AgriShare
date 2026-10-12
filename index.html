@@ -561,7 +561,7 @@ function showAppScreen(screen){
  const back=document.getElementById('appBack');if(back)back.style.display=['home','explore','groups','bookings','profile'].includes(screen)?'none':'grid';
  const headerTitles={home:'AgriShare',explore:'All Equipment',groups:'Group Bookings',nearby:'Nearby Equipment',bookings:'My Bookings',equipment:'My Equipment',messages:'Messages',profile:'My Profile',weather:'Weather',crop:'Crop Health',support:'Support'};
  document.title=(headerTitles[screen]||'AgriShare')+' | AgriShare';
- if(screen==='bookings'){loadAppBookings();loadDashboard();}
+ if(screen==='bookings')loadAppBookings();
  if(screen==='profile')syncAppProfile();
  if(screen==='equipment')syncAppEquipment();
  if(screen==='explore')syncAppListings();
