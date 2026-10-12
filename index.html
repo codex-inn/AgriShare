@@ -346,6 +346,56 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
  .app-bottom-nav .nav-ico{font-size:19px}
  .app-bottom-nav .nav-add{flex-basis:40px;min-height:42px}
 }
+/* AgriShare visual refresh v23 — high-contrast, calm agricultural dashboard */
+:root{--app-green:#0f5b35;--app-lime:#d9f99d;--app-surface:#fff;--app-line:#e1e9df;--app-ink:#17291d}
+body{background:radial-gradient(ellipse at 10% 0%,#eaf5e8 0,transparent 38%),linear-gradient(180deg,#f7faf5 0%,#f3f7ef 100%)}
+.app-device{background:linear-gradient(180deg,#fff 0%,#fbfdf9 100%);border:1px solid #e3ebdf;box-shadow:0 24px 80px rgba(24,69,39,.09)}
+.app-header{background:rgba(255,255,255,.94)!important;backdrop-filter:blur(16px);border-bottom:1px solid rgba(217,231,216,.8)}
+.app-greeting{align-items:center;gap:16px;margin-bottom:20px}
+.app-greeting h1{letter-spacing:-.045em;line-height:1.12;color:#173d27}
+.app-location{color:#718074;font-size:13px;line-height:1.55}
+.app-search{border:1px solid #dce8da!important;background:#fff!important;border-radius:17px!important;box-shadow:0 5px 18px rgba(31,72,39,.045);transition:border-color .18s,box-shadow .18s}
+.app-search:focus-within{border-color:#63a875!important;box-shadow:0 0 0 4px rgba(64,145,83,.12)}
+.app-page .app-btn{border-radius:14px;min-height:45px;font-weight:800;letter-spacing:-.01em;transition:transform .16s,box-shadow .16s,filter .16s}
+.app-page .app-btn:not(:disabled):hover{transform:translateY(-1px);filter:saturate(1.06);box-shadow:0 8px 18px rgba(17,91,53,.16)}
+.app-page .app-btn:active{transform:translateY(0)}
+.app-hero-card{position:relative;isolation:isolate;overflow:hidden;border:1px solid rgba(213,237,203,.6);box-shadow:0 18px 40px rgba(20,83,45,.17);background:linear-gradient(125deg,#0d472b 0%,#14663b 56%,#2f854b 100%)!important}
+.app-hero-card:before{content:"";position:absolute;z-index:-1;width:250px;height:250px;right:-70px;top:-100px;border:1px solid #ffffff35;border-radius:50%;box-shadow:0 0 0 24px #ffffff0b,0 0 0 48px #ffffff08}
+.app-hero-card:after{content:"";position:absolute;z-index:-1;width:120px;height:120px;right:14%;bottom:-78px;border-radius:50%;background:#d9f99d24;filter:blur(2px)}
+.app-section-head{margin-top:28px;margin-bottom:13px}
+.app-section-head h2,.app-section-head h3{letter-spacing:-.035em}
+.app-equipment-card,.app-mini-card,.app-info-card,.app-group-card,.app-feature-card,.app-category{border:1px solid #e3ebdf!important;border-radius:19px!important;box-shadow:0 6px 20px rgba(26,63,35,.045);transition:transform .18s,border-color .18s,box-shadow .18s}
+.app-equipment-card:hover,.app-mini-card:hover,.app-group-card:hover{transform:translateY(-2px);border-color:#bdd9bd!important;box-shadow:0 14px 30px rgba(26,63,35,.09)}
+.app-info-card{background:linear-gradient(145deg,#fff 0%,#f6faf3 100%)!important}
+.app-category{background:rgba(255,255,255,.92)!important;min-height:84px}
+.app-category:focus-visible,.app-bottom-nav button:focus-visible,.app-page button:focus-visible{outline:3px solid #9bd4a5;outline-offset:3px}
+.app-chip{border:1px solid #dce8da!important;border-radius:999px!important;padding:9px 14px!important;font-weight:750!important}
+.app-chip.active{background:#145c35!important;color:#fff!important;border-color:#145c35!important;box-shadow:0 5px 12px #145c3520}
+.app-empty{border:1px dashed #cbdcc8!important;border-radius:18px!important;background:linear-gradient(145deg,#fff,#f7fbf4)!important;color:#718074}
+.app-bottom-nav{background:rgba(255,255,255,.94)!important;border-color:#dbe8d9!important;box-shadow:0 12px 38px rgba(16,61,32,.16)!important;backdrop-filter:blur(18px) saturate(1.2)}
+.app-bottom-nav button.active{background:linear-gradient(145deg,#e8f6e8,#dff0dc)!important;color:#105a32!important}
+.app-bottom-nav .nav-add{background:linear-gradient(145deg,#17834a,#0e5a34)!important;box-shadow:0 7px 16px #0e5a3438!important}
+.app-page label{color:#405c47}
+.app-page input,.app-page select,.app-page textarea{border-radius:12px}
+#compatibilityPanel{border-top:3px solid #8cbd67!important}
+#compatibilityPanel h3{letter-spacing:-.025em}
+#dbStatus{padding:4px 9px;border-radius:999px;background:#ffffff14}
+@media(min-width:760px){
+ #appRoot{padding-top:28px!important}
+ .app-device{border-radius:30px}
+ .app-page{padding:32px 38px!important}
+ .app-page#appPage-home.active{gap:20px 26px}
+ .app-page .app-hero-card{min-height:220px}
+}
+@media(max-width:759px){
+ .app-device{background:#fbfdf9}
+ .app-page{padding-top:20px!important}
+ .app-greeting h1{font-size:clamp(24px,6vw,31px)}
+ .app-hero-card{border-radius:22px!important}
+ .app-bottom-nav{bottom:max(7px,env(safe-area-inset-bottom))!important}
+}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
 </style>
 </head>
 <body>
