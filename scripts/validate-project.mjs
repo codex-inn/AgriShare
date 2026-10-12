@@ -10,6 +10,18 @@ const requiredScreens = [
 for (const screen of requiredScreens) {
   assert.match(html, new RegExp('id="appPage-' + screen + '"'), `Missing app screen: ${screen}`);
 }
+
+const bottomNavs = [...html.matchAll(/<nav class="app-bottom-nav"[^>]*>([\\s\\S]*?)<\\/nav>/g)];
+assert.equal(bottomNavs.length, 1, "There must be only one active bottom navigation bar");
+const bottomNav = bottomNavs[0][1];
+const navScreens = [...bottomNav.matchAll(/data-screen="([^"]+)"/g)].map(([, screen]) => screen);
+assert.deepEqual(navScreens, ["home", "explore", "bookings", "profile"], "Bottom navigation order must match the app layout around the central add action");
+assert.match(bottomNav, /🏠[\\s\\S]*?🔍[\\s\\S]*?📅[\\s\\S]*?👤/, "Primary navigation must use the intended emoji icons");
+assert.match(bottomNav, /aria-label="List equipment"/, "The center add action needs a clear accessible name");
+assert.doesNotMatch(html, /aria-label="Quick navigation"/, "The obsolete duplicate navigation must not return");
+assert.match(html, /id="appProfileAuthButton"/, "The profile must provide an account action");
+assert.match(html, /function syncAppAuthState\\(/, "Auth state changes must refresh the app UI");
+assert.match(html, /btn\\.textContent=currentUser\\?'↪️ Sign out':'🔑 Sign in \\/ Create account'/, "Profile account action must clearly show sign-in or sign-out");
 for (const id of [
   "appEquipmentList", "appOwnerList", "appMessageThreads", "weatherForm",
   "cropAnalyzeForm", "nearbyPlaceForm", "appProfileAuthButton",
