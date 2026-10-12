@@ -264,6 +264,8 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 @media(min-width:700px){#appRoot{padding-top:24px}.app-device{min-height:calc(100vh - 48px)}}
 @media(max-width:420px){#appRoot{padding:0 0 82px}.app-device{border-radius:0;border:0;min-height:100vh;box-shadow:none}.app-page{padding:15px 14px 24px}.app-hero-card{height:172px}.app-equipment-card{grid-template-columns:91px minmax(0,1fr)}.app-equipment-card img{width:91px;height:101px}}
 
+
+.app-equipment-placeholder{width:104px;min-height:108px;display:grid;place-items:center;background:#eef5e9;color:#3f6e45;border-radius:13px;font-size:32px;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -326,9 +328,9 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
    <div class="app-info-card"><h3>Owner tips</h3><p>Keep rates, service area and availability accurate. Confirm each request directly before accepting a job.</p></div>
   </section>
   <section class="app-page" id="appPage-messages">
-   <div class="app-greeting"><div><h1>Messages</h1><div class="app-location">Conversations about your farm services</div></div><button class="app-icon-btn" onclick="toast('Messaging will be enabled when the chat backend is connected.')">⌕</button></div>
-   <div class="app-empty"><span class="emoji">💬</span><strong>Messages are not connected yet</strong>Live owner-to-farmer chat needs a secure messaging table and realtime policies. For now, use the booking request flow and confirm details with the owner.</div>
-   <div class="app-info-card"><h3>Stay safe</h3><p>Confirm the machine, rate, date and operator directly. Do not send payment to an unverified provider.</p><button class="app-btn soft full" style="margin-top:10px" onclick="showAppScreen('bookings')">View my bookings</button></div>
+   <div class="app-greeting"><div><h1>Messages</h1><div class="app-location">Private conversations linked to your bookings</div></div><button class="app-icon-btn" onclick="loadMessageThreads()">↻</button></div>
+   <div id="appMessageThreads"><div class="app-empty"><span class="emoji">💬</span><strong>Loading booking conversations</strong>Messages are only available to the farmer and equipment owner involved in a booking.</div></div>
+   <div class="app-info-card"><h3>Stay safe</h3><p>Keep booking details in the relevant conversation. Do not share passwords or payment credentials. Payments are not processed in AgriShare.</p></div>
   </section>
   <section class="app-page" id="appPage-profile">
    <div class="app-greeting"><div><h1>My profile</h1><div class="app-location">Your AgriShare account</div></div><button class="app-icon-btn" onclick="openModal('authModal')">⚙</button></div>
@@ -427,7 +429,7 @@ async function loadCloudData(){
  cloudBusy=true;
  try{
   const [equipmentResult,groupsResult,progressResult]=await Promise.all([
-   supabaseClient.from('equipment').select('id,name,category,description,rate,rate_unit,village,service_area,image_url,verified,available,created_at').eq('available',true).order('created_at',{ascending:false}),
+   supabaseClient.from('equipment').select('id,owner_id,name,category,description,rate,rate_unit,village,service_area,image_url,verified,available,created_at').eq('available',true).order('created_at',{ascending:false}),
    supabaseClient.from('group_bookings').select('id,organizer_id,equipment_category,village,preferred_date,target_acres,rate_per_acre,status,created_at').eq('status','open').order('created_at',{ascending:false}),
    supabaseClient.rpc('get_group_progress')
   ]);
@@ -566,6 +568,7 @@ function showAppScreen(screen){
  const headerTitles={home:'AgriShare',explore:'All Equipment',groups:'Group Bookings',nearby:'Nearby Equipment',bookings:'My Bookings',equipment:'My Equipment',messages:'Messages',profile:'My Profile',weather:'Weather',crop:'Crop Health',support:'Support'};
  document.title=(headerTitles[screen]||'AgriShare')+' | AgriShare';
  if(screen==='bookings')loadAppBookings();
+ if(screen==='messages')loadMessageThreads();
  if(screen==='profile')syncAppProfile();
  if(screen==='equipment')syncAppEquipment();
  if(screen==='explore')syncAppListings();
@@ -575,21 +578,21 @@ function showAppScreen(screen){
 function appSearch(q){appSearchQuery=String(q||'').trim().toLowerCase();const home=document.getElementById('appHomeSearch'),explore=document.getElementById('appExploreSearch');if(home&&home.value!==q)home.value=q;if(explore&&explore.value!==q)explore.value=q;const input=document.getElementById('searchInput');if(input){input.value=q;renderMachines()}syncAppListings()}
 function appFilter(type){appCurrentFilter=type;const typeSelect=document.getElementById('typeFilter');if(typeSelect){typeSelect.value=type;renderMachines()}document.querySelectorAll('#appFilterChips .app-chip').forEach(b=>b.classList.toggle('active',b.textContent.trim().toLowerCase()===(type||'all').toLowerCase()));showAppScreen('explore');syncAppListings()}
 function appCardMarkup(m){
- const img=m.image||'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=400&q=80';
+ const img=m.image||'';
  const id=String(m.id||'').replace(/'/g,'');
- return '<article class="app-equipment-card"><img src="'+esc(img)+'" alt="'+esc(m.name)+'" loading="lazy"><div><h3>'+esc(m.name)+'</h3><p>📍 '+esc(m.village||'Location to confirm')+'</p><p>⭐ '+esc(m.rating||'New')+' · '+esc(m.owner||'Local owner')+'</p><div class="app-price">'+money(m.rate)+' <small>/ '+esc(m.unit||'acre')+'</small></div><div class="app-card-actions"><button class="app-btn" onclick="requestBooking(\''+id+'\')">Book</button><button class="app-btn outline" onclick="toast('Please contact the owner through the booking request flow.')">Details</button></div></div></article>';
+ return '<article class="app-equipment-card">'+(img?'<img src="'+esc(img)+'" alt="Owner-provided photo of '+esc(m.name)+'" loading="lazy">':'<div class="app-equipment-placeholder" aria-label="No equipment photo provided">🚜</div>')+'<div><h3>'+esc(m.name)+'</h3><p>📍 '+esc(m.village||'Location to confirm')+'</p><p>⭐ '+esc(m.rating||'New')+' · '+esc(m.owner||'Local owner')+'</p><div class="app-price">'+money(m.rate)+' <small>/ '+esc(m.unit||'acre')+'</small></div><div class="app-card-actions"><button class="app-btn" onclick="requestBooking(\''+id+'\')">Book</button><button class="app-btn outline" onclick="toast('Please contact the owner through the booking request flow.')">Details</button></div></div></article>';
 }
 function syncAppListings(){
  const list=(machines||[]).filter(m=>(!appCurrentFilter||m.type===appCurrentFilter)&&(!appSearchQuery||[m.name,m.type,m.village,m.description,m.owner].join(' ').toLowerCase().includes(appSearchQuery)));
  const empty='<div class="app-empty"><span class="emoji">🚜</span><strong>No live equipment listings yet</strong>Real equipment will appear here when an owner publishes a listing. No demo offers are shown.</div>';
  const html=list.length?list.map(appCardMarkup).join(''):empty;
  ['appEquipmentList'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html});
- const pop=document.getElementById('appPopularGrid');if(pop)pop.innerHTML=list.length?list.slice(0,4).map(m=>'<button class="app-mini-card" style="text-align:left;border:1px solid var(--app-line)" onclick="showAppScreen(\'explore\')"><img src="'+esc(m.image||'https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=400&q=80')+'" alt="'+esc(m.name)+'"><div class="app-mini-body"><strong>'+esc(m.name)+'</strong><small>'+esc(m.type)+' · '+esc(m.village)+'</small><div class="app-price">'+money(m.rate)+' / '+esc(m.unit||'acre')+'</div></div></button>').join(''):empty;
+ const pop=document.getElementById('appPopularGrid');if(pop)pop.innerHTML=list.length?list.slice(0,4).map(m=>'<button class="app-mini-card" style="text-align:left;border:1px solid var(--app-line)" onclick="showAppScreen(\'explore\')">'+(m.image?'<img src="'+esc(m.image)+'" alt="Owner-provided photo of '+esc(m.name)+'">':'<div class="app-equipment-placeholder" aria-label="No equipment photo provided">🚜</div>')+'<div class="app-mini-body"><strong>'+esc(m.name)+'</strong><small>'+esc(m.type)+' · '+esc(m.village)+'</small><div class="app-price">'+money(m.rate)+' / '+esc(m.unit||'acre')+'</div></div></button>').join(''):empty;
 }
 function syncAppGroups(){
  const el=document.getElementById('appGroupList');if(!el)return;
  const list=(groups||[]).filter(g=>appCurrentGroupTab!=='mine'||(currentUser&&g.organizer_id===currentUser.id));
- el.innerHTML=list.length?list.map(g=>{const p=Math.min(100,Math.round((Number(g.joined)||0)/(Number(g.target)||1)*100));return '<article class="app-group-card"><div class="app-group-top"><img src="https://images.unsplash.com/photo-1592982537447-7440770cbfc9?auto=format&fit=crop&w=300&q=80" alt="Farm equipment"><div><h3>'+esc(g.machine||'Equipment')+' group booking</h3><p>📍 '+esc(g.village||'Village to confirm')+'</p><p>📅 '+esc(g.date||'Date to confirm')+'</p></div></div><div class="app-progress"><span style="width:'+p+'%"></span></div><div class="app-group-bottom"><strong>'+money(g.rate)+' / acre</strong><button class="app-btn" onclick="joinGroup(\''+String(g.id||'').replace(/'/g,'')+'\')">Join group</button></div></article>'}).join(''):'<div class="app-empty"><span class="emoji">🤝</span><strong>'+(appCurrentGroupTab==='mine'?'No groups from your account yet':'No open group bookings yet')+'</strong>Create a real group booking to invite nearby farmers. Group listings will appear here from the shared database.</div>';
+ el.innerHTML=list.length?list.map(g=>{const p=Math.min(100,Math.round((Number(g.joined)||0)/(Number(g.target)||1)*100));return '<article class="app-group-card"><div class="app-group-top"><div class="app-equipment-placeholder" aria-label="No group equipment photo provided">🤝</div><div><h3>'+esc(g.machine||'Equipment')+' group booking</h3><p>📍 '+esc(g.village||'Village to confirm')+'</p><p>📅 '+esc(g.date||'Date to confirm')+'</p></div></div><div class="app-progress"><span style="width:'+p+'%"></span></div><div class="app-group-bottom"><strong>'+money(g.rate)+' / acre</strong><button class="app-btn" onclick="joinGroup(\''+String(g.id||'').replace(/'/g,'')+'\')">Join group</button></div></article>'}).join(''):'<div class="app-empty"><span class="emoji">🤝</span><strong>'+(appCurrentGroupTab==='mine'?'No groups from your account yet':'No open group bookings yet')+'</strong>Create a real group booking to invite nearby farmers. Group listings will appear here from the shared database.</div>';
 }
 function appGroupTab(btn,tab){appCurrentGroupTab=tab;btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn));syncAppGroups()}
 async function loadAppBookings(){
@@ -656,6 +659,39 @@ document.getElementById('cropAnalyzeForm')?.addEventListener('submit',async e=>{
   root.innerHTML='<div class="app-info-card"><small>Real API result · Scan '+esc(body.scan_id||'ID not supplied')+' · Model '+esc(body.model||'model name not supplied')+'</small><h3 style="margin-top:10px">Tomato maturity detections</h3><div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px">'+classes.map(([k,label])=>'<div style="background:#f0f7f1;border-radius:10px;padding:10px;text-align:center"><b style="font-size:22px">'+esc(String(summary[k]??0))+'</b><small style="display:block">'+label+'</small></div>').join('')+'</div><p style="margin-top:10px">Mean detection confidence: '+(Number(summary.mean_confidence||0)*100).toFixed(1)+'%</p><h3 style="margin-top:14px">Detections</h3>'+(body.detections.length?body.detections.map(d=>'<p style="border-top:1px solid var(--app-line);padding:8px 0"><b>'+esc(d.class)+'</b> · '+(Number(d.confidence||0)*100).toFixed(1)+'% confidence · '+esc(d.id||'Detection')+'</p>').join(''):'<p>No maturity-class detections were returned for this image.</p>')+'<p style="margin-top:12px">'+esc(body.notice||'Model output is advisory only. Confirm with a qualified agricultural specialist.')+'</p></div>';
  }catch(err){root.innerHTML='<div class="app-empty"><span class="emoji">⚠️</span><strong>Real crop analysis failed</strong>'+esc(err.message||'The configured inference service is unavailable.')+'<p>No replacement/demo prediction was displayed.</p></div><button class="app-btn full" onclick="document.getElementById(\'cropAnalyzeForm\').requestSubmit()">Retry analysis</button>'}
 });
+
+
+async function loadMessageThreads(){
+ const root=document.getElementById('appMessageThreads');if(!root)return;
+ if(!currentUser){root.innerHTML='<div class="app-empty"><span class="emoji">🔐</span><strong>Sign in to view messages</strong>Conversations are private to booking participants.</div><button class="app-btn full" onclick="openModal(\'authModal\')">Sign in</button>';return}
+ root.innerHTML='<div class="app-empty"><strong>Loading conversations…</strong></div>';
+ try{
+  const {data:rows,error}=await supabaseClient.from('booking_requests').select('id,farmer_id,equipment_id,preferred_date,status,created_at,equipment(name,owner_id)').in('status',['pending','accepted']).order('created_at',{ascending:false});
+  if(error)throw error;
+  const threads=(rows||[]).filter(r=>r.farmer_id===currentUser.id||r.equipment?.owner_id===currentUser.id);
+  if(!threads.length){root.innerHTML='<div class="app-empty"><span class="emoji">💬</span><strong>No messageable bookings</strong>Messages become available after a booking request is created and remains pending or accepted.</div><button class="app-btn full" onclick="showAppScreen(\'explore\')">Find equipment</button>';return}
+  const counts=await supabaseClient.from('booking_messages').select('booking_request_id,recipient_id,read_at').eq('recipient_id',currentUser.id).is('read_at',null);
+  const unread={};(counts.data||[]).forEach(m=>unread[m.booking_request_id]=(unread[m.booking_request_id]||0)+1);
+  root.innerHTML=threads.map(r=>{const ownerId=r.equipment?.owner_id,recipient=r.farmer_id===currentUser.id?ownerId:r.farmer_id;return '<article class="app-info-card"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><div><h3>'+esc(r.equipment?.name||'Equipment booking')+'</h3><p>Booking '+esc(r.id.slice(0,8))+' · '+esc(r.status)+' · '+esc(r.preferred_date||'Date not set')+'</p></div>'+(unread[r.id]?'<span style="background:#dcfce7;border-radius:20px;padding:5px 8px;font-size:11px">'+unread[r.id]+' new</span>':'')+'</div><button class="app-btn full" style="margin-top:10px" onclick="openBookingConversation(\''+r.id+'\',\''+recipient+'\')">Open conversation</button></article>'}).join('');
+ }catch(err){console.error('[AgriShare messages]',err);root.innerHTML='<div class="app-empty"><strong>Messages unavailable</strong>'+esc(err.message||'Could not load booking conversations.')+'</div>'}
+}
+async function openBookingConversation(bookingId,recipientId){
+ const root=document.getElementById('appMessageThreads');if(!root||!currentUser)return;
+ root.innerHTML='<div class="app-empty"><strong>Loading conversation…</strong></div>';
+ try{
+  const {data:booking,error:be}=await supabaseClient.from('booking_requests').select('id,farmer_id,equipment_id,status,preferred_date,equipment(name,owner_id)').eq('id',bookingId).maybeSingle();
+  if(be)throw be;if(!booking||!['pending','accepted'].includes(booking.status))throw new Error('This conversation is unavailable because the booking is no longer active.');
+  const other=booking.farmer_id===currentUser.id?booking.equipment?.owner_id:booking.farmer_id;
+  if(!other||other!==recipientId)throw new Error('Conversation participant could not be verified.');
+  const {data:msgs,error:me}=await supabaseClient.from('booking_messages').select('id,sender_id,recipient_id,body,created_at,read_at').eq('booking_request_id',bookingId).order('created_at',{ascending:true});
+  if(me)throw me;
+  const unread=(msgs||[]).filter(m=>m.recipient_id===currentUser.id&&!m.read_at).map(m=>m.id);
+  if(unread.length){const {error:readError}=await supabaseClient.from('booking_messages').update({read_at:new Date().toISOString()}).in('id',unread);if(readError)console.warn('[AgriShare messages read status]',readError.message)}
+  root.innerHTML='<button class="app-btn outline" onclick="loadMessageThreads()">← All conversations</button><div class="app-info-card"><h3>'+esc(booking.equipment?.name||'Equipment booking')+'</h3><p>Booking '+esc(booking.id.slice(0,8))+' · '+esc(booking.status)+'</p></div><div id="appConversationBody" style="display:flex;flex-direction:column;gap:8px;margin:12px 0;max-height:48vh;overflow:auto">'+((msgs||[]).length?(msgs||[]).map(m=>'<div style="max-width:88%;align-self:'+(m.sender_id===currentUser.id?'flex-end':'flex-start')+';background:'+(m.sender_id===currentUser.id?'#dcfce7':'#fff')+';border:1px solid var(--app-line);padding:10px 12px;border-radius:13px"><p style="white-space:pre-wrap;overflow-wrap:anywhere">'+esc(m.body)+'</p><small>'+esc(new Date(m.created_at).toLocaleString())+(m.sender_id===currentUser.id?' · You':'')+'</small></div>').join(''):'<div class="app-empty"><strong>No messages yet</strong>Send a message to start the conversation.</div>')+'</div><form id="appSendMessageForm" style="display:flex;flex-direction:column;gap:8px"><textarea id="appMessageBody" maxlength="2000" required rows="3" placeholder="Message the farmer or equipment owner…" style="width:100%;border:1px solid var(--app-line);border-radius:12px;padding:12px;resize:vertical"></textarea><button class="app-btn full" type="submit">Send message</button></form>';
+  const body=document.getElementById('appConversationBody');if(body)body.scrollTop=body.scrollHeight;
+  document.getElementById('appSendMessageForm').addEventListener('submit',async e=>{e.preventDefault();const field=document.getElementById('appMessageBody'),text=field.value.trim();if(!text)return;const btn=e.submitter;btn.disabled=true;try{const {error}=await supabaseClient.from('booking_messages').insert({booking_request_id:bookingId,sender_id:currentUser.id,recipient_id:other,body:text});if(error)throw error;await openBookingConversation(bookingId,other)}catch(err){toast('Message not sent: '+(err.message||'Please try again.'))}finally{if(btn.isConnected)btn.disabled=false}});
+ }catch(err){console.error('[AgriShare conversation]',err);root.innerHTML='<div class="app-empty"><strong>Could not open conversation</strong>'+esc(err.message||'Please try again.')+'</div><button class="app-btn outline" onclick="loadMessageThreads()">Back to conversations</button>'}
+}
 
 document.querySelectorAll('.app-page').forEach(p=>{p.addEventListener('click',e=>{const a=e.target.closest('a[href^="#"]');if(a){const target=a.getAttribute('href').slice(1);if(['machines','groups','owners'].includes(target)){e.preventDefault();showAppScreen(target==='machines'?'explore':target==='groups'?'groups':'equipment')}}})});
 const appObserver=new MutationObserver(()=>{syncAppListings();syncAppGroups();syncAppProfile()});
