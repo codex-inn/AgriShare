@@ -413,11 +413,11 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
    <div class="app-info-card"><h3>Stay safe</h3><p>Keep booking details in the relevant conversation. Do not share passwords or payment credentials. Payments are not processed in AgriShare.</p></div>
   </section>
   <section class="app-page" id="appPage-profile">
-   <div class="app-greeting"><div><h1>My profile</h1><div class="app-location">Your AgriShare account</div></div><button class="app-icon-btn" onclick="openModal('authModal')">⚙</button></div>
+   <div class="app-greeting"><div><h1>My profile</h1><div class="app-location">Your AgriShare account</div></div></div>
    <div class="app-profile-hero"><div class="app-profile-photo">👨‍🌾</div><div><strong id="appProfileName">Farmer account</strong><small id="appProfileStatus">Sign in to view your account</small><small>📍 Tamil Nadu, India</small></div></div>
    <div id="appNotifications" class="app-info-card" style="margin-top:12px"><h3>🔔 Notifications</h3><p>Sign in to see booking and group updates.</p></div>
    <div class="app-menu"><button onclick="showAppScreen('bookings')"><span class="menu-icon">▣</span>My bookings <span class="menu-arrow">›</span></button><button onclick="showAppScreen('equipment')"><span class="menu-icon">🚜</span>My equipment <span class="menu-arrow">›</span></button><button onclick="showAppScreen('favorites')"><span class="menu-icon">☆</span>Saved equipment <span class="menu-arrow">›</span></button><button onclick="showAppScreen('groups')"><span class="menu-icon">♧</span>Group bookings <span class="menu-arrow">›</span></button><button disabled aria-disabled="true" title="Payments are not available yet"><span class="menu-icon">▤</span>Payments & wallet · Coming soon <span class="menu-arrow">›</span></button><button onclick="showAppScreen('reviews')"><span class="menu-icon">★</span>My reviews <span class="menu-arrow">›</span></button><button onclick="showAppScreen('support')"><span class="menu-icon">ⓘ</span>Help & support <span class="menu-arrow">›</span></button><button onclick="openModal('authModal')"><span class="menu-icon">⚙</span>Account settings <span class="menu-arrow">›</span></button></div>
-   <button id="appProfileAuthButton" class="app-btn outline full" style="margin-top:13px" onclick="openModal('authModal')">Sign in / Create account</button>
+   <button id="appProfileAuthButton" class="app-btn outline full" style="margin-top:13px" onclick="openModal('authModal')">🔑 Sign in / Create account</button>
   </section>
   <section class="app-page" id="appPage-weather">
    <div class="app-greeting"><div><h1>Weather planning</h1><div class="app-location">Plan field work around local conditions</div></div><button class="app-screen-back" onclick="showAppScreen('home')">‹</button></div>
@@ -462,9 +462,9 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
  </div>
 </div>
 <nav class="app-bottom-nav" aria-label="App navigation">
- <button class="active" data-screen="home" onclick="showAppScreen('home')"><span class="nav-ico" aria-hidden="true">🏠</span><span>Home</span></button>
+ <button class="active" data-screen="home" aria-current="page" onclick="showAppScreen('home')"><span class="nav-ico" aria-hidden="true">🏠</span><span>Home</span></button>
  <button data-screen="explore" onclick="showAppScreen('explore')"><span class="nav-ico" aria-hidden="true">🔍</span><span>Explore</span></button>
- <button class="nav-add" aria-label="➕ List equipment" title="List equipment" onclick="openModal('listModal')"><span aria-hidden="true">➕</span></button>
+ <button class="nav-add" aria-label="List equipment" title="List equipment" onclick="openModal('listModal')"><span aria-hidden="true">➕</span></button>
  <button data-screen="bookings" onclick="showAppScreen('bookings')"><span class="nav-ico" aria-hidden="true">📅</span><span>Bookings</span></button>
  <button data-screen="profile" onclick="showAppScreen('profile')"><span class="nav-ico" aria-hidden="true">👤</span><span>Profile</span></button>
 </nav>
@@ -494,13 +494,6 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 <div class="modal-backdrop" id="authModal" role="dialog" aria-modal="true" aria-labelledby="authTitle"><div class="modal"><div class="modal-head"><div><h2 id="authTitle">AgriShare account</h2><p>Username and password only — no email address is needed in this form.</p></div><button class="close" onclick="closeModal('authModal')" aria-label="Close">×</button></div><form id="authForm"><div class="form-grid"><div class="field full"><label for="authUsername">Username</label><input id="authUsername" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required minlength="3" maxlength="24" pattern="[A-Za-z0-9._-]{3,24}" placeholder="e.g. farmer_kumar"></div><div class="field full"><label for="authPassword">Password</label><input id="authPassword" name="password" type="password" minlength="8" autocomplete="current-password" required placeholder="At least 8 characters"></div></div><div class="form-note"><b>First time here?</b> Enter a username and password, then select <b>Create account</b>. To return, use <b>Sign in</b>. Usernames may contain letters, numbers, dots, underscores or hyphens (3–24 characters). For this Supabase-backed prototype, the project owner must turn off <b>Confirm email</b> in Authentication → Providers → Email before creating accounts. Username accounts cannot receive email password-reset messages, so keep your password safe.</div><div class="form-actions"><button class="btn btn-outline" type="button" onclick="closeModal('authModal')">Cancel</button><button class="btn btn-primary" type="submit">Sign in</button><button class="btn btn-outline" type="button" id="signUpButton">Create account</button></div></form></div></div>
 <div class="modal-backdrop" id="dashboardModal" role="dialog" aria-modal="true" aria-labelledby="dashboardTitle"><div class="modal"><div class="modal-head"><div><h2 id="dashboardTitle">My AgriShare dashboard</h2><p>View your booking requests and group bookings.</p></div><button class="close" onclick="closeModal('dashboardModal')" aria-label="Close">×</button></div><div id="dashboardContent"><p>Sign in to view your activity.</p></div><div class="form-actions"><button class="btn btn-outline" onclick="loadDashboard()">Refresh</button><button class="btn btn-primary" onclick="closeModal('dashboardModal')">Done</button></div></div></div><div class="toast" id="toast" role="status" aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<nav class="app-bottom-nav" aria-label="Quick navigation">
-<a class="active" href="#home"><span class="nav-ico">⌂</span><span>Home</span></a>
-<a href="#machines"><span class="nav-ico">⌕</span><span>Explore</span></a>
-<button class="nav-add" aria-label="List equipment" onclick="openModal('listModal')">＋</button>
-<button onclick="openModal('dashboardModal');loadDashboard()"><span class="nav-ico">▣</span><span>Bookings</span></button>
-<button onclick="openModal('authModal')"><span class="nav-ico">♙</span><span>Profile</span></button>
-</nav>
 <script>
 const SUPABASE_URL='https://xsrrpjkvlodcvlqawrui.supabase.co';
 const SUPABASE_PUBLISHABLE_KEY='sb_publishable_lnA0EdDqKKDFT7UHoEbU1Q_4WPnRbNe';
@@ -530,7 +523,7 @@ async function loadCloudData(){
  }catch(err){cloudReady=false;machines=[];groups=[];renderMachines();renderGroups();setConnectionStatus('Live listings unavailable',false);showCloudError('Could not load live listings from Supabase: '+(err?.message||'Check database/API settings')+'. Demo listings are hidden so farmers do not mistake examples for real offers.');}
  finally{cloudBusy=false;}
 }
-async function signOutUser(){const {error}=await supabaseClient.auth.signOut();if(error){showCloudError(error.message);return}currentUser=null;setAuthButton();toast('Signed out.');}
+async function signOutUser(){const {error}=await supabaseClient.auth.signOut();if(error){showCloudError(error.message);return}currentUser=null;syncAppAuthState(true);toast('Signed out.');}
 async function submitAuth(signUp){
  const form=document.getElementById('authForm');
  const submitBtn=form.querySelector('button[type="submit"]');
@@ -590,7 +583,7 @@ async function submitAuth(signUp){
    return;
   }
   currentUser=result.data.user||null;
-  setAuthButton();
+  syncAppAuthState(true);
   closeModal('authModal');
   toast(signUp?'Account created and signed in.':'Signed in successfully.');
   await loadCloudData();
@@ -658,11 +651,30 @@ document.querySelectorAll('.modal-backdrop').forEach(m=>m.addEventListener('clic
 document.getElementById('mobileToggle').addEventListener('click',()=>{const n=document.getElementById('navlinks');const open=n.classList.toggle('open');document.getElementById('mobileToggle').setAttribute('aria-expanded',String(open));document.getElementById('mobileToggle').textContent=open?'×':'☰'});document.querySelectorAll('#navlinks a').forEach(a=>a.addEventListener('click',()=>{document.getElementById('navlinks').classList.remove('open');document.getElementById('mobileToggle').setAttribute('aria-expanded','false');document.getElementById('mobileToggle').textContent='☰'}));
 document.getElementById('authForm').addEventListener('submit',e=>{e.preventDefault();submitAuth(false)});document.getElementById('signUpButton').addEventListener('click',()=>submitAuth(true));
 document.getElementById('year').textContent=new Date().getFullYear();renderMachines();renderGroups();setAuthButton();
-if(supabaseClient){supabaseClient.auth.getSession().then(({data,error})=>{if(error)console.warn(error.message);currentUser=data?.session?.user||null;setAuthButton();loadCloudData()});supabaseClient.auth.onAuthStateChange((_event,session)=>{currentUser=session?.user||null;setAuthButton();if(session)loadCloudData()})}else{showCloudError('Supabase client library failed to load.');}
+if(supabaseClient){supabaseClient.auth.getSession().then(({data,error})=>{if(error)console.warn(error.message);currentUser=data?.session?.user||null;syncAppAuthState(false);loadCloudData()});supabaseClient.auth.onAuthStateChange((_event,session)=>{const previousUserId=currentUser?.id||null;currentUser=session?.user||null;syncAppAuthState(previousUserId!==(currentUser?.id||null));loadCloudData()})}else{showCloudError('Supabase client library failed to load.');}
 if('serviceWorker'in navigator&&location.protocol.startsWith('http'))window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
 
 /* App screen navigation and live data adapters */
 let appCurrentScreen='home',appCurrentFilter='',appCurrentGroupTab='open',appCurrentBookingTab='upcoming',appSearchQuery='';
+function syncAppAuthState(refreshPrivateViews){
+ setAuthButton();
+ syncAppProfile();
+ if(!refreshPrivateViews)return;
+ if(!currentUser){
+  loadAppBookings();
+  loadMessageThreads();
+  loadAppReviews();
+  syncAppEquipment();
+  loadAppNotifications();
+  document.getElementById('appSupportForm')?.reset();
+  return;
+ }
+ if(appCurrentScreen==='bookings')loadAppBookings();
+ if(appCurrentScreen==='messages')loadMessageThreads();
+ if(appCurrentScreen==='profile')loadAppNotifications();
+ if(appCurrentScreen==='equipment')syncAppEquipment();
+ if(appCurrentScreen==='reviews')loadAppReviews();
+}
 async function loadAppNotifications(){
  const root=document.getElementById('appNotifications');if(!root)return;
  if(!currentUser){root.innerHTML='<h3>🔔 Notifications</h3><p>Sign in to see booking and group updates.</p>';return}
@@ -777,7 +789,21 @@ async function loadAppBookings(){
  }catch(err){console.error('[AgriShare app bookings]',err);root.innerHTML='<div class="app-empty"><span class="emoji">⚠️</span><strong>Could not load bookings</strong>'+esc(err?.message||'Please retry when the connection is available.')+'</div><button class="app-btn full" onclick="loadAppBookings()">Retry</button>'}
 }
 function appBookingTab(btn,tab){appCurrentBookingTab=tab;btn.parentElement.querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn));loadAppBookings()}
-function syncAppProfile(){const n=currentUser?.user_metadata?.username||currentUser?.email?.split('@')[0]||'Farmer account';const name=document.getElementById('appProfileName'),status=document.getElementById('appProfileStatus'),greet=document.getElementById('appGreetingName');if(name)name.textContent=n;if(greet)greet.textContent=n;if(status)status.textContent=currentUser?'Signed in · AgriShare account':'Sign in to view your account';const btn=document.getElementById('appProfileAuthButton');if(btn){btn.textContent=currentUser?'Sign out':'Sign in / Create account';btn.onclick=()=>currentUser?signOutUser():openModal('authModal')}const loc=document.getElementById('appHomeLocation');if(loc&&currentUser?.user_metadata?.village)loc.textContent='📍 '+currentUser.user_metadata.village+' · profile location';const profileAuth=document.getElementById('appProfileAuthButton');if(profileAuth)profileAuth.setAttribute('aria-label',currentUser?'Sign out of your AgriShare account':'Sign in or create an AgriShare account')}
+function syncAppProfile(){
+ const n=currentUser?.user_metadata?.username||currentUser?.email?.split('@')[0]||'Farmer account';
+ const name=document.getElementById('appProfileName'),status=document.getElementById('appProfileStatus'),greet=document.getElementById('appGreetingName');
+ if(name)name.textContent=n;
+ if(greet)greet.textContent=n;
+ if(status)status.textContent=currentUser?'Signed in · AgriShare account':'Sign in to view your account';
+ const btn=document.getElementById('appProfileAuthButton');
+ if(btn){
+  btn.textContent=currentUser?'↪️ Sign out':'🔑 Sign in / Create account';
+  btn.setAttribute('aria-label',currentUser?'Sign out of your AgriShare account':'Sign in or create an AgriShare account');
+  btn.onclick=()=>currentUser?signOutUser():openModal('authModal');
+ }
+ const loc=document.getElementById('appHomeLocation');
+ if(loc&&currentUser?.user_metadata?.village)loc.textContent='📍 '+currentUser.user_metadata.village+' · profile location';
+}
 async function toggleEquipmentAvailability(id){if(!requireLogin())return;const item=(machines||[]).find(m=>m.id===id);if(!item)return;const {error}=await supabaseClient.from('equipment').update({available:!item.available}).eq('id',id).eq('owner_id',currentUser.id);if(error){showCloudError('Could not update listing: '+error.message);return}toast(item.available?'Listing paused.':'Listing published.');await loadCloudData();syncAppEquipment();}
 function renderCompatibilityMatches(){
  const select=document.getElementById('compatibilityTractor'),root=document.getElementById('compatibilityResults');if(!select||!root)return;
