@@ -27,6 +27,13 @@ assert.match(html, /function editEquipment\(/, "Owners must be able to edit thei
 assert.match(html, /function deleteEquipment\(/, "Owners must be able to delete their own equipment");
 assert.match(html, /async function loadAppNotifications\(/, "Profile must load real notifications");
 assert.match(html, /id="cropAnalyzeForm"/, "CropSight screen must expose a real-image analysis form");
+assert.match(html, /id="compatibilityTractor"/, "Compatibility matching must allow selection of a real tractor listing");
+assert.match(html, /function renderCompatibilityMatches\(/, "Compatibility matching logic must exist");
+assert.match(html, /horsepower/, "Equipment form must store declared horsepower");
+assert.match(html, /required_pto_rpm/, "Equipment form must store required PTO speed");
+assert.match(html, /required_hydraulic_lpm/, "Equipment form must store implement hydraulic requirements");
+assert.match(html, /Manual compatibility review required/, "Unknown specifications must not be reported as confirmed matches");
+
 assert.match(html, /No scan performed/, "Crop analysis must state clearly when no prediction has been made");
 
 assert.doesNotMatch(html, /image:x\.image_url\|\|['"]https:\/\/images\.unsplash\.com/, "Equipment data must not use generic photo URLs as listing images");
