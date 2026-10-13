@@ -359,6 +359,11 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 .app-bottom-nav .nav-add span{display:block!important;line-height:1!important;margin:0!important}
 @media(max-width:390px){.app-bottom-nav .nav-add{flex-basis:42px!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important}}
 
+/* Professional list-equipment action icon */
+.app-bottom-nav .nav-add{background:linear-gradient(145deg,#0b8650,#075b38)!important;color:#fff!important;border:1px solid #087044!important;border-radius:16px!important;box-shadow:0 5px 13px rgba(8,112,68,.23)!important}
+.app-bottom-nav .nav-add-icon{display:block;flex:0 0 24px;width:24px;height:24px;stroke:currentColor;pointer-events:none}
+.app-bottom-nav .nav-add:hover{filter:brightness(1.06);box-shadow:0 7px 17px rgba(8,112,68,.3)!important}
+
 </style>
 </head>
 <body>
@@ -477,7 +482,7 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 <nav class="app-bottom-nav" aria-label="App navigation">
  <button class="active" data-screen="home" aria-current="page" onclick="showAppScreen('home')"><span class="nav-ico" aria-hidden="true">🏠</span><span>Home</span></button>
  <button data-screen="explore" onclick="showAppScreen('explore')"><span class="nav-ico" aria-hidden="true">🔍</span><span>Explore</span></button>
- <button class="nav-add" aria-label="List equipment" title="List equipment" onclick="openModal('listModal')"><span aria-hidden="true">➕</span></button>
+ <button class="nav-add" aria-label="List equipment" title="List equipment" onclick="openModal('listModal')"><svg class="nav-add-icon" aria-hidden="true" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
  <button data-screen="bookings" onclick="showAppScreen('bookings')"><span class="nav-ico" aria-hidden="true">📅</span><span>Bookings</span></button>
  <button data-screen="profile" onclick="showAppScreen('profile')"><span class="nav-ico" aria-hidden="true">👤</span><span>Profile</span></button>
 </nav>
