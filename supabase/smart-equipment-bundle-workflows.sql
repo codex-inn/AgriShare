@@ -2,16 +2,14 @@
 -- Additive migration: no equipment, booking or group rows are seeded or rewritten.
 begin;
 
-alter table public.equipment drop constraint if exists equipment_category_check;
-alter table public.equipment add constraint equipment_category_check
-  check (category = any (array['Tractor','Rotavator','Rotary tiller','Plough','Seed drill','Disc harrow','Baler','Harvester','Transplanter','Sprayer','Other']));
-
-alter table public.group_bookings drop constraint if exists group_bookings_equipment_category_check;
-alter table public.group_bookings add constraint group_bookings_equipment_category_check
-  check (equipment_category = any (array['Tractor','Rotavator','Rotary tiller','Plough','Seed drill','Disc harrow','Baler','Harvester','Transplanter','Sprayer','Other']));
+alter table public.equipment add column if not exists implement_type text;
+alter table public.equipment add constraint equipment_implement_type_check
+  check (implement_type is null or implement_type = any (array['Rotavator','Rotary tiller','Plough','Seed drill','Disc harrow','Baler','Harvester','Sprayer','Other']));
+grant select (implement_type) on public.equipment to anon, authenticated;
+grant insert (implement_type) on public.equipment to authenticated;
+grant update (implement_type) on public.equipment to authenticated;
 
 alter table public.group_bookings add column if not exists work_type text not null default 'general';
-alter table public.group_bookings drop constraint if exists group_bookings_work_type_check;
 alter table public.group_bookings add constraint group_bookings_work_type_check
   check (work_type = any (array['general','ploughing','tilling','seeding','harvesting','spraying','baling','other']));
 grant select (work_type) on public.group_bookings to anon, authenticated;
@@ -30,10 +28,8 @@ create table if not exists public.booking_bundles (
 alter table public.booking_requests add column if not exists bundle_id uuid;
 alter table public.booking_requests add column if not exists requested_rate_snapshot numeric(10,2);
 alter table public.booking_requests add column if not exists requested_rate_unit_snapshot text;
-alter table public.booking_requests drop constraint if exists booking_requests_requested_rate_snapshot_check;
 alter table public.booking_requests add constraint booking_requests_requested_rate_snapshot_check
   check (requested_rate_snapshot is null or requested_rate_snapshot > 0);
-alter table public.booking_requests drop constraint if exists booking_requests_requested_rate_unit_snapshot_check;
 alter table public.booking_requests add constraint booking_requests_requested_rate_unit_snapshot_check
   check (requested_rate_unit_snapshot is null or requested_rate_unit_snapshot = any (array['acre','hour','trip','day']));
 do $$
@@ -45,7 +41,6 @@ begin
 end $$;
 create index if not exists booking_requests_bundle_id_idx on public.booking_requests(bundle_id) where bundle_id is not null;
 alter table public.booking_bundles enable row level security;
-drop policy if exists "Farmers and participating owners can read bundles" on public.booking_bundles;
 create policy "Farmers and participating owners can read bundles"
   on public.booking_bundles for select to authenticated
   using (
@@ -68,7 +63,6 @@ create table if not exists public.equipment_compatibility_reviews (
   check ((status = 'approved' and reviewed_at is not null) or status <> 'approved')
 );
 alter table public.equipment_compatibility_reviews enable row level security;
-drop policy if exists "Visible listings expose compatibility review state" on public.equipment_compatibility_reviews;
 create policy "Visible listings expose compatibility review state"
   on public.equipment_compatibility_reviews for select to anon, authenticated
   using (
@@ -89,7 +83,6 @@ create table if not exists public.equipment_spec_evidence (
 );
 create index if not exists equipment_spec_evidence_equipment_id_idx on public.equipment_spec_evidence(equipment_id);
 alter table public.equipment_spec_evidence enable row level security;
-drop policy if exists "Owners can read their private specification evidence metadata" on public.equipment_spec_evidence;
 create policy "Owners can read their private specification evidence metadata"
   on public.equipment_spec_evidence for select to authenticated using (owner_id = (select auth.uid()));
 revoke all on public.equipment_spec_evidence from anon, authenticated;
@@ -116,12 +109,10 @@ begin
 end;
 $function$;
 revoke all on function public.delete_equipment_spec_evidence_object() from public, anon, authenticated;
-drop trigger if exists equipment_spec_evidence_cleanup_object on public.equipment_spec_evidence;
 create trigger equipment_spec_evidence_cleanup_object
   after delete on public.equipment_spec_evidence for each row
   execute function public.delete_equipment_spec_evidence_object();
 
-drop policy if exists "Owners read private equipment specification evidence" on storage.objects;
 create policy "Owners read private equipment specification evidence"
   on storage.objects for select to authenticated
   using (
@@ -133,7 +124,6 @@ create policy "Owners read private equipment specification evidence"
       where e.id::text = (storage.foldername(name))[2] and e.owner_id = (select auth.uid())
     )
   );
-drop policy if exists "Owners upload private equipment specification evidence" on storage.objects;
 create policy "Owners upload private equipment specification evidence"
   on storage.objects for insert to authenticated
   with check (
@@ -198,6 +188,7 @@ as $function$
 begin
   if new.category is distinct from old.category
      or new.equipment_role is distinct from old.equipment_role
+     or new.implement_type is distinct from old.implement_type
      or new.horsepower is distinct from old.horsepower
      or new.hitch_type is distinct from old.hitch_type
      or new.pto_rpm is distinct from old.pto_rpm
@@ -216,9 +207,8 @@ begin
 end;
 $function$;
 revoke all on function public.reset_equipment_compatibility_review() from public, anon, authenticated;
-drop trigger if exists equipment_compatibility_changes_reset_review on public.equipment;
 create trigger equipment_compatibility_changes_reset_review
-  after update of category, equipment_role, horsepower, hitch_type, pto_rpm, hydraulic_capacity_lpm,
+  after update of category, equipment_role, implement_type, horsepower, hitch_type, pto_rpm, hydraulic_capacity_lpm,
     min_tractor_hp, max_tractor_hp, required_pto_rpm, required_hydraulic_lpm, compatibility_notes
   on public.equipment for each row execute function public.reset_equipment_compatibility_review();
 
@@ -313,12 +303,12 @@ begin
   end if;
   select e.* into v_tractor from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role = 'tractor';
 
-  if v_task = 'ploughing' and exists (select 1 from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role='implement' and e.category not in ('Plough')) then raise exception 'Ploughing bundles must use plough listings'; end if;
-  if v_task = 'tilling' and exists (select 1 from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role='implement' and e.category not in ('Rotavator','Rotary tiller','Disc harrow')) then raise exception 'Tilling bundles must use tillage implement listings'; end if;
-  if v_task = 'seeding' and exists (select 1 from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role='implement' and e.category <> 'Seed drill') then raise exception 'Seeding bundles must use seed drill listings'; end if;
-  if v_task = 'harvesting' and exists (select 1 from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role='implement' and e.category <> 'Harvester') then raise exception 'Harvesting bundles must use harvester listings'; end if;
-  if v_task = 'spraying' and exists (select 1 from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role='implement' and e.category <> 'Sprayer') then raise exception 'Spraying bundles must use sprayer listings'; end if;
-  if v_task = 'baling' and exists (select 1 from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role='implement' and e.category <> 'Baler') then raise exception 'Baling bundles must use baler listings'; end if;
+  if v_task = 'ploughing' and exists (select 1 from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role='implement' and coalesce(e.implement_type,e.category) not in ('Plough')) then raise exception 'Ploughing bundles must use plough listings'; end if;
+  if v_task = 'tilling' and exists (select 1 from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role='implement' and coalesce(e.implement_type,e.category) not in ('Rotavator','Rotary tiller','Disc harrow')) then raise exception 'Tilling bundles must use tillage implement listings'; end if;
+  if v_task = 'seeding' and exists (select 1 from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role='implement' and coalesce(e.implement_type,e.category) <> 'Seed drill') then raise exception 'Seeding bundles must use seed drill listings'; end if;
+  if v_task = 'harvesting' and exists (select 1 from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role='implement' and coalesce(e.implement_type,e.category) <> 'Harvester') then raise exception 'Harvesting bundles must use harvester listings'; end if;
+  if v_task = 'spraying' and exists (select 1 from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role='implement' and coalesce(e.implement_type,e.category) <> 'Sprayer') then raise exception 'Spraying bundles must use sprayer listings'; end if;
+  if v_task = 'baling' and exists (select 1 from public.equipment e where e.id = any(p_equipment_ids) and e.equipment_role='implement' and coalesce(e.implement_type,e.category) <> 'Baler') then raise exception 'Baling bundles must use baler listings'; end if;
 
   foreach v_id in array p_equipment_ids loop
     select e.* into v_equipment from public.equipment e where e.id = v_id;
