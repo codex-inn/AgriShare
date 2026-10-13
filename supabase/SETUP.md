@@ -6,7 +6,7 @@ The AgriShare frontend contains a username + password interface (no email field)
 1. Create a project in Supabase and save the database password privately.
 2. Open **SQL Editor → New query**.
 3. Copy all of `supabase/schema.sql`, run it, and check for errors.
-4. Open **Table Editor** and confirm these tables exist: `equipment`, `group_bookings`, `group_members`, `booking_requests`, `booking_reviews` and `support_requests`. The SQL also creates `get_group_progress()` to show aggregate group acreage without exposing member records.
+4. Open **Table Editor** and confirm these tables exist: `equipment`, `group_bookings`, `group_members`, `booking_requests`, `booking_bundles`, `booking_reviews`, `equipment_compatibility_reviews`, `equipment_spec_evidence` and `support_requests`. The SQL also creates `get_group_progress()` to show aggregate group acreage without exposing member records.
 
 ## 2. Configure authentication
 1. In **Authentication → URL Configuration**, add your deployed site URL: `https://codex-inn.github.io/AgriShare`.
@@ -46,5 +46,13 @@ For an existing project, apply `supabase/production-readiness-workflows.sql` onc
 
 The migration also fixes the SQL `search_path` on the existing privileged database trigger/workflow functions. Do not re-run `supabase/schema.sql` against production; it is only for a new development project.
 
-## 7. Next integration milestone
-After applying the schema and deploying the signup function, test username account creation, sign-in, sign-out, listing creation, booking requests, and group joining with two separate accounts. The configured browser key is a public publishable key; keep Row Level Security enabled and never expose service-role or secret keys. The app still has no self-service username password reset or automatic account deletion. Support requests provide a manual contact path only. Configure real account recovery (which requires routable verified email identities or another recovery provider) before public launch.
+## 7. Smart compatibility and bundle migration
+
+For an existing production project, apply `supabase/smart-equipment-bundle-workflows.sql` once after the core schema and production-readiness workflows/indexes. It adds a separate implement-type field, group work type, private specification evidence storage and review status, date-only availability checks, and atomic bundle request creation. Then apply `supabase/smart-equipment-bundle-indexes.sql` to index the new bundle and evidence owner foreign keys. Both scripts are additive and create no sample listings or bookings. The starter `supabase/schema.sql` includes both sections for new development projects.
+
+The private `equipment-spec-evidence` bucket accepts JPEG, PNG, WebP and PDF files up to 5 MB. Owners can upload evidence only to their own equipment folder. Project maintainers review evidence through Supabase administration and update `equipment_compatibility_reviews.status` to `approved` or `rejected`, setting `reviewed_at = now()`. A listing-specification edit resets status to `unverified`; new evidence changes it to `pending`. Do not mark specifications approved solely because a file exists, and do not use this status as a machinery safety or identity guarantee.
+
+The `get_equipment_availability` function returns only equipment IDs and date-availability booleans to signed-in callers. `create_equipment_bundle` locks selected equipment rows in ID order, checks compatibility and same-date requests, then creates all owner requests in one transaction. Each owner sees only their request line under the existing booking RLS. Every provider still confirms separately; a bundle request does not reserve equipment.
+
+## 8. Next integration milestone
+After applying the schema and deploying the signup function, test username account creation, sign-in, sign-out, listing creation, same-date booking, a tractor/implement bundle with separate owner responses, private evidence access, group task selection and messaging with two separate accounts. The configured browser key is a public publishable key; keep Row Level Security enabled and never expose service-role or secret keys. The app still has no self-service username password reset or automatic account deletion. Support requests provide a manual contact path only. Configure real account recovery (which requires routable verified email identities or another recovery provider) before public launch.

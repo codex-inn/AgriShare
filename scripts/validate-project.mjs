@@ -75,7 +75,25 @@ assert.match(html, /function renderCompatibilityMatches\(/, "Compatibility match
 assert.match(html, /horsepower/, "Equipment form must store declared horsepower");
 assert.match(html, /required_pto_rpm/, "Equipment form must store required PTO speed");
 assert.match(html, /required_hydraulic_lpm/, "Equipment form must store implement hydraulic requirements");
-assert.match(html, /Manual compatibility review required/, "Unknown specifications must not be reported as confirmed matches");
+assert.match(html, /Needs verification/, "Unknown specifications must remain visibly unverified");
+assert.match(html, /Incompatible — listed specifications conflict/, "Known compatibility mismatches must be shown as incompatible");
+assert.match(html, /id="equipImplementType"/, "Owners must be able to declare a detailed implement type");
+assert.match(html, /implement_type/, "The listing flow must store and search the implement type");
+assert.match(html, /id="compatibilityTask"/, "Compatibility search must be task-aware");
+assert.match(html, /id="compatibilityHp"/, "Compatibility search must filter tractor horsepower");
+assert.match(html, /id="compatibilityLocation"/, "Compatibility search must use the selected field location");
+assert.match(html, /id="compatibilityBudget"/, "Compatibility search must expose a per-acre rate filter");
+assert.match(html, /id="compatibilityDate"/, "Compatibility search must use a requested work date");
+assert.match(html, /create_equipment_bundle/, "Tractor and implement requests must use the atomic bundle RPC");
+assert.match(html, /get_equipment_availability/, "Same-date availability must use the protected database function");
+assert.match(html, /submit_equipment_spec_evidence/, "Owner evidence must be submitted through the ownership-checked RPC");
+assert.match(html, /equipment-spec-evidence/, "Specification evidence must use the private evidence bucket");
+assert.match(html, /work_type:d\.work_type/, "Group bookings must include their farm task");
+assert.match(html, /booking_bundles\(task,item_count\)/, "Bundle history must display grouped requests");
+assert.match(html, /requested_rate_snapshot/, "Bundle history must use saved listed-rate snapshots");
+assert.match(html, /No discount is assumed/, "Bundle totals must not imply unconfigured discounts");
+assert.doesNotMatch(html, /value="1200"/, "Group booking must not prefill an invented rate");
+
 
 assert.match(html, /No scan performed/, "Crop analysis must state clearly when no prediction has been made");
 
@@ -98,7 +116,7 @@ const equipmentWriteGrants = [...schema.matchAll(/grant\s+(insert|update)\s*\(([
 const expectedEquipmentWriteColumns = [
   "equipment_role", "horsepower", "hitch_type", "pto_rpm", "hydraulic_capacity_lpm",
   "min_tractor_hp", "max_tractor_hp", "required_pto_rpm", "required_hydraulic_lpm",
-  "compatibility_notes"
+  "compatibility_notes", "implement_type"
 ];
 for (const operation of ["insert", "update"]) {
   const grant = equipmentWriteGrants.find(([, action]) => action.toLowerCase() === operation);
@@ -111,6 +129,8 @@ for (const operation of ["insert", "update"]) {
 }
 
 const workflowSql = readFileSync(new URL("../supabase/production-readiness-workflows.sql", import.meta.url), "utf8");
+const bundleSql = readFileSync(new URL("../supabase/smart-equipment-bundle-workflows.sql", import.meta.url), "utf8");
+const bundleIndexSql = readFileSync(new URL("../supabase/smart-equipment-bundle-indexes.sql", import.meta.url), "utf8");
 const indexSql = readFileSync(new URL("../supabase/production-readiness-indexes.sql", import.meta.url), "utf8");
 assert.match(workflowSql, /booking_requests_active_equipment_date_uidx/, "Active equipment booking collisions must be prevented in Postgres");
 assert.match(indexSql, /booking_reviews_reviewer_created_idx/, "Review participant lookups must be indexed");
@@ -121,4 +141,17 @@ assert.match(workflowSql, /grant insert \(requester_id, request_type, equipment_
 assert.match(workflowSql, /private\.can_submit_booking_review/, "Review writes must be checked against a completed participant booking");
 assert.equal((workflowSql.match(/security definer\s+set search_path = ''/gi) || []).length, 2, "New privileged functions must use an empty search_path");
 assert.match(schema, /security definer\s+set search_path = ''/i, "Starter schema privileged functions must pin an empty search_path");
+assert.match(bundleSql, /implement_type/, "Detailed implement types must be additive and stored separately");
+assert.doesNotMatch(bundleSql, /\bdrop\s/i, "The production feature migration must not drop existing schema objects");
+assert.match(bundleSql, /booking_bundles/, "Bundle request schema must be present");
+assert.match(bundleIndexSql, /booking_bundles_farmer_id_idx/, "Bundle farmer foreign keys must be indexed");
+assert.match(bundleIndexSql, /equipment_spec_evidence_owner_id_idx/, "Evidence owner foreign keys must be indexed");
+assert.match(bundleSql, /create_equipment_bundle/, "Atomic bundle booking function must be present");
+assert.match(bundleSql, /get_equipment_availability/, "Availability privacy function must be present");
+assert.match(bundleSql, /submit_equipment_spec_evidence/, "Private evidence submission function must be present");
+assert.match(bundleSql, /create policy "Owners upload private equipment specification evidence"/, "Only owners may upload evidence to the private bucket");
+assert.match(bundleSql, /grant execute on function public\.create_equipment_bundle[\s\S]*?to authenticated/i, "Bundle RPC must be authenticated");
+assert.match(bundleSql, /revoke all on function public\.create_equipment_bundle[\s\S]*?from public, anon, authenticated/i, "Bundle RPC must not be public");
+assert.match(bundleSql, /set search_path = ''/i, "Feature privileged functions must pin an empty search path");
+assert.equal((bundleSql.match(/security definer\s+set search_path = ''/gi) || []).length, 5, "Feature privileged functions must all use an empty search_path");
 console.log(`AgriShare static validation passed: ${requiredScreens.length} screens, ${inlineScripts.length} inline script(s), required integration markers, PWA and policy files.`);
