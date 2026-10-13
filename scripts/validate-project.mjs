@@ -77,6 +77,8 @@ assert.match(html, /required_pto_rpm/, "Equipment form must store required PTO s
 assert.match(html, /required_hydraulic_lpm/, "Equipment form must store implement hydraulic requirements");
 assert.match(html, /Needs verification/, "Unknown specifications must remain visibly unverified");
 assert.match(html, /Incompatible — listed specifications conflict/, "Known compatibility mismatches must be shown as incompatible");
+assert.match(html, /id="equipImplementType"/, "Owners must be able to declare a detailed implement type");
+assert.match(html, /implement_type/, "The listing flow must store and search the implement type");
 assert.match(html, /id="compatibilityTask"/, "Compatibility search must be task-aware");
 assert.match(html, /id="compatibilityHp"/, "Compatibility search must filter tractor horsepower");
 assert.match(html, /id="compatibilityLocation"/, "Compatibility search must use the selected field location");
@@ -114,7 +116,7 @@ const equipmentWriteGrants = [...schema.matchAll(/grant\s+(insert|update)\s*\(([
 const expectedEquipmentWriteColumns = [
   "equipment_role", "horsepower", "hitch_type", "pto_rpm", "hydraulic_capacity_lpm",
   "min_tractor_hp", "max_tractor_hp", "required_pto_rpm", "required_hydraulic_lpm",
-  "compatibility_notes"
+  "compatibility_notes", "implement_type"
 ];
 for (const operation of ["insert", "update"]) {
   const grant = equipmentWriteGrants.find(([, action]) => action.toLowerCase() === operation);
@@ -128,6 +130,7 @@ for (const operation of ["insert", "update"]) {
 
 const workflowSql = readFileSync(new URL("../supabase/production-readiness-workflows.sql", import.meta.url), "utf8");
 const bundleSql = readFileSync(new URL("../supabase/smart-equipment-bundle-workflows.sql", import.meta.url), "utf8");
+const bundleIndexSql = readFileSync(new URL("../supabase/smart-equipment-bundle-indexes.sql", import.meta.url), "utf8");
 const indexSql = readFileSync(new URL("../supabase/production-readiness-indexes.sql", import.meta.url), "utf8");
 assert.match(workflowSql, /booking_requests_active_equipment_date_uidx/, "Active equipment booking collisions must be prevented in Postgres");
 assert.match(indexSql, /booking_reviews_reviewer_created_idx/, "Review participant lookups must be indexed");
@@ -138,7 +141,11 @@ assert.match(workflowSql, /grant insert \(requester_id, request_type, equipment_
 assert.match(workflowSql, /private\.can_submit_booking_review/, "Review writes must be checked against a completed participant booking");
 assert.equal((workflowSql.match(/security definer\s+set search_path = ''/gi) || []).length, 2, "New privileged functions must use an empty search_path");
 assert.match(schema, /security definer\s+set search_path = ''/i, "Starter schema privileged functions must pin an empty search_path");
+assert.match(bundleSql, /implement_type/, "Detailed implement types must be additive and stored separately");
+assert.doesNotMatch(bundleSql, /\bdrop\s/i, "The production feature migration must not drop existing schema objects");
 assert.match(bundleSql, /booking_bundles/, "Bundle request schema must be present");
+assert.match(bundleIndexSql, /booking_bundles_farmer_id_idx/, "Bundle farmer foreign keys must be indexed");
+assert.match(bundleIndexSql, /equipment_spec_evidence_owner_id_idx/, "Evidence owner foreign keys must be indexed");
 assert.match(bundleSql, /create_equipment_bundle/, "Atomic bundle booking function must be present");
 assert.match(bundleSql, /get_equipment_availability/, "Availability privacy function must be present");
 assert.match(bundleSql, /submit_equipment_spec_evidence/, "Private evidence submission function must be present");
