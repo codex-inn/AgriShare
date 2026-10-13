@@ -13,7 +13,8 @@
 - `supabase/schema.sql` — starter schema for a **new development project only**; not a production reset script.
 - `supabase/production-readiness-workflows.sql` — one-time migration for existing projects; adds booking-date protection, private reviews and a support request queue.
 - `supabase/production-readiness-indexes.sql` — adds indexes for new review and support foreign keys.
-- `supabase/smart-equipment-bundle-workflows.sql` — additive migration for task-aware matching, atomic tractor/implement bundle requests, date availability checks and private specification evidence.
+- `supabase/smart-equipment-bundle-workflows.sql` — additive migration adding a separate implement type, task-aware group requests, atomic tractor/implement bundle requests, date availability checks and private specification evidence.
+- `supabase/smart-equipment-bundle-indexes.sql` — small follow-up migration indexing the bundle and evidence owner foreign keys.
 - `supabase/SETUP.md` — backend setup and deployment precautions.
 - `privacy.html`, `terms.html` — prototype privacy notice and use terms.
 - `scripts/validate-project.mjs` — static integrity checks for required screens and inline JavaScript syntax.
