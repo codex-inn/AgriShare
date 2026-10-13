@@ -353,6 +353,12 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 .app-bottom-nav .nav-add{width:48px;min-width:48px;justify-self:center;margin-left:0;margin-right:0}
 @media(max-width:759px){.app-bottom-nav .nav-add{width:44px;min-width:44px}}
 @media(max-width:390px){.app-bottom-nav .nav-add{width:40px;min-width:40px}}
+/* Navigation alignment fix: keep the add action inside the bar, centered with every tab. */
+.app-bottom-nav{align-items:center!important}
+.app-bottom-nav .nav-add{align-self:center!important;transform:none!important;margin:0!important;position:relative!important;top:0!important;bottom:auto!important;border-width:0!important;box-sizing:border-box!important;flex:0 0 46px!important;width:46px!important;height:46px!important;min-height:46px!important;min-width:46px!important;padding:0!important;display:flex!important;align-items:center!important;justify-content:center!important}
+.app-bottom-nav .nav-add span{display:block!important;line-height:1!important;margin:0!important}
+@media(max-width:390px){.app-bottom-nav .nav-add{flex-basis:42px!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important}}
+
 </style>
 </head>
 <body>
