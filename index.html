@@ -279,7 +279,7 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 .app-page{padding:24px clamp(18px,3vw,36px) 30px}
 .app-page.active{min-height:calc(100vh - 220px)}
 .app-bottom-nav{max-width:1120px;left:50%;right:auto;width:calc(100% - 24px);transform:translateX(-50%);border:1px solid #dce9df;border-bottom:0;border-radius:20px 20px 0 0}
-.app-equipment-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.app-demo-heading{grid-column:1/-1;background:#f7fbf4;border:1px solid var(--app-line);border-radius:15px;padding:13px}.app-demo-heading strong{display:block;color:#31583b;font-size:12px;margin-bottom:4px}.app-demo-heading p{margin:0;color:var(--app-muted);font-size:10px;line-height:1.5}.app-demo-tag{display:inline-flex;background:#fff4d6;color:#76550b;border:1px solid #f0d994;border-radius:7px;padding:4px 6px;font-size:8px;font-weight:800;letter-spacing:.35px}.app-demo-equipment{border-style:dashed;background:#fcfdf9}.app-demo-equipment .app-btn:disabled{opacity:.72;cursor:not-allowed}
+.app-equipment-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.app-live-empty{grid-column:1/-1}.app-demo-panel{grid-column:1/-1;background:#fff9ec;border:2px dashed #cd8a28;border-radius:19px;padding:14px;box-shadow:0 5px 18px #95600d12}.app-demo-banner{background:#fff0c9;border:1px solid #efd08a;border-radius:14px;padding:13px;margin-bottom:12px}.app-demo-stamp{display:inline-block;background:#7b4e08;color:#fff;font-size:10px;line-height:1.3;font-weight:900;letter-spacing:.5px;border-radius:7px;padding:7px 9px}.app-demo-banner h3{font-size:15px;color:#533808;margin:9px 0 4px}.app-demo-banner p{font-size:11px;line-height:1.55;color:#684f20;margin:0}.app-demo-list{list-style:none;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:0;padding:0}.app-demo-row{display:flex;align-items:center;gap:8px;min-width:0;padding:10px;background:#fff;border:1px solid #efdcb3;border-radius:12px}.app-demo-icon{font-size:21px}.app-demo-name{flex:1;min-width:0;font-size:11px;font-weight:800;color:#344037}.app-demo-row-label{background:#fff0c9;color:#75500c;border-radius:5px;padding:4px 5px;font-size:8px;font-weight:900;letter-spacing:.3px}.app-demo-empty{grid-column:1/-1;color:#705c35;font-size:11px;padding:8px}.app-demo-heading{grid-column:1/-1;background:#f7fbf4;border:1px solid var(--app-line);border-radius:15px;padding:13px}.app-demo-heading strong{display:block;color:#31583b;font-size:12px;margin-bottom:4px}.app-demo-heading p{margin:0;color:var(--app-muted);font-size:10px;line-height:1.5}.app-demo-tag{display:inline-flex;background:#fff4d6;color:#76550b;border:1px solid #f0d994;border-radius:7px;padding:4px 6px;font-size:8px;font-weight:800;letter-spacing:.35px}
 .app-equipment-card{height:100%;align-content:start;grid-template-columns:112px minmax(0,1fr);padding:10px}
 .app-equipment-card h3{font-size:14px}.app-equipment-card p{font-size:11px}.app-equipment-card .app-btn{font-size:11px}
 .app-empty{font-size:13px}.app-empty strong{font-size:15px}.app-search input{font-size:14px}.app-location{font-size:13px}
@@ -823,14 +823,14 @@ function appCardMarkup(m){
  return '<article class="app-equipment-card">'+(img?'<img src="'+esc(img)+'" alt="Owner-provided photo of '+esc(m.name)+'" loading="lazy">':'<div class="app-equipment-placeholder" aria-label="No equipment photo provided">🚜</div>')+'<div><h3>'+esc(m.name)+'</h3><p>📍 '+esc(equipmentLocation(m))+'</p><p>📋 '+esc(m.owner||'Local provider')+' · confirm provider details before work begins</p><p>🔧 '+esc(compatibilityReviewLabel(m))+'</p>'+maintenance+'<div class="app-price">'+money(m.rate)+' <small>/ '+esc(m.unit||'acre')+'</small></div><div class="app-card-actions"><button class="app-btn" onclick="requestBooking(\''+id+'\')">Book</button><button class="app-btn outline" onclick="reportEquipment(\''+id+'\')">Report</button><button class="app-btn outline" aria-pressed="'+saved+'" onclick="toggleFavorite(\''+id+'\')">'+(saved?'Saved':'Save')+'</button></div></div></article>';
 }
 const appDemoEquipment=[
- {type:'Tractor',name:'45 HP utility tractor',icon:'🚜',description:'Sample farm preparation machine',rate:900,unit:'acre'},
- {type:'Tractor',name:'24 HP compact tractor',icon:'🚜',description:'Sample small-farm tractor',rate:700,unit:'acre'},
- {type:'Rotavator',name:'6 ft rotavator',icon:'⚙️',description:'Sample soil preparation implement',rate:650,unit:'acre'},
- {type:'Seed drill',name:'9-row seed drill',icon:'🌱',description:'Sample sowing implement',rate:500,unit:'acre'},
- {type:'Sprayer',name:'16 L power sprayer',icon:'💦',description:'Sample crop sprayer',rate:250,unit:'day'}
+ {type:'Tractor',name:'45 HP utility tractor',icon:'🚜'},
+ {type:'Tractor',name:'24 HP compact tractor',icon:'🚜'},
+ {type:'Rotavator',name:'6 ft rotavator',icon:'⚙️'},
+ {type:'Seed drill',name:'9-row seed drill',icon:'🌱'},
+ {type:'Sprayer',name:'16 L power sprayer',icon:'💦'}
 ];
 function appDemoCardMarkup(m){
- return '<article class="app-equipment-card app-demo-equipment"><div class="app-equipment-placeholder" aria-hidden="true">'+esc(m.icon)+'</div><div><span class="app-demo-tag">DEMO ONLY</span><h3>'+esc(m.name)+'</h3><p>🧪 '+esc(m.description)+' · sample details, not verified</p><p>📍 Example area · Tamil Nadu</p><div class="app-price">Sample rate '+money(m.rate)+' <small>/ '+esc(m.unit)+'</small></div><button class="app-btn outline" type="button" disabled>Demo only · not bookable</button></div></article>';
+ return '<li class="app-demo-row"><span class="app-demo-icon" aria-hidden="true">'+esc(m.icon)+'</span><span class="app-demo-name">'+esc(m.name)+'</span><span class="app-demo-row-label">EXAMPLE</span></li>';
 }
 function appFavoriteStorageKey(){return 'agrishare-favorites:'+(currentUser?.id||'guest')}
 function appFavoriteIds(){try{const value=JSON.parse(localStorage.getItem(appFavoriteStorageKey())||'[]');return Array.isArray(value)?value.filter(id=>typeof id==='string'):[]}catch{return []}}
@@ -841,12 +841,10 @@ function reportEquipment(id){showAppScreen('support');const type=document.getEle
 function syncAppListings(){
  const matches=(m)=>m.available!==false&&(!appCurrentFilter||m.type===appCurrentFilter)&&(!appSearchQuery||[m.name,m.type,m.village,m.serviceArea,m.description,m.owner].join(' ').toLowerCase().includes(appSearchQuery));
  const list=(machines||[]).filter(matches);
- const demoList=appDemoEquipment.filter(m=>(!appCurrentFilter||m.type===appCurrentFilter)&&(!appSearchQuery||[m.name,m.type,m.description].join(' ').toLowerCase().includes(appSearchQuery)));
- const liveHtml=list.length?list.map(appCardMarkup).join(''):'<div class="app-empty"><span class="emoji">🚜</span><strong>No live equipment listings yet</strong>Only owner-published equipment appears as a real offer. These sample cards below are for preview only.</div>';
- const demoHeader='<div class="app-demo-heading"><strong>🧪 Sample machinery · DEMO ONLY</strong><p>Illustrative equipment and rates show how listings look. These are not owner offers, are not verified, and cannot be booked.</p></div>';
- const demoHtml=demoList.length?demoList.map(appDemoCardMarkup).join(''):'<div class="app-empty app-demo-empty">No sample machinery matches this filter.</div>';
- const html=liveHtml+demoHeader+demoHtml;
- const el=document.getElementById('appEquipmentList');if(el)el.innerHTML=html;
+ const demoList=appDemoEquipment.filter(m=>(!appCurrentFilter||m.type===appCurrentFilter)&&(!appSearchQuery||[m.name,m.type].join(' ').toLowerCase().includes(appSearchQuery)));
+ const liveHtml=list.length?list.map(appCardMarkup).join(''):'<div class="app-empty app-live-empty"><span class="emoji">🚜</span><strong>No live owner listings yet</strong>There are no real equipment offers available here right now.</div>';
+ const demoHtml='<section class="app-demo-panel" aria-label="Fictional machinery preview"><div class="app-demo-banner"><span class="app-demo-stamp">DEMO PREVIEW · NOT AVAILABLE FOR RENT</span><h3>Sample machinery</h3><p>These are fictional interface examples. No owner, location, price, availability, or booking is attached to them.</p></div><ul class="app-demo-list">'+(demoList.length?demoList.map(appDemoCardMarkup).join(''):'<li class="app-demo-empty">No examples match this filter.</li>')+'</ul></section>';
+ const el=document.getElementById('appEquipmentList');if(el)el.innerHTML=liveHtml+demoHtml;
  const pop=document.getElementById('appPopularGrid');if(pop)pop.innerHTML=list.length?list.slice(0,4).map(m=>'<button class="app-mini-card" style="text-align:left;border:1px solid var(--app-line)" onclick="showAppScreen(&quot;explore&quot;)">'+(safeEquipmentImage(m.image)?'<img src="'+esc(safeEquipmentImage(m.image))+'" alt="Owner-provided photo of '+esc(m.name)+'">':'<div class="app-equipment-placeholder" aria-label="No equipment photo provided">🚜</div>')+'<div class="app-mini-body"><strong>'+esc(m.name)+'</strong><small>'+esc(m.type)+' · '+esc(equipmentLocation(m))+'</small><div class="app-price">'+money(m.rate)+' / '+esc(m.unit||'acre')+'</div></div></button>').join(''):'<div class="app-empty"><span class="emoji">🚜</span><strong>No live equipment listings yet</strong>Real owner listings will appear here when published.</div>';
 }
 function syncAppGroups(){
