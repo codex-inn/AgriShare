@@ -69,6 +69,11 @@ assert.match(html, /not owner quotes or verified local rates/, "Demo prices must
 assert.match(html, /class="app-demo-row"/, "Sample equipment must use a separate preview-only layout");
 assert.equal((html.match(/samplePrice:'₹[\d,]+'/g) || []).length, 5, "Each of the five demos must have a clearly fictional rupee price");
 assert.match(html, /class="app-demo-price"/, "Demo prices must use a distinct preview style");
+assert.match(html, /class="app-submission-card"/, "Home must show a premium project credit card");
+assert.match(html, /PROJECT SUBMITTED BY/, "The credit card must show its project submission label");
+assert.match(html, /KOWSHIK S/, "The project submitter name must be displayed");
+assert.match(html, /AC&amp;RI VAZHAVACHANUR \(TNAU\)/, "The submitted institution must be displayed as requested");
+assert.match(html, /app-submission-card\{grid-column:1\/-1/, "The project credit must span the bottom of the Home layout");
 assert.equal((html.match(/demoImage:'https:/g) || []).length, 5, "Each demo machine must have a real photo source");
 assert.match(html, /class="app-demo-photo"/, "Demo photos must appear in the preview cards");
 assert.match(html, /class="app-demo-credit"/, "Demo photo sources must be credited");

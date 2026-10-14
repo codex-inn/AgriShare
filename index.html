@@ -199,6 +199,15 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 .app-mini-body small{display:block;font-size:9px;color:var(--app-muted);margin-top:4px}
 .app-price{font-size:12px;color:var(--app-green);font-weight:800;margin-top:7px}
 .app-feature-row{display:flex;align-items:center;gap:11px;padding:13px;background:#e9f5eb;border-radius:16px;margin-top:12px}
+.app-submission-card{grid-column:1/-1;display:flex;align-items:center;gap:13px;position:relative;isolation:isolate;overflow:hidden;padding:15px 17px;border:1px solid #d2bd78;border-radius:19px;background:linear-gradient(118deg,#0a4b2d 0%,#105c37 58%,#173f2d 100%);box-shadow:0 12px 25px rgba(8,60,35,.15)}
+.app-submission-card:after{content:"";position:absolute;z-index:-1;width:170px;height:170px;right:-70px;top:-90px;border:1px solid rgba(242,216,147,.24);border-radius:50%;box-shadow:0 0 0 14px rgba(242,216,147,.04),0 0 0 29px rgba(242,216,147,.035)}
+.app-submission-mark{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;border-radius:14px;background:linear-gradient(145deg,#f6e3aa,#d9bb67);color:#20412b;font-size:20px;box-shadow:0 5px 12px #001d102d}
+.app-submission-copy{min-width:0;flex:1}
+.app-submission-eyebrow{display:block;margin-bottom:4px;color:#e8d594;font-size:8px;font-weight:900;letter-spacing:1.05px;text-transform:uppercase}
+.app-submission-copy strong{display:block;color:#fff;font:800 14px/1.2 system-ui,sans-serif;letter-spacing:.35px}
+.app-submission-copy span:last-child{display:block;color:#dce8db;font-size:10px;font-weight:600;letter-spacing:.22px;margin-top:4px}
+.app-submission-crest{display:grid;place-items:center;flex:0 0 43px;width:43px;height:43px;border:1px solid rgba(238,217,158,.48);border-radius:50%;color:#f3dfaa;font-size:8px;font-weight:900;line-height:1.1;text-align:center}
+@media(max-width:420px){.app-submission-card{gap:9px;padding:12px}.app-submission-mark,.app-submission-crest{flex-basis:38px;width:38px;height:38px}.app-submission-copy strong{font-size:12px}.app-submission-copy span:last-child{font-size:9px;letter-spacing:0}}
 .app-feature-icon{width:45px;height:45px;border-radius:14px;display:grid;place-items:center;background:#d4f1de;font-size:23px}
 .app-feature-row strong{display:block;font-size:11px;color:#0c6039}
 .app-feature-row small{display:block;font-size:10px;color:#63746a;margin-top:4px}
@@ -394,7 +403,7 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
    <div id="appPopularGrid" class="app-mini-grid"><div class="app-empty"><span class="emoji">🚜</span><strong>Local listings will appear here</strong>Real owner listings will show when available.</div></div>
    <div class="app-section-head"><h2>Group bookings</h2><button onclick="showAppScreen('groups')">See all →</button></div>
    <div class="app-feature-row"><div class="app-feature-icon">👨‍🌾</div><div style="flex:1"><strong>Join farmers together</strong><small>Lower cost, share time, better yield</small></div><button class="app-btn" onclick="showAppScreen('groups')">Explore</button></div>
-   
+   <div class="app-submission-card" aria-label="Project submission credit"><span class="app-submission-mark" aria-hidden="true">🌾</span><div class="app-submission-copy"><span class="app-submission-eyebrow">PROJECT SUBMITTED BY</span><strong>KOWSHIK S</strong><span>AC&amp;RI VAZHAVACHANUR (TNAU)</span></div><span class="app-submission-crest" aria-hidden="true">TNAU</span></div>
   </section>
   <section class="app-page" id="appPage-explore">
    <div class="app-greeting"><div><h1>All equipment</h1><div class="app-location">Find machinery shared by local owners</div></div><button class="app-icon-btn" onclick="showAppScreen('nearby')">⌖</button></div>
