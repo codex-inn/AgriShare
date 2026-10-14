@@ -56,7 +56,7 @@ The `get_equipment_availability` function returns only equipment IDs and date-av
 
 ## 8. Maintenance, progress and quote migration
 
-For an existing project, apply `supabase/marketplace-operations-workflows.sql` once after the bundle workflows. It is additive: it does not seed listings, bookings or maintenance events. It adds owner-scoped service history, a separate private table for notes and operating hours, participant-readable manual booking stages, and a quote RPC that stores the listed rate, rate unit and quantity at request time. The starter `supabase/schema.sql` includes the same SQL for new development projects.
+For an existing project, apply `supabase/marketplace-operations-workflows.sql` once after the bundle workflows. It is additive: it does not seed listings, bookings or maintenance events. It adds owner-scoped service history, a separate private table for notes and operating hours, participant-readable manual booking stages, and a quote RPC that stores the listed rate, rate unit and quantity at request time. The starter `supabase/schema.sql` includes the same SQL for new development projects. For existing projects, then apply `supabase/marketplace-operations-indexes.sql` once to index the booking-progress owner foreign key.
 
 Maintenance sharing is off by default. If an owner chooses to share a record, renters can see only the service date, type and next due date; notes and meter readings stay owner-only. Booking progress uses manual stages and does not collect location data. A quote is a listed-rate estimate, not a processed payment or final invoice.
 
