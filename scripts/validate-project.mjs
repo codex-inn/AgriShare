@@ -69,6 +69,10 @@ assert.match(html, /not owner quotes or verified local rates/, "Demo prices must
 assert.match(html, /class="app-demo-row"/, "Sample equipment must use a separate preview-only layout");
 assert.equal((html.match(/samplePrice:'₹[\d,]+'/g) || []).length, 5, "Each of the five demos must have a clearly fictional rupee price");
 assert.match(html, /class="app-demo-price"/, "Demo prices must use a distinct preview style");
+assert.equal((html.match(/demoImage:'https:/g) || []).length, 5, "Each demo machine must have a real photo source");
+assert.match(html, /class="app-demo-photo"/, "Demo photos must appear in the preview cards");
+assert.match(html, /class="app-demo-credit"/, "Demo photo sources must be credited");
+assert.match(html, /app-demo-list\{list-style:none;display:grid;grid-template-columns:1fr/, "Demo cards must form a horizontal full-width list");
 assert.match(html, /id="appPopularGrid"/, "Home must show the equipment preview when no live listings exist");
 assert.match(html, /const homeLiveHtml=list\.length\?/, "Home must keep real owner listings ahead of demos");
 assert.match(html, /homeLiveHtml\+\(list\.length\?'':demoHtml\)/, "Home demos must appear only when real listings are absent");
