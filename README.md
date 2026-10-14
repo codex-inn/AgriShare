@@ -1,48 +1,27 @@
-# AgriShare
+# 🌾 AgriShare
 
-**Agricultural machinery sharing and booking platform.**
+### 🚜 Share Resources. Grow Together.
 
-- **Live demo:** https://codex-inn.github.io/AgriShare/
-- **Repository:** https://github.com/codex-inn/AgriShare
-- **Stack:** HTML, CSS, JavaScript, Supabase, GitHub Pages
+**AgriShare** is an agricultural machinery sharing platform designed to help farmers discover equipment, request bookings, and coordinate shared farm operations through one simple digital experience.
 
-## Features
+## ✨ Key Features
 
-- Equipment listings and booking requests
-- Farmer group coordination
-- Tractor and implement compatibility checks
-- Weather forecasts and maintenance records
-- Booking progress, messaging, reviews and support requests
-- Progressive Web App (PWA) support
+- 🚜 **Equipment Marketplace** — Discover agricultural machinery and implements.
+- 📅 **Booking Requests** — Request equipment for farm work.
+- 🤝 **Group Coordination** — Connect with nearby farmers for shared tasks.
+- 🌱 **Smart Farming Tools** — Access weather information and equipment compatibility guidance.
+- 📱 **Mobile-Friendly Experience** — Use AgriShare across desktop and mobile devices.
 
-Some features depend on a correctly configured Supabase backend. CropSight analysis requires a separately deployed, trained HTTPS inference API.
+## 🔗 Explore AgriShare
 
-## Setup
+- 🌐 **Live Website:** https://codex-inn.github.io/AgriShare/
+- 💻 **GitHub Repository:** https://github.com/codex-inn/AgriShare
 
-1. Review [Supabase setup instructions](supabase/SETUP.md).
-2. Apply database migrations in the documented order.
-3. Configure the Supabase URL and publishable key for the frontend.
-4. Deploy through GitHub Pages.
+## 🛠️ Technology
 
-**Security:** Never expose the Supabase service-role key in browser code. Keep Row Level Security enabled. Do not run `supabase/schema.sql` against the production database; it is for new development projects only.
-
-## Validation
-
-Requires Node.js 20 or later:
-
-```sh
-node scripts/validate-project.mjs
-```
-
-The automated checks validate project structure and JavaScript syntax; they do not replace browser testing or end-to-end Supabase tests.
-
-## Current limitations
-
-- Payments, automated identity verification, dispute handling and self-service password recovery/account deletion are not fully implemented.
-- Group booking requests require each equipment owner to respond separately.
-- CropSight predictions are unavailable until its inference API is deployed.
-- Test signup, booking, messaging and storage privacy with consenting accounts before public production use.
+HTML · CSS · JavaScript · Supabase · GitHub Pages
 
 ---
 
-**Project by Kowshik S** · AC&RI Vazhavachanur, TNAU
+👨‍💻 **Developed by Kowshik S**  
+🎓 AC&RI Vazhavachanur · Tamil Nadu Agricultural University (TNAU)
