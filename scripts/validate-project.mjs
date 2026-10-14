@@ -61,7 +61,7 @@ assert.match(html, /function toggleFavorite\(/, "Equipment favorites must work")
 assert.match(html, /async function loadAppReviews\(/, "Completed booking reviews must be available");
 assert.match(html, /from\('support_requests'\)/, "Private support submission must use Supabase");
 assert.match(html, /cropImageConsent/, "Crop photos must require explicit endpoint consent");
-assert.match(html, /const appDemoEquipment=\\[/, "Preview machinery must remain separate from live owner listings");
+assert.match(html, /const appDemoEquipment=\[/, "Preview machinery must remain separate from live owner listings");
 assert.match(html, /DEMO ONLY/, "Every sample listing must be clearly labeled as a demo");
 assert.match(html, /Demo only · not bookable/, "Sample machinery must never offer a booking action");
 assert.equal((html.match(/type:'(?:Tractor|Rotavator|Seed drill|Sprayer)'/g) || []).length >= 5, true, "At least five preview machines must be available");
