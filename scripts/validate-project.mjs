@@ -61,10 +61,10 @@ assert.match(html, /function toggleFavorite\(/, "Equipment favorites must work")
 assert.match(html, /async function loadAppReviews\(/, "Completed booking reviews must be available");
 assert.match(html, /from\('support_requests'\)/, "Private support submission must use Supabase");
 assert.match(html, /cropImageConsent/, "Crop photos must require explicit endpoint consent");
-assert.match(html, /const appDemoEquipment=\[/, "Preview machinery must remain separate from live owner listings");
-assert.match(html, /DEMO ONLY/, "Every sample listing must be clearly labeled as a demo");
-assert.match(html, /Demo only · not bookable/, "Sample machinery must never offer a booking action");
-assert.equal((html.match(/type:'(?:Tractor|Rotavator|Seed drill|Sprayer)'/g) || []).length >= 5, true, "At least five preview machines must be available");
+assert.match(html, /const appDemoEquipment=\\[/, "Preview examples must remain separate from live owner listings");
+assert.match(html, /DEMO PREVIEW · NOT AVAILABLE FOR RENT/, "The sample panel must be unmistakably non-rentable");
+assert.match(html, /No owner, location, price, availability, or booking is attached/, "Sample data must not resemble a real owner offer");
+assert.match(html, /class="app-demo-row"/, "Sample equipment must use a separate preview-only layout");
 assert.doesNotMatch(html, /seedMachines|seedGroups|Demo provider|Demo organizer/, "Production data must not seed fake owner listings");
 assert.match(html, /Identity not independently verified/, "Provider identity limitations must be visible");
 assert.match(html, /Payments & wallet · Coming soon/, "Payments must be clearly unavailable until implemented");
