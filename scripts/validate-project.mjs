@@ -148,6 +148,7 @@ const workflowSql = readFileSync(new URL("../supabase/production-readiness-workf
 const bundleSql = readFileSync(new URL("../supabase/smart-equipment-bundle-workflows.sql", import.meta.url), "utf8");
 const bundleIndexSql = readFileSync(new URL("../supabase/smart-equipment-bundle-indexes.sql", import.meta.url), "utf8");
 const operationsSql = readFileSync(new URL("../supabase/marketplace-operations-workflows.sql", import.meta.url), "utf8");
+const operationsIndexSql = readFileSync(new URL("../supabase/marketplace-operations-indexes.sql", import.meta.url), "utf8");
 const indexSql = readFileSync(new URL("../supabase/production-readiness-indexes.sql", import.meta.url), "utf8");
 assert.match(workflowSql, /booking_requests_active_equipment_date_uidx/, "Active equipment booking collisions must be prevented in Postgres");
 assert.match(indexSql, /booking_reviews_reviewer_created_idx/, "Review participant lookups must be indexed");
@@ -171,6 +172,7 @@ assert.match(bundleSql, /grant execute on function public\.create_equipment_bund
 assert.match(bundleSql, /revoke all on function public\.create_equipment_bundle[\s\S]*?from public, anon, authenticated/i, "Bundle RPC must not be public");
 assert.match(bundleSql, /set search_path = ''/i, "Feature privileged functions must pin an empty search path");
 
+assert.match(operationsIndexSql, /booking_progress_updates_owner_id_idx/, "Booking progress owner foreign key must be indexed");
 assert.match(operationsSql, /equipment_maintenance_records/, "Owner maintenance history migration must exist");
 assert.match(operationsSql, /equipment_maintenance_details/, "Private maintenance details must be stored separately");
 assert.match(operationsSql, /Shared maintenance dates are public/, "Maintenance sharing must require owner opt-in");
