@@ -373,6 +373,34 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 .app-bottom-nav .nav-add-icon{display:block;flex:0 0 24px;width:24px;height:24px;stroke:currentColor;pointer-events:none}
 .app-bottom-nav .nav-add:hover{filter:brightness(1.06);box-shadow:0 7px 17px rgba(8,112,68,.3)!important}
 
+
+/* Premium AgriShare animated farm showcase */
+#agri-motion-showcase{grid-column:1/-1;position:relative;isolation:isolate;overflow:hidden;min-height:210px;margin:6px 0 2px;border:1px solid #cfe2d0;border-radius:22px;background:linear-gradient(180deg,#0c3025 0%,#15583a 58%,#1d6b40 100%);box-shadow:0 14px 32px rgba(7,65,35,.14);color:#f5fff4}
+#agri-motion-showcase .agri-scene-label{position:absolute;z-index:5;left:18px;top:16px;display:flex;align-items:center;gap:8px;font-size:9px;font-weight:900;letter-spacing:1.7px;text-transform:uppercase;color:#e0f5c8}
+#agri-motion-showcase .agri-scene-dot{width:7px;height:7px;border-radius:50%;background:#c8f68b;box-shadow:0 0 12px #c8f68b;animation:agri-pulse 2s ease-in-out infinite}
+#agri-motion-showcase .agri-scene-title{position:absolute;z-index:5;left:18px;top:43px;margin:0;max-width:45%;font:800 clamp(16px,2.8vw,24px)/1.18 Manrope,system-ui,sans-serif;letter-spacing:-.6px;text-shadow:0 2px 12px #092b1d80}
+#agri-motion-showcase .agri-scene-title span{display:block;margin-top:6px;color:#c8f68b;font:600 10px/1.5 'DM Sans',system-ui,sans-serif;letter-spacing:.1px}
+#agri-motion-showcase .agri-sun{position:absolute;right:14%;top:23px;width:43px;height:43px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff7c8,#e6c66f 68%,#d5a44c);box-shadow:0 0 0 9px #f3d98a12,0 0 38px #edcf7b55;animation:agri-sun-glow 5s ease-in-out infinite}
+#agri-motion-showcase .agri-cloud{position:absolute;top:38px;left:54%;width:62px;height:14px;border-radius:20px;background:#d8eedc20;filter:blur(1px);animation:agri-cloud-drift 14s linear infinite}
+#agri-motion-showcase .agri-cloud:before,#agri-motion-showcase .agri-cloud:after{content:"";position:absolute;bottom:4px;border-radius:50%;background:inherit}
+#agri-motion-showcase .agri-cloud:before{left:12px;width:24px;height:24px}#agri-motion-showcase .agri-cloud:after{left:31px;width:18px;height:18px}
+#agri-motion-showcase .agri-hill{position:absolute;left:-8%;right:-8%;bottom:-60px;height:140px;border-radius:50% 50% 0 0 / 40% 40% 0 0;transform:rotate(-4deg);background:linear-gradient(180deg,#34844b,#155235)}
+#agri-motion-showcase .agri-hill-back{bottom:-78px;left:25%;background:linear-gradient(180deg,#267447,#10452f);transform:rotate(5deg)}
+#agri-motion-showcase .agri-field-lines{position:absolute;left:38%;right:-20%;bottom:-50px;height:140px;opacity:.38;background:repeating-linear-gradient(166deg,transparent 0 12px,#a8dc7b 13px 15px,transparent 16px 27px);transform:perspective(100px) rotateX(14deg)}
+#agri-motion-showcase .agri-tractor{position:absolute;z-index:4;width:min(46%,250px);height:auto;right:12%;bottom:21px;filter:drop-shadow(0 13px 8px #06271670);animation:agri-tractor-float 4.5s ease-in-out infinite;transform-origin:center bottom}
+#agri-motion-showcase .agri-wheel{transform-box:fill-box;transform-origin:center;animation:agri-wheel-turn 3s linear infinite}
+#agri-motion-showcase .agri-track{position:absolute;z-index:3;right:7%;bottom:15px;width:48%;height:10px;border-radius:50%;background:#062b1c70;filter:blur(5px);animation:agri-track-breathe 4.5s ease-in-out infinite}
+#agri-motion-showcase .agri-scene-footer{position:absolute;z-index:5;bottom:13px;left:17px;display:flex;align-items:center;gap:7px;color:#e1f1df;font-size:9px;font-weight:700;letter-spacing:.35px}
+#agri-motion-showcase .agri-scene-footer b{color:#d6f6a7}
+@keyframes agri-pulse{50%{opacity:.45;box-shadow:0 0 4px #c8f68b}}
+@keyframes agri-sun-glow{50%{transform:scale(1.06);box-shadow:0 0 0 13px #f3d98a10,0 0 48px #edcf7b65}}
+@keyframes agri-cloud-drift{0%{translate:-15px 0;opacity:.3}50%{opacity:.8}100%{translate:38px 0;opacity:.3}}
+@keyframes agri-tractor-float{0%,100%{translate:0 0;rotate:-.5deg}50%{translate:0 -5px;rotate:.5deg}}
+@keyframes agri-wheel-turn{to{rotate:360deg}}
+@keyframes agri-track-breathe{0%,100%{transform:scaleX(.96);opacity:.65}50%{transform:scaleX(1.04);opacity:.9}}
+@media(max-width:520px){#agri-motion-showcase{min-height:190px;border-radius:19px}#agri-motion-showcase .agri-scene-label{left:14px;top:13px;font-size:8px;letter-spacing:1.2px}#agri-motion-showcase .agri-scene-title{left:14px;top:38px;max-width:48%;font-size:17px}#agri-motion-showcase .agri-scene-title span{font-size:9px}#agri-motion-showcase .agri-sun{right:12%;top:22px;width:34px;height:34px}#agri-motion-showcase .agri-tractor{width:55%;right:2%;bottom:23px}#agri-motion-showcase .agri-track{right:0;width:58%}#agri-motion-showcase .agri-scene-footer{left:13px;bottom:12px;font-size:8px;max-width:44%}}
+@media(prefers-reduced-motion:reduce){#agri-motion-showcase *,#agri-motion-showcase *:before,#agri-motion-showcase *:after{animation:none!important;transition:none!important}#agri-motion-showcase .agri-cloud{display:none}}
+
 </style>
 </head>
 <body>
@@ -403,7 +431,40 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
    <div id="appPopularGrid" class="app-mini-grid"><div class="app-empty"><span class="emoji">🚜</span><strong>Local listings will appear here</strong>Real owner listings will show when available.</div></div>
    <div class="app-section-head"><h2>Group bookings</h2><button onclick="showAppScreen('groups')">See all →</button></div>
    <div class="app-feature-row"><div class="app-feature-icon">👨‍🌾</div><div style="flex:1"><strong>Join farmers together</strong><small>Lower cost, share time, better yield</small></div><button class="app-btn" onclick="showAppScreen('groups')">Explore</button></div>
-   <div class="app-submission-card" aria-label="Project submission credit"><span class="app-submission-mark" aria-hidden="true">🌾</span><div class="app-submission-copy"><span class="app-submission-eyebrow">PROJECT SUBMITTED BY</span><strong>KOWSHIK S</strong><span>AC&amp;RI VAZHAVACHANUR (TNAU)</span></div><span class="app-submission-crest" aria-hidden="true">TNAU</span></div>
+   <section id="agri-motion-showcase" aria-label="Animated AgriShare agricultural machinery showcase">
+    <div class="agri-scene-label"><span class="agri-scene-dot" aria-hidden="true"></span> Smart farming · Shared machinery</div>
+    <h2 class="agri-scene-title">Better tools.<br>Stronger farms.<span>Sharing equipment, growing together.</span></h2>
+    <div class="agri-sun" aria-hidden="true"></div><div class="agri-cloud" aria-hidden="true"></div>
+    <div class="agri-hill" aria-hidden="true"></div><div class="agri-hill agri-hill-back" aria-hidden="true"></div><div class="agri-field-lines" aria-hidden="true"></div>
+    <div class="agri-track" aria-hidden="true"></div>
+    <svg class="agri-tractor" viewBox="0 0 340 190" role="img" aria-label="Illustration of a green tractor moving across a farm field">
+      <defs><linearGradient id="agriTractorBody" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b6e879"/><stop offset=".55" stop-color="#54a83d"/><stop offset="1" stop-color="#1c6a35"/></linearGradient><linearGradient id="agriTractorGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#bfe8d2"/><stop offset="1" stop-color="#347e68"/></linearGradient><linearGradient id="agriTractorTyre" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#34463b"/><stop offset="1" stop-color="#101d17"/></linearGradient></defs>
+      <ellipse cx="171" cy="166" rx="125" ry="10" fill="#062a1b" opacity=".42"/>
+      <path d="M49 126 L65 98 Q70 90 83 90 L111 90 L129 113 L201 117 L223 132 L222 148 L51 148Z" fill="url(#agriTractorBody)" stroke="#163e28" stroke-width="3"/>
+      <path d="M119 87 L145 45 Q150 37 162 37 L193 37 Q205 37 211 49 L231 111 L202 118 L186 66 L157 66 L143 112Z" fill="url(#agriTractorBody)" stroke="#173e28" stroke-width="4" stroke-linejoin="round"/>
+      <path d="M151 45 L160 45 L160 61 L143 92 L130 90Z" fill="#d5f4b0" opacity=".85"/>
+      <path d="M166 45 L192 45 Q199 45 202 54 L219 101 L185 101 L166 65Z" fill="url(#agriTractorGlass)" stroke="#183e2b" stroke-width="3"/>
+      <path d="M171 49 L188 49 Q194 49 196 56 L210 92 L189 92Z" fill="#c7f0df" opacity=".5"/>
+      <path d="M143 111 L232 111 L244 127 L237 143 L126 143Z" fill="#348b3f" stroke="#173e28" stroke-width="3"/>
+      <path d="M78 92 L109 92 L123 112 L87 112Z" fill="#d7f39a" stroke="#214c2c" stroke-width="3"/>
+      <path d="M80 94 L106 94 L116 107 L88 107Z" fill="#f3d77a"/>
+      <rect x="213" y="115" width="28" height="12" rx="4" fill="#f2d578" stroke="#22482b" stroke-width="2"/>
+      <path d="M242 129 L270 133 L277 142 L245 142Z" fill="#b9d2a6" stroke="#1c3e29" stroke-width="3"/>
+      <path d="M261 133 L281 134 L286 139 L267 140Z" fill="#d4e4c5"/>
+      <circle cx="105" cy="143" r="39" fill="url(#agriTractorTyre)" stroke="#0c2117" stroke-width="4"/>
+      <circle cx="105" cy="143" r="24" fill="#7a8b76" stroke="#c2d5a9" stroke-width="4"/>
+      <g class="agri-wheel"><circle cx="105" cy="143" r="17" fill="#c6d9ae" stroke="#34523b" stroke-width="3"/><path d="M105 128V158 M90 143H120 M94 132L116 154 M116 132L94 154" stroke="#49684c" stroke-width="4" stroke-linecap="round"/><circle cx="105" cy="143" r="6" fill="#1b4a2b"/></g>
+      <circle cx="225" cy="143" r="24" fill="url(#agriTractorTyre)" stroke="#0c2117" stroke-width="4"/>
+      <circle cx="225" cy="143" r="13" fill="#9bb68c" stroke="#c2d5a9" stroke-width="3"/>
+      <g class="agri-wheel"><circle cx="225" cy="143" r="9" fill="#c6d9ae"/><path d="M225 136V150 M218 143H232 M220 138L230 148 M230 138L220 148" stroke="#49684c" stroke-width="2.5" stroke-linecap="round"/></g>
+      <path d="M133 119 L150 119 L155 126 L136 126Z" fill="#e8c86b"/><rect x="181" y="104" width="14" height="7" rx="2" fill="#d6e8c2"/><path d="M68 119 L78 119 L82 125 L67 125Z" fill="#f3d578"/>
+      <path d="M276 138 L295 145 L295 151 L273 148Z" fill="#a6bf92" stroke="#23472d" stroke-width="3"/>
+      <path d="M289 145 L305 149 L305 154 L289 152Z" fill="#d8e8ca"/>
+      <circle cx="305" cy="154" r="3" fill="#f4d57b"/>
+    </svg>
+    <div class="agri-scene-footer"><span aria-hidden="true">✦</span> <span>Technology for <b>every farmer</b></span></div>
+  </section>
+  <div class="app-submission-card" aria-label="Project submission credit"><span class="app-submission-mark" aria-hidden="true">🌾</span><div class="app-submission-copy"><span class="app-submission-eyebrow">PROJECT SUBMITTED BY</span><strong>KOWSHIK S</strong><span>AC&amp;RI VAZHAVACHANUR (TNAU)</span></div><span class="app-submission-crest" aria-hidden="true">TNAU</span></div>
   </section>
   <section class="app-page" id="appPage-explore">
    <div class="app-greeting"><div><h1>All equipment</h1><div class="app-location">Find machinery shared by local owners</div></div><button class="app-icon-btn" onclick="showAppScreen('nearby')">⌖</button></div>
