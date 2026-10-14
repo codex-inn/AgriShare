@@ -54,5 +54,13 @@ The private `equipment-spec-evidence` bucket accepts JPEG, PNG, WebP and PDF fil
 
 The `get_equipment_availability` function returns only equipment IDs and date-availability booleans to signed-in callers. `create_equipment_bundle` locks selected equipment rows in ID order, checks compatibility and same-date requests, then creates all owner requests in one transaction. Each owner sees only their request line under the existing booking RLS. Every provider still confirms separately; a bundle request does not reserve equipment.
 
-## 8. Next integration milestone
+## 8. Maintenance, progress and quote migration
+
+For an existing project, apply `supabase/marketplace-operations-workflows.sql` once after the bundle workflows. It is additive: it does not seed listings, bookings or maintenance events. It adds owner-scoped service history, a separate private table for notes and operating hours, participant-readable manual booking stages, and a quote RPC that stores the listed rate, rate unit and quantity at request time. The starter `supabase/schema.sql` includes the same SQL for new development projects. For existing projects, then apply `supabase/marketplace-operations-indexes.sql` once to index the booking-progress owner foreign key.
+
+Maintenance sharing is off by default. If an owner chooses to share a record, renters can see only the service date, type and next due date; notes and meter readings stay owner-only. Booking progress uses manual stages and does not collect location data. A quote is a listed-rate estimate, not a processed payment or final invoice.
+
+The booking weather check is optional. The UI asks before sending a village or town name to Open-Meteo, limits the check to the provider's five-day forecast window, and leaves the booking decision with the farmer.
+
+## 9. Next integration milestone
 After applying the schema and deploying the signup function, test username account creation, sign-in, sign-out, listing creation, same-date booking, a tractor/implement bundle with separate owner responses, private evidence access, group task selection and messaging with two separate accounts. The configured browser key is a public publishable key; keep Row Level Security enabled and never expose service-role or secret keys. The app still has no self-service username password reset or automatic account deletion. Support requests provide a manual contact path only. Configure real account recovery (which requires routable verified email identities or another recovery provider) before public launch.

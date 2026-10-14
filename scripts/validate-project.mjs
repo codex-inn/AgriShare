@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const requiredScreens = [
   "home", "explore", "groups", "nearby", "bookings", "equipment",
-  "messages", "profile", "weather", "crop", "favorites", "reviews", "support"
+  "messages", "profile", "maintenance", "earnings", "weather", "crop", "favorites", "reviews", "support"
 ];
 for (const screen of requiredScreens) {
   assert.match(html, new RegExp('id="appPage-' + screen + '"'), `Missing app screen: ${screen}`);
@@ -45,7 +45,9 @@ assert.ok(html.includes('<span class="menu-icon">🤝</span>Group bookings'), "P
 assert.ok(html.includes(".app-bottom-nav button:focus-visible"), "Navigation needs a visible keyboard focus state");
 assert.ok(html.includes(".app-bottom-nav button{font-size:10px}"), "Small-screen navigation labels must remain readable");
 for (const id of [
-  "appEquipmentList", "appOwnerList", "appMessageThreads", "weatherForm",
+  "appEquipmentList", "appOwnerList", "appMessageThreads", "weatherForm", "bookingQuantity",
+  "bookingWeatherConsent", "bookingWeatherStatus", "groupMatchVillage", "groupMatchTask", "groupMatchDate",
+  "maintenanceForm", "maintenanceEquipment", "appMaintenanceList", "appEarningsSummary", "appEarningsList",
   "cropAnalyzeForm", "nearbyPlaceForm", "appProfileAuthButton",
   "cropImageConsent", "appSupportForm", "appFavoritesList", "appReviewList"
 ]) {
@@ -85,6 +87,20 @@ assert.match(html, /id="compatibilityLocation"/, "Compatibility search must use 
 assert.match(html, /id="compatibilityBudget"/, "Compatibility search must expose a per-acre rate filter");
 assert.match(html, /id="compatibilityDate"/, "Compatibility search must use a requested work date");
 assert.match(html, /create_equipment_bundle/, "Tractor and implement requests must use the atomic bundle RPC");
+assert.match(html, /create_booking_request_with_quote/, "Single bookings must save a listed-rate quantity snapshot");
+assert.match(html, /requested_quantity/, "Booking history must use a saved rate quantity");
+assert.match(html, /Check a weather forecast for this village/, "Booking weather lookup must require explicit user consent");
+assert.match(html, /Open-Meteo only after I enable this/, "The app must disclose the weather location destination before lookup");
+assert.match(html, /function updateBookingProgress\(/, "Owners must be able to share manual work progress");
+assert.match(html, /booking_progress_updates/, "Booking progress must use participant-scoped Supabase rows");
+assert.match(html, /function syncAppMaintenance\(/, "Owners must be able to manage real maintenance history");
+assert.match(html, /equipment_maintenance_details/, "Maintenance notes and operating hours must stay in the owner-only table");
+assert.match(html, /function loadAppEarnings\(/, "Completed booking earnings must be calculated from real rows");
+assert.match(html, /function downloadBookingStatement\(/, "Completed bookings must support a printable work statement");
+assert.match(html, /Not a payment receipt/, "Statements must not imply payment processing");
+assert.match(html, /function exportBookingHistoryCsv\(/, "Users must be able to export real booking history");
+assert.match(html, /Match group demand/, "Farmers must be able to filter group requests by village, task and date");
+assert.match(html, /Last shared service:/, "Only opted-in maintenance dates may appear on public listing cards");
 assert.match(html, /get_equipment_availability/, "Same-date availability must use the protected database function");
 assert.match(html, /submit_equipment_spec_evidence/, "Owner evidence must be submitted through the ownership-checked RPC");
 assert.match(html, /equipment-spec-evidence/, "Specification evidence must use the private evidence bucket");
@@ -131,6 +147,8 @@ for (const operation of ["insert", "update"]) {
 const workflowSql = readFileSync(new URL("../supabase/production-readiness-workflows.sql", import.meta.url), "utf8");
 const bundleSql = readFileSync(new URL("../supabase/smart-equipment-bundle-workflows.sql", import.meta.url), "utf8");
 const bundleIndexSql = readFileSync(new URL("../supabase/smart-equipment-bundle-indexes.sql", import.meta.url), "utf8");
+const operationsSql = readFileSync(new URL("../supabase/marketplace-operations-workflows.sql", import.meta.url), "utf8");
+const operationsIndexSql = readFileSync(new URL("../supabase/marketplace-operations-indexes.sql", import.meta.url), "utf8");
 const indexSql = readFileSync(new URL("../supabase/production-readiness-indexes.sql", import.meta.url), "utf8");
 assert.match(workflowSql, /booking_requests_active_equipment_date_uidx/, "Active equipment booking collisions must be prevented in Postgres");
 assert.match(indexSql, /booking_reviews_reviewer_created_idx/, "Review participant lookups must be indexed");
@@ -153,5 +171,14 @@ assert.match(bundleSql, /create policy "Owners upload private equipment specific
 assert.match(bundleSql, /grant execute on function public\.create_equipment_bundle[\s\S]*?to authenticated/i, "Bundle RPC must be authenticated");
 assert.match(bundleSql, /revoke all on function public\.create_equipment_bundle[\s\S]*?from public, anon, authenticated/i, "Bundle RPC must not be public");
 assert.match(bundleSql, /set search_path = ''/i, "Feature privileged functions must pin an empty search path");
+
+assert.match(operationsIndexSql, /booking_progress_updates_owner_id_idx/, "Booking progress owner foreign key must be indexed");
+assert.match(operationsSql, /equipment_maintenance_records/, "Owner maintenance history migration must exist");
+assert.match(operationsSql, /equipment_maintenance_details/, "Private maintenance details must be stored separately");
+assert.match(operationsSql, /Shared maintenance dates are public/, "Maintenance sharing must require owner opt-in");
+assert.match(operationsSql, /booking_progress_updates/, "Participant-scoped booking progress migration must exist");
+assert.match(operationsSql, /create_booking_request_with_quote/, "Secure quote RPC must snapshot rate unit and quantity");
+assert.match(operationsSql, /security definer\s+set search_path = ''/i, "Private quote helper must pin an empty search_path");
+assert.doesNotMatch(operationsSql, /\bdrop\s+(table|column|function)\b/i, "Operations migration must be additive and preserve user data");
 assert.equal((bundleSql.match(/security definer\s+set search_path = ''/gi) || []).length, 5, "Feature privileged functions must all use an empty search_path");
 console.log(`AgriShare static validation passed: ${requiredScreens.length} screens, ${inlineScripts.length} inline script(s), required integration markers, PWA and policy files.`);
