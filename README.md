@@ -15,6 +15,7 @@
 - `supabase/production-readiness-indexes.sql` — adds indexes for new review and support foreign keys.
 - `supabase/smart-equipment-bundle-workflows.sql` — additive migration adding a separate implement type, task-aware group requests, atomic tractor/implement bundle requests, date availability checks and private specification evidence.
 - `supabase/smart-equipment-bundle-indexes.sql` — small follow-up migration indexing the bundle and evidence owner foreign keys.
+- `supabase/marketplace-operations-workflows.sql` — additive maintenance history, booking-progress updates, quoted quantities and secure price snapshots.
 - `supabase/SETUP.md` — backend setup and deployment precautions.
 - `privacy.html`, `terms.html` — prototype privacy notice and use terms.
 - `scripts/validate-project.mjs` — static integrity checks for required screens and inline JavaScript syntax.
@@ -30,6 +31,11 @@
 - Weather lookup uses Open-Meteo's public geocoding and forecast APIs.
 - CropSight analysis requires a deployed HTTPS inference API with trained weights; no predictions are fabricated if it is unavailable.
 - Booking messages use a private Supabase table and participant policies; validate the full send/read flow with two real accounts before relying on it.
+- Group requests can be filtered by village, farm task and date; farmers choose whether to join, and matching does not reserve a machine.
+- Owners can keep maintenance and repair history. Operating hours and notes remain private; only the service date/type/next due date are shared when an owner opts in.
+- Owners can manually mark an accepted booking as travelling or work started. Only the booking participants can read progress; the app does not track live location.
+- Booking forms calculate a listed-rate estimate for per-acre, per-hour, per-trip or per-day listings when the matching quantity is entered. Receipts and history use saved rates and quantities; estimates are not proof of payment.
+- Weather warnings are optional, use a five-day live Open-Meteo forecast, and send only the village/town name after the farmer enables the consent checkbox. Forecasts never cancel or change a booking.
 - Tractor/implement recommendations compare owner-entered HP, hitch, PTO and hydraulics. Only manually reviewed matching specs receive the “Compatible” label; unknown data stays “Needs verification,” and mismatches are blocked.
 - Bundle booking submits one tractor and up to four implements in a database transaction. Every owner receives a separate request; each owner responds separately, so the bundle is not reserved or confirmed until all agree.
 - The app checks same-date availability and rechecks it while creating the bundle. It shows listed rates and computes a combined estimate only when every item is priced per acre; transport, operator charges and discounts are never assumed.
@@ -45,7 +51,7 @@
 
 ## Data integrity
 
-The production database was checked on 2026-10-13 and contained zero equipment listings, open groups, group members and booking requests. That may mean there is nothing to display until actual users publish listings. No fabricated production records were added.
+The production database was checked on 2026-10-14 and contained zero equipment listings, open groups, group members and booking requests. The new operations tables were added without demo records. That may mean there is nothing to display until actual users publish listings. No fabricated production records were added.
 
 If a Supabase read fails, the marketplace should show a clear error/empty state rather than substitute demo listings. Generic illustrations are not evidence that a machine exists or is available.
 
