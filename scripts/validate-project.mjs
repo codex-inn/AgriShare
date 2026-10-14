@@ -64,9 +64,15 @@ assert.match(html, /cropImageConsent/, "Crop photos must require explicit endpoi
 assert.match(html, /const appDemoEquipment=\[/, "Preview examples must remain separate from live owner listings");
 assert.equal((html.match(/\{type:'(?:Tractor|Rotavator|Seed drill|Sprayer)',name:/g) || []).length, 5, "Exactly five sample machines should be shown");
 assert.match(html, /DEMO PREVIEW · NOT AVAILABLE FOR RENT/, "The sample panel must be unmistakably non-rentable");
-assert.match(html, /No owner, location, price, availability, or booking is attached/, "Sample data must not resemble a real owner offer");
+assert.match(html, /illustrative UI prices/, "Demo prices must be clearly identified as illustrative");
+assert.match(html, /not owner quotes or verified local rates/, "Demo prices must not be presented as market rates or owner quotes");
 assert.match(html, /class="app-demo-row"/, "Sample equipment must use a separate preview-only layout");
-assert.doesNotMatch(html, /Sample rate|Example area · Tamil Nadu|app-demo-equipment/, "Preview examples must not resemble a real owner listing");
+assert.equal((html.match(/samplePrice:'₹[\d,]+'/g) || []).length, 5, "Each of the five demos must have a clearly fictional rupee price");
+assert.match(html, /class="app-demo-price"/, "Demo prices must use a distinct preview style");
+assert.match(html, /id="appPopularGrid"/, "Home must show the equipment preview when no live listings exist");
+assert.match(html, /const homeLiveHtml=list\.length\?/, "Home must keep real owner listings ahead of demos");
+assert.match(html, /homeLiveHtml\+\(list\.length\?'':demoHtml\)/, "Home demos must appear only when real listings are absent");
+assert.doesNotMatch(html, /Example area · Tamil Nadu|app-demo-equipment/, "Demo preview must not imply a real listing or location");
 assert.doesNotMatch(html, /seedMachines|seedGroups|Demo provider|Demo organizer/, "Production data must not seed fake owner listings");
 assert.match(html, /Identity not independently verified/, "Provider identity limitations must be visible");
 assert.match(html, /Payments & wallet · Coming soon/, "Payments must be clearly unavailable until implemented");
