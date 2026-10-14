@@ -66,6 +66,7 @@ assert.equal((html.match(/\{type:'(?:Tractor|Rotavator|Seed drill|Sprayer)',name
 assert.match(html, /DEMO PREVIEW · NOT AVAILABLE FOR RENT/, "The sample panel must be unmistakably non-rentable");
 assert.match(html, /No owner, location, price, availability, or booking is attached/, "Sample data must not resemble a real owner offer");
 assert.match(html, /class="app-demo-row"/, "Sample equipment must use a separate preview-only layout");
+assert.doesNotMatch(html, /Sample rate|Example area · Tamil Nadu|app-demo-equipment/, "Preview examples must not resemble a real owner listing");
 assert.doesNotMatch(html, /seedMachines|seedGroups|Demo provider|Demo organizer/, "Production data must not seed fake owner listings");
 assert.match(html, /Identity not independently verified/, "Provider identity limitations must be visible");
 assert.match(html, /Payments & wallet · Coming soon/, "Payments must be clearly unavailable until implemented");
