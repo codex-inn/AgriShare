@@ -202,4 +202,13 @@ assert.match(operationsSql, /create_booking_request_with_quote/, "Secure quote R
 assert.match(operationsSql, /security definer\s+set search_path = ''/i, "Private quote helper must pin an empty search_path");
 assert.doesNotMatch(operationsSql, /\bdrop\s+(table|column|function)\b/i, "Operations migration must be additive and preserve user data");
 assert.equal((bundleSql.match(/security definer\s+set search_path = ''/gi) || []).length, 5, "Feature privileged functions must all use an empty search_path");
+const homeStart = html.indexOf('id="appPage-home"');
+const exploreStart = html.indexOf('id="appPage-explore"');
+const showcaseStart = html.indexOf('<section id="agri-motion-showcase"');
+const creditStart = html.indexOf('class="app-submission-card"');
+assert.ok(showcaseStart > homeStart && showcaseStart < exploreStart, "The animated machinery showcase must stay on the Home screen");
+assert.ok(creditStart > showcaseStart && creditStart < exploreStart, "The project credit must remain below the Home showcase");
+assert.match(html, /class="agri-scene-cta"[^>]*aria-label="Browse shared machinery"/, "The showcase must offer an accessible route to equipment listings");
+assert.match(html, /animation:agri-tractor-float 4\.5s ease-in-out infinite/, "The tractor scene must keep its gentle motion");
+assert.match(html, /@media\(prefers-reduced-motion:reduce\)\{#agri-motion-showcase/, "The animation must honor reduced-motion preferences");
 console.log(`AgriShare static validation passed: ${requiredScreens.length} screens, ${inlineScripts.length} inline script(s), required integration markers, PWA and policy files.`);
