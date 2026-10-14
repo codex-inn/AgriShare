@@ -390,15 +390,15 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
 #agri-motion-showcase .agri-tractor{position:absolute;z-index:4;width:min(46%,250px);height:auto;right:12%;bottom:21px;filter:drop-shadow(0 13px 8px #06271670);animation:agri-tractor-float 4.5s ease-in-out infinite;transform-origin:center bottom}
 #agri-motion-showcase .agri-wheel{transform-box:fill-box;transform-origin:center;animation:agri-wheel-turn 3s linear infinite}
 #agri-motion-showcase .agri-track{position:absolute;z-index:3;right:7%;bottom:15px;width:48%;height:10px;border-radius:50%;background:#062b1c70;filter:blur(5px);animation:agri-track-breathe 4.5s ease-in-out infinite}
-#agri-motion-showcase .agri-scene-footer{position:absolute;z-index:5;bottom:13px;left:17px;display:flex;align-items:center;gap:7px;color:#e1f1df;font-size:9px;font-weight:700;letter-spacing:.35px}
+#agri-motion-showcase .agri-scene-footer{position:absolute;z-index:5;bottom:13px;left:17px;right:17px;display:flex;align-items:center;justify-content:space-between;gap:9px;color:#e1f1df;font-size:9px;font-weight:700;letter-spacing:.35px}#agri-motion-showcase .agri-scene-footer-copy{min-width:0}#agri-motion-showcase .agri-scene-cta{flex:none;border:1px solid #d6f6a7;background:#e9f8db;color:#0b4b2e;border-radius:999px;padding:7px 11px;font-size:9px;font-weight:900;white-space:nowrap;box-shadow:0 4px 14px #071d1360}#agri-motion-showcase .agri-scene-cta:hover{background:#fff}#agri-motion-showcase .agri-scene-cta:focus-visible{outline:3px solid #fff;outline-offset:3px}
 #agri-motion-showcase .agri-scene-footer b{color:#d6f6a7}
 @keyframes agri-pulse{50%{opacity:.45;box-shadow:0 0 4px #c8f68b}}
 @keyframes agri-sun-glow{50%{transform:scale(1.06);box-shadow:0 0 0 13px #f3d98a10,0 0 48px #edcf7b65}}
 @keyframes agri-cloud-drift{0%{translate:-15px 0;opacity:.3}50%{opacity:.8}100%{translate:38px 0;opacity:.3}}
-@keyframes agri-tractor-float{0%,100%{translate:0 0;rotate:-.5deg}50%{translate:0 -5px;rotate:.5deg}}
+@keyframes agri-tractor-float{0%,100%{translate:-7px 0;rotate:-.5deg}50%{translate:10px -4px;rotate:.5deg}}
 @keyframes agri-wheel-turn{to{rotate:360deg}}
 @keyframes agri-track-breathe{0%,100%{transform:scaleX(.96);opacity:.65}50%{transform:scaleX(1.04);opacity:.9}}
-@media(max-width:520px){#agri-motion-showcase{min-height:190px;border-radius:19px}#agri-motion-showcase .agri-scene-label{left:14px;top:13px;font-size:8px;letter-spacing:1.2px}#agri-motion-showcase .agri-scene-title{left:14px;top:38px;max-width:48%;font-size:17px}#agri-motion-showcase .agri-scene-title span{font-size:9px}#agri-motion-showcase .agri-sun{right:12%;top:22px;width:34px;height:34px}#agri-motion-showcase .agri-tractor{width:55%;right:2%;bottom:23px}#agri-motion-showcase .agri-track{right:0;width:58%}#agri-motion-showcase .agri-scene-footer{left:13px;bottom:12px;font-size:8px;max-width:44%}}
+@media(max-width:520px){#agri-motion-showcase{min-height:190px;border-radius:19px}#agri-motion-showcase .agri-scene-label{left:14px;top:13px;font-size:8px;letter-spacing:1.2px}#agri-motion-showcase .agri-scene-title{left:14px;top:38px;max-width:48%;font-size:17px}#agri-motion-showcase .agri-scene-title span{font-size:9px}#agri-motion-showcase .agri-sun{right:12%;top:22px;width:34px;height:34px}#agri-motion-showcase .agri-tractor{width:55%;right:2%;bottom:23px}#agri-motion-showcase .agri-track{right:0;width:58%}#agri-motion-showcase .agri-scene-footer{left:13px;right:13px;bottom:12px;font-size:8px;gap:6px}#agri-motion-showcase .agri-scene-cta{padding:6px 8px;font-size:8px}}
 @media(prefers-reduced-motion:reduce){#agri-motion-showcase *,#agri-motion-showcase *:before,#agri-motion-showcase *:after{animation:none!important;transition:none!important}#agri-motion-showcase .agri-cloud{display:none}}
 
 </style>
@@ -462,7 +462,7 @@ body>.topline,body>header.navbar,body>main#home,body>footer.footer{display:none!
       <path d="M289 145 L305 149 L305 154 L289 152Z" fill="#d8e8ca"/>
       <circle cx="305" cy="154" r="3" fill="#f4d57b"/>
     </svg>
-    <div class="agri-scene-footer"><span aria-hidden="true">✦</span> <span>Technology for <b>every farmer</b></span></div>
+    <div class="agri-scene-footer"><span class="agri-scene-spark" aria-hidden="true">✦</span><span class="agri-scene-footer-copy">Technology for <b>every farmer</b></span><button type="button" class="agri-scene-cta" aria-label="Browse shared machinery" onclick="showAppScreen('explore')">Browse machinery <span aria-hidden="true">→</span></button></div>
   </section>
   <div class="app-submission-card" aria-label="Project submission credit"><span class="app-submission-mark" aria-hidden="true">🌾</span><div class="app-submission-copy"><span class="app-submission-eyebrow">PROJECT SUBMITTED BY</span><strong>KOWSHIK S</strong><span>AC&amp;RI VAZHAVACHANUR (TNAU)</span></div><span class="app-submission-crest" aria-hidden="true">TNAU</span></div>
   </section>
